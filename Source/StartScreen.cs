@@ -32,8 +32,10 @@ namespace WindowsFormsApplication1
         }
 
         //populate the race comboBox
-        private void loadComboBox()
+        public void loadComboBox()
         {
+            //empty out the comboBox
+            comboBox1.Items.Clear();
             //load the names of the races from file
             var races = new DataTable();
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
@@ -59,6 +61,11 @@ namespace WindowsFormsApplication1
         }
 
         private void StartScreen_Load(object sender, EventArgs e)
+        {
+            loadComboBox();
+        }
+
+        private void comboBox1_Click(object sender, EventArgs e)
         {
             loadComboBox();
         }
