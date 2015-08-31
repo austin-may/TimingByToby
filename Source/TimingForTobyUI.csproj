@@ -128,7 +128,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="MyDatabase.sqlite" />
+    <None Include="MyDatabase.sqlite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="MyDatabaseDataSet.xsc">
       <DependentUpon>MyDatabaseDataSet.xsd</DependentUpon>
     </None>
