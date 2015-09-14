@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using System.Data.OleDb;
 
-namespace WindowsFormsApplication1
+namespace TimingForToby
 {
     public partial class StartScreen : Form
     {

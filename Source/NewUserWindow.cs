@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApplication1
+namespace TimingForToby
 {
     public partial class NewUserWindow : Form
     {
@@ -20,6 +20,11 @@ namespace WindowsFormsApplication1
         private void btnDone_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void NewUserWindow_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace TimingForToby
 {
     partial class NewRaceWindow
     {
@@ -81,6 +81,7 @@
             this.Controls.Add(this.label1);
             this.Name = "NewRaceWindow";
             this.Text = "New Race";
+            this.Load += new System.EventHandler(this.NewRaceWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

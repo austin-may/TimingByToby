@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 
-namespace WindowsFormsApplication1
+namespace TimingForToby
 {
     public partial class MainWindow : Form
     {
+        private TimingDevice timingDevice;
         private Form parentWindow;
         public MainWindow()
         {
@@ -81,6 +82,45 @@ namespace WindowsFormsApplication1
                 this.Dispose();
                 parentWindow.Close();
             }
+        }
+
+        private void radioButtonKB_CheckedChanged(object sender, EventArgs e)
+        {
+            if(radioButtonKB.Checked)
+            {
+                timingDevice = new KeybordTimer(this);
+            }
+        }
+
+        private void MainWindow_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            DialogResult results = MessageBox.Show("Key Selected");
+        }
+        private void StartRace(object sender, EventArgs e)
+        {
+            if (timingDevice == null) {
+                RadioButton rb = groupBox1.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
+                switch(rb.Name)
+                {
+                    case "radioButtonKB":
+                        timingDevice = new KeybordTimer(this);
+                        break;
+                    case "radioButtonTM":
+                        timingDevice = new KeybordTimer();
+                        break;
+                    default:
+                        timingDevice = new KeybordTimer(this);
+                        break;
+                }
+            }
+            //note! this is different frrom else, we want this to run so long as not null (should be based on above)
+            if (timingDevice != null)
+                timingDevice.StartRace();
+        }
+        private void StopRace(object sender, EventArgs e)
+        {
+            if(timingDevice!=null)
+                timingDevice.StopRace();
         }
 
     }

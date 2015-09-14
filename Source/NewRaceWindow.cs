@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 
-namespace WindowsFormsApplication1
+namespace TimingForToby
 {
     public partial class NewRaceWindow : Form
     {
@@ -44,6 +44,11 @@ namespace WindowsFormsApplication1
             }
             if(rowsAffected>0)
                 this.Close();
+        }
+
+        private void NewRaceWindow_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

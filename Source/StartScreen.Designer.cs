@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace TimingForToby
 {
     partial class StartScreen
     {
