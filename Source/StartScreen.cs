@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
+using System.Data.OleDb;
 
 namespace WindowsFormsApplication1
 {
@@ -68,6 +69,27 @@ namespace WindowsFormsApplication1
         private void comboBox1_Click(object sender, EventArgs e)
         {
             loadComboBox();
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileExplorer = new OpenFileDialog();
+            DialogResult dialogResult = openFileExplorer.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                this.textBox1.Text = openFileExplorer.FileName;
+            }
+            
+        }
+
+        private void displayContentBtn_Click(object sender, EventArgs e)
+        {
+            string filePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + textBox1.Text + ";Extended Properties=\"Excel 8.0;HDR=Yes;\";";
+            OleDbConnection connection = new OleDbConnection(filePath);
+            OleDbDataAdapter dataAdapter = new OleDbDataAdapter("SELECT * FROM [" + textBox2.Text + "$]", connection);
+            DataTable dataTable = new DataTable();
+            dataAdapter.Fill(dataTable);
+            dataGridView1.DataSource = dataTable;
         }
     }
 }
