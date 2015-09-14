@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace TimingForToby
 {
     partial class NewUserWindow
     {
@@ -113,6 +113,7 @@
             this.Controls.Add(this.btnDone);
             this.Name = "NewUserWindow";
             this.Text = "Add Runner";
+            this.Load += new System.EventHandler(this.NewUserWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

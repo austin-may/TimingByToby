@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace TimingForToby
 {
     partial class MainWindow
     {
@@ -38,23 +38,27 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabTiming = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.radioButtonTM = new System.Windows.Forms.RadioButton();
+            this.radioButtonKB = new System.Windows.Forms.RadioButton();
+            this.dataGridTiming = new System.Windows.Forms.DataGridView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridTiming = new System.Windows.Forms.DataGridView();
-            this.radioButtonKB = new System.Windows.Forms.RadioButton();
-            this.radioButtonTM = new System.Windows.Forms.RadioButton();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.btnStartRace = new System.Windows.Forms.Button();
+            this.btnEndRace = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabRunners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRunners)).BeginInit();
             this.tabResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridResults)).BeginInit();
             this.tabTiming.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTiming)).BeginInit();
+            this.menuStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -169,11 +173,10 @@
             // 
             // tabTiming
             // 
+            this.tabTiming.Controls.Add(this.groupBox1);
+            this.tabTiming.Controls.Add(this.btnEndRace);
+            this.tabTiming.Controls.Add(this.btnStartRace);
             this.tabTiming.Controls.Add(this.label2);
-            this.tabTiming.Controls.Add(this.textBox1);
-            this.tabTiming.Controls.Add(this.comboBox1);
-            this.tabTiming.Controls.Add(this.radioButtonTM);
-            this.tabTiming.Controls.Add(this.radioButtonKB);
             this.tabTiming.Controls.Add(this.dataGridTiming);
             this.tabTiming.Location = new System.Drawing.Point(4, 22);
             this.tabTiming.Name = "tabTiming";
@@ -181,6 +184,62 @@
             this.tabTiming.TabIndex = 2;
             this.tabTiming.Text = "Timing";
             this.tabTiming.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(765, 36);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(188, 29);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Timing Method";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(94, 16);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 4;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(97, 42);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(107, 21);
+            this.comboBox1.TabIndex = 3;
+            // 
+            // radioButtonTM
+            // 
+            this.radioButtonTM.AutoSize = true;
+            this.radioButtonTM.Location = new System.Drawing.Point(0, 42);
+            this.radioButtonTM.Name = "radioButtonTM";
+            this.radioButtonTM.Size = new System.Drawing.Size(92, 17);
+            this.radioButtonTM.TabIndex = 2;
+            this.radioButtonTM.TabStop = true;
+            this.radioButtonTM.Text = "Time Machine";
+            this.radioButtonTM.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonKB
+            // 
+            this.radioButtonKB.AutoSize = true;
+            this.radioButtonKB.Location = new System.Drawing.Point(6, 19);
+            this.radioButtonKB.Name = "radioButtonKB";
+            this.radioButtonKB.Size = new System.Drawing.Size(71, 17);
+            this.radioButtonKB.TabIndex = 1;
+            this.radioButtonKB.TabStop = true;
+            this.radioButtonKB.Text = "KeyBoard";
+            this.radioButtonKB.UseVisualStyleBackColor = true;
+            this.radioButtonKB.CheckedChanged += new System.EventHandler(this.radioButtonKB_CheckedChanged);
+            // 
+            // dataGridTiming
+            // 
+            this.dataGridTiming.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridTiming.Location = new System.Drawing.Point(3, 3);
+            this.dataGridTiming.Name = "dataGridTiming";
+            this.dataGridTiming.Size = new System.Drawing.Size(692, 421);
+            this.dataGridTiming.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -206,60 +265,40 @@
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
             this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.mainMenueToolStripMenuItem_Click);
             // 
-            // dataGridTiming
+            // btnStartRace
             // 
-            this.dataGridTiming.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridTiming.Location = new System.Drawing.Point(3, 3);
-            this.dataGridTiming.Name = "dataGridTiming";
-            this.dataGridTiming.Size = new System.Drawing.Size(692, 421);
-            this.dataGridTiming.TabIndex = 0;
+            this.btnStartRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStartRace.Location = new System.Drawing.Point(702, 400);
+            this.btnStartRace.Name = "btnStartRace";
+            this.btnStartRace.Size = new System.Drawing.Size(75, 23);
+            this.btnStartRace.TabIndex = 6;
+            this.btnStartRace.Text = "Start Race";
+            this.btnStartRace.UseVisualStyleBackColor = true;
+            this.btnStartRace.Click += new System.EventHandler(this.StartRace);
             // 
-            // radioButtonKB
+            // btnEndRace
             // 
-            this.radioButtonKB.AutoSize = true;
-            this.radioButtonKB.Location = new System.Drawing.Point(765, 103);
-            this.radioButtonKB.Name = "radioButtonKB";
-            this.radioButtonKB.Size = new System.Drawing.Size(71, 17);
-            this.radioButtonKB.TabIndex = 1;
-            this.radioButtonKB.TabStop = true;
-            this.radioButtonKB.Text = "KeyBoard";
-            this.radioButtonKB.UseVisualStyleBackColor = true;
+            this.btnEndRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEndRace.Location = new System.Drawing.Point(894, 399);
+            this.btnEndRace.Name = "btnEndRace";
+            this.btnEndRace.Size = new System.Drawing.Size(75, 23);
+            this.btnEndRace.TabIndex = 7;
+            this.btnEndRace.Text = "End Race";
+            this.btnEndRace.UseVisualStyleBackColor = true;
+            this.btnEndRace.Click += new System.EventHandler(this.StopRace);
             // 
-            // radioButtonTM
+            // groupBox1
             // 
-            this.radioButtonTM.AutoSize = true;
-            this.radioButtonTM.Location = new System.Drawing.Point(765, 126);
-            this.radioButtonTM.Name = "radioButtonTM";
-            this.radioButtonTM.Size = new System.Drawing.Size(92, 17);
-            this.radioButtonTM.TabIndex = 2;
-            this.radioButtonTM.TabStop = true;
-            this.radioButtonTM.Text = "Time Machine";
-            this.radioButtonTM.UseVisualStyleBackColor = true;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(863, 126);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(107, 21);
-            this.comboBox1.TabIndex = 3;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(863, 100);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 4;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(765, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(188, 29);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Timing Method";
+            this.groupBox1.Controls.Add(this.radioButtonKB);
+            this.groupBox1.Controls.Add(this.radioButtonTM);
+            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Location = new System.Drawing.Point(753, 68);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "groupBox1";
             // 
             // MainWindow
             // 
@@ -281,11 +320,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridResults)).EndInit();
             this.tabTiming.ResumeLayout(false);
             this.tabTiming.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTiming)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridTiming)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.KeyPreview = true;
 
         }
 
@@ -311,6 +353,9 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.RadioButton radioButtonTM;
         private System.Windows.Forms.RadioButton radioButtonKB;
+        private System.Windows.Forms.Button btnEndRace;
+        private System.Windows.Forms.Button btnStartRace;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

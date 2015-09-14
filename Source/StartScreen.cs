@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 
-namespace WindowsFormsApplication1
+namespace TimingForToby
 {
     public partial class StartScreen : Form
     {
