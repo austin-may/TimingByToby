@@ -69,6 +69,7 @@
             this.btnImport.TabIndex = 2;
             this.btnImport.Text = "Import Runners";
             this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnRace
             // 
