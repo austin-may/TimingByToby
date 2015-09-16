@@ -14,14 +14,14 @@ namespace TimingForToby
     public partial class MainWindow : Form
     {
         private TimingDevice timingDevice;
-        private Form parentWindow;
+        private RaceData raceData;
         public MainWindow()
         {
             InitializeComponent();
         }
-        public MainWindow(Form parent)
+        public MainWindow(RaceData data)
         {
-            parentWindow = parent;
+            raceData=data;
             InitializeComponent();
         }
 
@@ -42,11 +42,12 @@ namespace TimingForToby
                 using (var cmd = new SQLiteCommand())
                 {
                     cmd.Connection = conn;
-                    cmd.CommandText = "select FirstName, LastName, BibId, age from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID;";
+                    cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=(select RaceID from Race where Name = @RaceName Limit 1);";
+                    cmd.Parameters.AddWithValue("@RaceName", raceData.RaceName);
                     var daRunners = new SQLiteDataAdapter(cmd);
                     daRunners.Fill(runners);
 
-                    cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r order by Time";
+                    cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=(select RaceID from Race where Name = @RaceName Limit 1) order by Time";
                     var daTimer = new SQLiteDataAdapter(cmd);
                     daTimer.Fill(timing);
                 }
@@ -59,28 +60,33 @@ namespace TimingForToby
             dataGridRunners.DataSource = runners;
             dataGridTiming.DataSource = timing;
         }
+
+        public void reload()
+        {
+            MainWindow_Load(null, null);
+        }
         
         private void btnAddRunner_Click(object sender, EventArgs e)
         {
-            var user = new NewUserWindow();
+            var user = new NewUserWindow(raceData, this);
             user.Show();
         }
 
         private void mainMenueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(parentWindow!=null)
-            { 
-                parentWindow.Show();
+            if (raceData.StartWindow != null)
+            {
+                raceData.StartWindow.Show();
                 this.Dispose();
             }
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (parentWindow != null)
+            if (raceData.StartWindow != null)
             {
                 this.Dispose();
-                parentWindow.Close();
+                raceData.StartWindow.Close();
             }
         }
 

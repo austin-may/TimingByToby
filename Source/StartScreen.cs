@@ -22,7 +22,8 @@ namespace TimingForToby
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var mainWindow = new MainWindow(this);
+            var data = new RaceData(this, comboBox1.SelectedItem.ToString(), "Data Source=MyDatabase.sqlite;Version=3;");
+            var mainWindow = new MainWindow(data);
             this.Hide();
             mainWindow.Show();
         }
@@ -40,7 +41,7 @@ namespace TimingForToby
             comboBox1.Items.Clear();
             //load the names of the races from file
             var races = new DataTable();
-            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
             {
                 conn.Open();
                 using (var cmd = new SQLiteCommand())
@@ -96,6 +97,7 @@ namespace TimingForToby
 
         private void AddUsersToRace(String filename)
         {
+            Cursor.Current = Cursors.WaitCursor;
             int curRow = 1;
             try {
                 var excelApp = new Excel.Application();
@@ -106,52 +108,41 @@ namespace TimingForToby
                     var range = worksheet.UsedRange as Excel.Range;
                     int rowCount = range.Rows.Count;
                     int colCount = range.Columns.Count;
-                    if(rowCount>1 && colCount>3)//minimum valid input
-                    using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+                    string race=this.comboBox1.SelectedItem.ToString();
+                    if(rowCount>1 && colCount>4)//minimum valid input
                     {
-                        conn.Open();
-                        using (var cmd = new SQLiteCommand())
+                        //curRo-1 becouse the first row is headers
+                        var FirstNames = new string[rowCount-1];
+                        var LastNames = new string[rowCount - 1];
+                        var DOBs = new DateTime[rowCount - 1];
+                        var BibIDs = new string[rowCount - 1];
+                        var Orginizations = new string[rowCount - 1];
+                        var Teams = new string[rowCount - 1];
+                        for (curRow = 2; curRow <= rowCount; curRow++)
                         {
-                            string FirstName, LastName, Team, Orginization, BibID;
-                            DateTime DOB;
-                            for (curRow = 2; curRow <= rowCount; curRow++)
-                            {
-                                FirstName = range.Cells[curRow, 1].Value2 as string;
-                                LastName = range.Cells[curRow, 2].Value2 as string;
-                                DOB = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
-                                BibID = range.Cells[curRow, 4].Value2 as string ?? "";
-                                Team = range.Cells[curRow, 5].Value2 as string ?? "";
-                                Orginization = range.Cells[curRow, 6] as string ?? "";
-                                                       
-                                cmd.Connection = conn;
-                                cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
-                                cmd.Parameters.AddWithValue("@FirstName", FirstName);
-                                cmd.Parameters.AddWithValue("@LastName", LastName);
-                                cmd.Parameters.AddWithValue("@DOB", DOB);
-                                cmd.ExecuteNonQuery();
-                                //cmd.Parameters.Add(new SQLiteParameter("@FirstName", SqlDbType.Text) { Value = FirstName });
-                                //cmd.Parameters.Add(new SQLiteParameter("@LastName", SqlDbType.Text) { Value = LastName });
-                                //cmd.Parameters.Add(new SQLiteParameter("@DOB", DbType.Date) { Value =  });
-                                //cmd.Parameters.Add(DOB.ToString("MM/DD/YYYY"));
-                                cmd.CommandText="Insert into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values("+
-                                    "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1),"+
-                                    "(select RaceID from Race where Name=@Race Limit 1),"+
-                                    "@BibID,@Orginization,@Team);";
-
-
-                                cmd.Parameters.AddWithValue("@Race", this.comboBox1.SelectedItem.ToString());
-                                cmd.Parameters.AddWithValue("@BibID", BibID);
-                                cmd.Parameters.AddWithValue("@Team", Team);
-                                cmd.Parameters.AddWithValue("@Orginization", Orginization);
-                                cmd.ExecuteNonQuery();
-                            }
+                            FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
+                            LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
+                            DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
+                            BibIDs[curRow-2] = range.Cells[curRow, 4].Value2 as string ?? "";
+                            Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
+                            Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
                         }
-                        conn.Close();
+                        workbook.Close();
+                        CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
                     }
+                    MessageBox.Show("Import Complete for " + race);
+                }
+                else
+                {
+                    MessageBox.Show("No Valid Data to Import!");
                 }
             }
             catch(Exception e) {
                 MessageBox.Show("Error occured at row: " + curRow + e.Message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
             }
         }
     }
