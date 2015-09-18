@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
-using System.Data.OleDb;
+using System.IO;
+using Excel=Microsoft.Office.Interop.Excel;
 
 namespace TimingForToby
 {
@@ -21,7 +22,8 @@ namespace TimingForToby
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var mainWindow = new MainWindow(this);
+            var data = new RaceData(this, comboBox1.SelectedItem.ToString(), "Data Source=MyDatabase.sqlite;Version=3;");
+            var mainWindow = new MainWindow(data);
             this.Hide();
             mainWindow.Show();
         }
@@ -39,7 +41,7 @@ namespace TimingForToby
             comboBox1.Items.Clear();
             //load the names of the races from file
             var races = new DataTable();
-            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
             {
                 conn.Open();
                 using (var cmd = new SQLiteCommand())
@@ -73,23 +75,75 @@ namespace TimingForToby
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileExplorer = new OpenFileDialog();
-            DialogResult dialogResult = openFileExplorer.ShowDialog();
-            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Excel File|*.xlsx";
+            int size = -1;
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
             {
-                this.textBox1.Text = openFileExplorer.FileName;
+                string file = openFileDialog1.FileName;
+                try
+                {
+                    if (file.Contains(".xlsx"))
+                        AddUsersToRace(file);
+                }
+                catch (IOException)
+                {
+                }
             }
-            
+            Console.WriteLine(size); // <-- Shows file size in debugging mode.
+            Console.WriteLine(result); // <-- For debugging use.
         }
 
-        private void displayContentBtn_Click(object sender, EventArgs e)
+        private void AddUsersToRace(String filename)
         {
-            string filePath = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + textBox1.Text + ";Extended Properties=\"Excel 8.0;HDR=Yes;\";";
-            OleDbConnection connection = new OleDbConnection(filePath);
-            OleDbDataAdapter dataAdapter = new OleDbDataAdapter("SELECT * FROM [" + textBox2.Text + "$]", connection);
-            DataTable dataTable = new DataTable();
-            dataAdapter.Fill(dataTable);
-            dataGridView1.DataSource = dataTable;
+            Cursor.Current = Cursors.WaitCursor;
+            int curRow = 1;
+            try {
+                var excelApp = new Excel.Application();
+                var workbook = excelApp.Workbooks.Open(filename);
+                if(workbook.Worksheets.Count>0)
+                {
+                    var worksheet=workbook.Worksheets[1] as Excel.Worksheet;//first page
+                    var range = worksheet.UsedRange as Excel.Range;
+                    int rowCount = range.Rows.Count;
+                    int colCount = range.Columns.Count;
+                    string race=this.comboBox1.SelectedItem.ToString();
+                    if(rowCount>1 && colCount>4)//minimum valid input
+                    {
+                        //curRo-1 becouse the first row is headers
+                        var FirstNames = new string[rowCount-1];
+                        var LastNames = new string[rowCount - 1];
+                        var DOBs = new DateTime[rowCount - 1];
+                        var BibIDs = new string[rowCount - 1];
+                        var Orginizations = new string[rowCount - 1];
+                        var Teams = new string[rowCount - 1];
+                        for (curRow = 2; curRow <= rowCount; curRow++)
+                        {
+                            FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
+                            LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
+                            DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
+                            BibIDs[curRow-2] = range.Cells[curRow, 4].Value2 as string ?? "";
+                            Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
+                            Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
+                        }
+                        workbook.Close();
+                        CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
+                    }
+                    MessageBox.Show("Import Complete for " + race);
+                }
+                else
+                {
+                    MessageBox.Show("No Valid Data to Import!");
+                }
+            }
+            catch(Exception e) {
+                MessageBox.Show("Error occured at row: " + curRow + e.Message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
     }
 }
