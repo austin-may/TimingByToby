@@ -8,9 +8,10 @@ using System.Windows.Input;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
+
 namespace TimingForToby
 {
-    class KeybordTimer : TimingDevice
+    public class KeybordTimer : TimingDevice
     {
         private Stopwatch timer;
 
@@ -38,6 +39,8 @@ namespace TimingForToby
         {
             DialogResult results2 = MessageBox.Show("event triggered");
         }
+
+        
         public override void StartRace()
         {
             timer.Start();
