@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TimingForToby
 {
-    abstract class TimingDevice
+    public abstract class TimingDevice
     {
         private List<Object> listeners=new List<object>();
         public abstract void StartRace();
