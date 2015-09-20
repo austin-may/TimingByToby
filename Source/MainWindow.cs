@@ -13,6 +13,7 @@ namespace TimingForToby
 {
     public partial class MainWindow : Form
     {
+         public SQLiteConnection connect = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;");
         private TimingDevice timingDevice;
         private RaceData raceData;
         public MainWindow()
@@ -50,6 +51,10 @@ namespace TimingForToby
                     cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=(select RaceID from Race where Name = @RaceName Limit 1) order by Time";
                     var daTimer = new SQLiteDataAdapter(cmd);
                     daTimer.Fill(timing);
+                     //Testing results
+                    cmd.CommandText = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults";
+                    var daResults = new SQLiteDataAdapter(cmd);
+                    daResults.Fill(results);
                 }
                 conn.Close();
             }
@@ -59,6 +64,61 @@ namespace TimingForToby
             //dataGridView1.CellValidating += new DataGridViewCellValidatingEventHandler(dgv_CellValidating);
             dataGridRunners.DataSource = runners;
             dataGridTiming.DataSource = timing;
+            dataGridResults.DataSource = results;
+            dataGridResults.AutoResizeColumns();
+/*
+* The following code will be rolled into a method which is part of a "Filter" object.
+* Using this, we can create filters and add them to the form dynamically.
+*/
+
+             //Results 1
+            Label resLabel1 = new Label();
+            resLabel1.Text = "Result 1";
+             resLabel1.Location = new Point(8,10);
+             resLabel1.Show();
+             DataGridView Results1 = new DataGridView();
+             var filter1 = new DataTable();
+             string r1 = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults where BibID % 2 = 0 order by Position asc";
+             connect.Open();
+             SQLiteCommand command = new SQLiteCommand();
+             command.Connection = connect;
+             command.CommandText = r1;
+             var daFilter1 = new SQLiteDataAdapter(command);
+             daFilter1.Fill(filter1);
+             Results1.DataSource = filter1;
+             Results1.Location = new Point(8,25);
+             Results1.Size = new Size(350,185);
+             Results1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+             Results1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
+             Results1.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
+             tabResults.Controls.Add(Results1);
+             tabResults.Controls.Add(resLabel1);
+             Results1.Show();
+
+             //Results 2
+             DataGridView Results2 = new DataGridView();
+             Label resLabel2 = new Label();
+             resLabel2.Text = "Result 2";
+             resLabel2.Location = new Point(8,215);
+             resLabel2.Visible = true;
+             var filter2 = new DataTable();
+             string r2 = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults where BibID % 2 != 0 order by Position asc";
+             //connect.Open();
+             SQLiteCommand command2 = new SQLiteCommand();
+             command2.Connection = connect;
+             command2.CommandText = r2;
+             var daFilter2 = new SQLiteDataAdapter(command2);
+             daFilter2.Fill(filter2);
+             Results2.DataSource = filter2;
+             Results2.Location = new Point(8, 235);
+             Results2.Size = new Size(350, 185);
+             Results2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+             Results2.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
+             Results2.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
+             tabResults.Controls.Add(Results2);
+             tabResults.Controls.Add(resLabel2);
+             Results2.Show();
+
         }
 
         public void reload()
