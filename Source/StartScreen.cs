@@ -119,7 +119,7 @@ namespace TimingForToby
                         var Orginizations = new string[rowCount - 1];
                         var Teams = new string[rowCount - 1];
                         for (curRow = 2; curRow <= rowCount; curRow++)
-                        {
+                        {        
                             FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
                             LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
                             DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
