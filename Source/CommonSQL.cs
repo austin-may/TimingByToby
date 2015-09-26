@@ -10,9 +10,12 @@ namespace TimingForToby
     class CommonSQL
     {
         internal static string SQLiteConnection = "Data Source=MyDatabase.sqlite;Version=3;";
+        internal static string backupDB = "Data Source=BackupDatabase.sqlite;Version=3;";
+
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string Team, string Orginization, string RaceName, string Connection){
             using (var conn = new SQLiteConnection(Connection))
             {
+                
                 conn.Open();
                 using (var cmd = new SQLiteCommand())
                 {
@@ -77,5 +80,17 @@ namespace TimingForToby
                 conn.Close();
             }
         }
+        internal static void BackupDB()
+        {
+            SQLiteConnection originalDatabase = new SQLiteConnection(SQLiteConnection);
+            SQLiteConnection backupDatabase = new SQLiteConnection(backupDB);
+            originalDatabase.Open();
+            backupDatabase.Open();
+            originalDatabase.BackupDatabase(backupDatabase, "main", "main", -1, null, -1);
+            originalDatabase.Close();
+            backupDatabase.Close();
+        } 
+
+        
     }
 }

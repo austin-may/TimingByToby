@@ -13,7 +13,6 @@ namespace TimingForToby
 {
     public partial class MainWindow : Form
     {
-         public SQLiteConnection connect = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;");
         private TimingDevice timingDevice;
         private RaceData raceData;
         public MainWindow()
@@ -59,6 +58,8 @@ namespace TimingForToby
                 conn.Close();
             }
 
+            
+
             dataGridRunners.AllowUserToAddRows = false;
             //dataGridView1.CellEndEdit += new DataGridViewCellEventHandler(dgv_CellEndEdit);
             //dataGridView1.CellValidating += new DataGridViewCellValidatingEventHandler(dgv_CellValidating);
@@ -79,45 +80,54 @@ namespace TimingForToby
              DataGridView Results1 = new DataGridView();
              var filter1 = new DataTable();
              string r1 = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults where BibID % 2 = 0 order by Position asc";
-             connect.Open();
-             SQLiteCommand command = new SQLiteCommand();
-             command.Connection = connect;
-             command.CommandText = r1;
-             var daFilter1 = new SQLiteDataAdapter(command);
-             daFilter1.Fill(filter1);
-             Results1.DataSource = filter1;
-             Results1.Location = new Point(8,25);
-             Results1.Size = new Size(350,185);
-             Results1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-             Results1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
-             Results1.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
-             tabResults.Controls.Add(Results1);
-             tabResults.Controls.Add(resLabel1);
-             Results1.Show();
+             using (var connect = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+             {
+                 connect.Open();
+                 SQLiteCommand command = new SQLiteCommand();
+                 using (command)
+                 {
+                     command.Connection = connect;
+                     command.CommandText = r1;
+                     var daFilter1 = new SQLiteDataAdapter(command);
+                     daFilter1.Fill(filter1);
+                     Results1.DataSource = filter1;
+                     Results1.Location = new Point(8, 25);
+                     Results1.Size = new Size(350, 185);
+                     Results1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+                     Results1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
+                     Results1.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
+                     tabResults.Controls.Add(Results1);
+                     tabResults.Controls.Add(resLabel1);
+                     Results1.Show();
 
-             //Results 2
-             DataGridView Results2 = new DataGridView();
-             Label resLabel2 = new Label();
-             resLabel2.Text = "Result 2";
-             resLabel2.Location = new Point(8,215);
-             resLabel2.Visible = true;
-             var filter2 = new DataTable();
-             string r2 = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults where BibID % 2 != 0 order by Position asc";
-             //connect.Open();
-             SQLiteCommand command2 = new SQLiteCommand();
-             command2.Connection = connect;
-             command2.CommandText = r2;
-             var daFilter2 = new SQLiteDataAdapter(command2);
-             daFilter2.Fill(filter2);
-             Results2.DataSource = filter2;
-             Results2.Location = new Point(8, 235);
-             Results2.Size = new Size(350, 185);
-             Results2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-             Results2.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
-             Results2.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
-             tabResults.Controls.Add(Results2);
-             tabResults.Controls.Add(resLabel2);
-             Results2.Show();
+                     //Results 2
+                     DataGridView Results2 = new DataGridView();
+                     Label resLabel2 = new Label();
+                     resLabel2.Text = "Result 2";
+                     resLabel2.Location = new Point(8, 215);
+                     resLabel2.Visible = true;
+                     var filter2 = new DataTable();
+                     string r2 = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults where BibID % 2 != 0 order by Position asc";
+                     //connect.Open();
+                     SQLiteCommand command2 = new SQLiteCommand();
+                     command2.Connection = connect;
+                     command2.CommandText = r2;
+                     var daFilter2 = new SQLiteDataAdapter(command2);
+                     daFilter2.Fill(filter2);
+                     Results2.DataSource = filter2;
+                     Results2.Location = new Point(8, 235);
+                     Results2.Size = new Size(350, 185);
+                     Results2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+                     Results2.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
+                     Results2.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
+                     tabResults.Controls.Add(Results2);
+                     tabResults.Controls.Add(resLabel2);
+                     Results2.Show();
+                 }
+                 connect.Close();
+             }
+             
+             
 
         }
 
