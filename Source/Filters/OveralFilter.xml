@@ -1,0 +1,4 @@
+<Filter>
+	<Name>Overall</Name>
+	<SQL>select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults</SQL>
+</Filter>

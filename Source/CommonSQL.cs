@@ -11,7 +11,7 @@ namespace TimingForToby
     {
         internal static string SQLiteConnection = "Data Source=MyDatabase.sqlite;Version=3;";
         internal static string backupDB = "Data Source=BackupDatabase.sqlite;Version=3;";
-
+        public static string filterFolder="Filters";
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string Team, string Orginization, string RaceName, string Connection){
             using (var conn = new SQLiteConnection(Connection))
             {
