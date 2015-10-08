@@ -14,6 +14,7 @@ namespace TimingForToby
         internal static string backupDB = "Data Source=BackupDatabase.sqlite;Version=3;";
         public static string filterFolder="Filters";
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string Team, string Orginization, string RaceName, string Connection){
+            int raceID = GetRaceID(RaceName);
             using (var conn = new SQLiteConnection(Connection))
             {
                 
@@ -32,11 +33,11 @@ namespace TimingForToby
                         //cmd.Parameters.Add(DOB.ToString("MM/DD/YYYY"));
                         cmd.CommandText = "Insert into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values(" +
                             "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1)," +
-                            "(select RaceID from Race where Name=@Race Limit 1)," +
+                            "@Race," +
                             "@BibID,@Orginization,@Team);";
 
 
-                        cmd.Parameters.AddWithValue("@Race", RaceName);
+                        cmd.Parameters.AddWithValue("@Race", raceID);
                         cmd.Parameters.AddWithValue("@BibID", BibID);
                         cmd.Parameters.AddWithValue("@Team", Team);
                         cmd.Parameters.AddWithValue("@Orginization", Orginization);
@@ -47,6 +48,7 @@ namespace TimingForToby
         }
         internal static void AddRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection)
         {
+            int raceID = GetRaceID(RaceName);
             //big assumption that all arrays are same size or atleast larger than the FirstName array
             using (var conn = new SQLiteConnection(Connection))
             {
@@ -67,11 +69,11 @@ namespace TimingForToby
                         //cmd.Parameters.Add(DOB.ToString("MM/DD/YYYY"));
                         cmd.CommandText = "Insert into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values(" +
                             "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1)," +
-                            "(select RaceID from Race where Name=@Race Limit 1)," +
+                            "@Race," +
                             "@BibID,@Orginization,@Team);";
 
 
-                        cmd.Parameters.AddWithValue("@Race", RaceName);
+                        cmd.Parameters.AddWithValue("@Race", raceID);
                         cmd.Parameters.AddWithValue("@BibID", BibID[i]);
                         cmd.Parameters.AddWithValue("@Team", Team[i]);
                         cmd.Parameters.AddWithValue("@Orginization", Orginization[i]);
@@ -148,6 +150,77 @@ namespace TimingForToby
                     conn.Close();
                 }
             }
+        }
+        //returns -1 if no race is found
+        public static int GetRaceID(string raceName){
+            int RaceID=-1;
+            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "select RaceID from Race where Name = @RaceName Limit 1;";
+                        cmd.Parameters.AddWithValue("@RaceName", raceName);
+                        SQLiteDataReader r = cmd.ExecuteReader();
+                        if (r.HasRows)
+                        {
+                            r.Read();
+                            RaceID=r.GetInt32(0);
+                            r.Dispose();                            
+                        }
+                        else
+                        {
+                            Console.WriteLine("No rows found.");
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+                return RaceID;
+            }
+        }
+        public static List<string> FindBadBibs(int raceID)
+        {
+            var badBibs = new List<string>();
+            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        //get list of all results in table that have multiple BibID entries
+                        cmd.Connection = conn;
+                        cmd.CommandText = "select BibID from(select count(BibID) as count, BibID from RaceResults where RaceID=@RaceID Group by (BibID)) as dictionary where dictionary.count>1;";
+                        cmd.Parameters.AddWithValue("@RaceID", raceID+"");
+
+                        var reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            badBibs.Add(reader[0].ToString());
+                        }
+                        reader.Dispose();
+                    }
+                }
+                catch (Exception sqlError)
+                {
+                    MessageBox.Show(sqlError.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            return badBibs;
         }        
     }
 }

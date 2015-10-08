@@ -97,9 +97,9 @@ namespace TimingForToby
 
         private void AddUsersToRace(String filename)
         {
-            Cursor.Current = Cursors.WaitCursor;
             int curRow = 1;
             try {
+                this.UseWaitCursor = true;
                 var excelApp = new Excel.Application();
                 var workbook = excelApp.Workbooks.Open(filename);
                 if(workbook.Worksheets.Count>0)
@@ -123,11 +123,12 @@ namespace TimingForToby
                             FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
                             LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
                             DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
-                            BibIDs[curRow-2] = range.Cells[curRow, 4].Value2 as string ?? "";
+                            BibIDs[curRow-2] = range.Cells[curRow, 4].Value2.ToString() ?? "";
                             Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
                             Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
                         }
                         workbook.Close();
+                        MessageBox.Show("Exporting to database");
                         CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
                     }
                     MessageBox.Show("Import Complete for " + race);
@@ -142,8 +143,9 @@ namespace TimingForToby
             }
             finally
             {
-                Cursor.Current = Cursors.Default;
+                this.UseWaitCursor = false;
             }
+
         }
     }
 }
