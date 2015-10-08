@@ -33,6 +33,7 @@
             this.btnAddRunner = new System.Windows.Forms.Button();
             this.dataGridRunners = new System.Windows.Forms.DataGridView();
             this.tabResults = new System.Windows.Forms.TabPage();
+            this.resultTable = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
@@ -49,7 +50,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resultTable = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl1.SuspendLayout();
             this.tabRunners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRunners)).BeginInit();
@@ -123,6 +123,23 @@
             this.tabResults.TabIndex = 1;
             this.tabResults.Text = "Results";
             this.tabResults.UseVisualStyleBackColor = true;
+            // 
+            // resultTable
+            // 
+            this.resultTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.resultTable.AutoScroll = true;
+            this.resultTable.ColumnCount = 1;
+            this.resultTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.resultTable.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddColumns;
+            this.resultTable.Location = new System.Drawing.Point(7, 7);
+            this.resultTable.Name = "resultTable";
+            this.resultTable.RowCount = 2;
+            this.resultTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.resultTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95F));
+            this.resultTable.Size = new System.Drawing.Size(779, 417);
+            this.resultTable.TabIndex = 5;
             // 
             // button1
             // 
@@ -264,6 +281,8 @@
             this.dataGridTiming.Name = "dataGridTiming";
             this.dataGridTiming.Size = new System.Drawing.Size(692, 421);
             this.dataGridTiming.TabIndex = 0;
+            this.dataGridTiming.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.TimingTableCellChanging);
+            this.dataGridTiming.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.TimingTableCellChange);
             // 
             // menuStrip1
             // 
@@ -289,23 +308,6 @@
             this.mainMenueToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
             this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.mainMenueToolStripMenuItem_Click);
-            // 
-            // resultTable
-            // 
-            this.resultTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.resultTable.AutoScroll = true;
-            this.resultTable.ColumnCount = 1;
-            this.resultTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.resultTable.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddColumns;
-            this.resultTable.Location = new System.Drawing.Point(7, 7);
-            this.resultTable.Name = "resultTable";
-            this.resultTable.RowCount = 2;
-            this.resultTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5F));
-            this.resultTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95F));
-            this.resultTable.Size = new System.Drawing.Size(779, 417);
-            this.resultTable.TabIndex = 5;
             // 
             // MainWindow
             // 

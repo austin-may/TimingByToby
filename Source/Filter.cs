@@ -17,46 +17,29 @@ namespace TimingForToby
 {
      public class Filter
      {
-          SQLiteConnection connect = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;");
+          
           SQLiteCommand command = new SQLiteCommand();
           DataGridView data = new DataGridView();
-          DataTable filterTable = new DataTable();
           Label filLabel = new Label();
-          RaceData raceData = new RaceData();
+          private int RaceID;
+         private String connectionSting;
           string ageString = "(strftime('%Y', 'now') - strftime('%Y', DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', DOB)) = ";
+          private String _Sql;
          public String Name;
           
-         public Filter(){
-
+         public Filter(RaceData raceData){
+             RaceID = raceData.RaceID;
+             connectionSting = raceData.ConnectionString;
+             data.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+             data.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
+             data.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
+             data.AllowUserToAddRows = false;
          }
-         public Filter(string name, string age, string gender, int width = -1, int height = -1)
-             : this()
-         {
-               string query = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults where "+ ageString + age +" and Gender = "+gender+" order by Position asc";
-               connect.Open();
-               command.Connection = connect;
-               command.CommandText = query;
-               var daFilter = new SQLiteDataAdapter(command);
-               daFilter.Fill(filterTable);
-               data.DataSource = filterTable;
-               data.AutoSize = true;
-               data.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-               data.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
-               data.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
-               Name = name;
-               //tabResults.Controls.Add(Results1);
-               //tabResults.Controls.Add(resLabel1);
-               //Results1.Show();               
-          }
-          public Filter(string name, string query, int width=-1, int height=-1)
-              : this()
+          public Filter(RaceData raceData, string name, string query, int width=-1, int height=-1)
+              : this(raceData)
           {
-              connect.Open();
-              command.Connection = connect;
-              command.CommandText = query;
-              var daFilter = new SQLiteDataAdapter(command);
-              daFilter.Fill(filterTable);
-              data.DataSource = filterTable;
+              Name = name;
+              _Sql = query;
               if (width > 0 && height > 0)
               {
                   data.Width = width;
@@ -64,21 +47,36 @@ namespace TimingForToby
               }
               else
                 data.AutoSize = true;
-              data.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-              data.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
-              data.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
-              Name = name;
-              //tabResults.Controls.Add(Results1);
-              //tabResults.Controls.Add(resLabel1);
-              //Results1.Show();               
+          }
+          public void LoadDataTable()
+          {
+              using (var connect = new SQLiteConnection(connectionSting))
+              {
+                  try
+                  {
+                      connect.Open();
+                      command.Connection = connect;
+                      command.CommandText = _Sql;
+                      command.Parameters.AddWithValue("@RaceID", RaceID);
+                      var filterTable = new DataTable();
+                      var daFilter = new SQLiteDataAdapter(command);
+                      daFilter.Fill(filterTable);
+                      data.DataSource = filterTable;
+                  }
+                  catch (Exception e)
+                  {
+                      MessageBox.Show(e.Message);
+                  }
+              }
           }
           public DataGridView GetDataTable()
           {
               return data;
           }
 
-          public static Filter BuildFromXML(string file, int width = -1, int height = -1)
+          public static List<Filter> BuildFromXML(RaceData raceData, string file, int width = -1, int height = -1)
           {
+              var filters=new List<Filter>();
             string name=null, sql=null;
             var xml = new XmlTextReader(file);
             try
@@ -98,9 +96,11 @@ namespace TimingForToby
                             sql = xml.Value;
                         }
                     }
-                    if (!string.IsNullOrEmpty(sql) && !string.IsNullOrEmpty(name))
+                    if (!string.IsNullOrEmpty(sql) && !string.IsNullOrEmpty(name)||(xml.IsEmptyElement && xml.Name=="Filter"))
                     {
-                        return new Filter(name, sql, width, height);
+                        filters.Add(new Filter(raceData, name, sql, width, height));
+                        sql = null;
+                        name = null;
                     }
                 }
             }
@@ -109,7 +109,7 @@ namespace TimingForToby
                 MessageBox.Show(e.Message);
                 return null;
             }
-            return null;
+            return filters;
             }
      }
 }

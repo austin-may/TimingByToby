@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace TimingForToby
 {
@@ -89,8 +90,64 @@ namespace TimingForToby
             originalDatabase.BackupDatabase(backupDatabase, "main", "main", -1, null, -1);
             originalDatabase.Close();
             backupDatabase.Close();
-        } 
+        }
+        internal static void UpdateTimingBib(int raceID, string oldBib, string time, string newBib)
+        {
+            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "update raceresults set BibID=@newBib where RaceID=@RaceID AND BibID=@oldBib AND Time=@time;";
+                        cmd.Parameters.AddWithValue("@RaceID", raceID);
+                        cmd.Parameters.AddWithValue("@oldBib", oldBib);
+                        cmd.Parameters.AddWithValue("@newBib", newBib);
+                        cmd.Parameters.AddWithValue("@time", time);
 
-        
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception sqlError)
+                {
+                    MessageBox.Show(sqlError.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+        internal static void UpdateTimingTime(int raceID, string bib, string oldTime, string newTime)
+        {
+            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "update raceresults set Time=@newTime where RaceID=@RaceID AND BibID=@Bib AND Time=@oldTime;";
+                        cmd.Parameters.AddWithValue("@RaceID", raceID);
+                        cmd.Parameters.AddWithValue("@Bib", bib);
+                        cmd.Parameters.AddWithValue("@newTime", newTime);
+                        cmd.Parameters.AddWithValue("@oldTime", oldTime);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception sqlError)
+                {
+                    MessageBox.Show(sqlError.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }        
     }
 }
