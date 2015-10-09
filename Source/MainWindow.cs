@@ -107,6 +107,7 @@ namespace TimingForToby
                         var daResults = new SQLiteDataAdapter(cmd);
                         daResults.Fill(results);
                     }
+
                 }
                 catch (Exception sqlError)
                 {

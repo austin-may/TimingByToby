@@ -122,7 +122,7 @@ namespace TimingForToby
                         {        
                             FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
                             LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
-                            DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
+                            //DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
                             BibIDs[curRow-2] = range.Cells[curRow, 4].Value2 as string ?? "";
                             Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
                             Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
