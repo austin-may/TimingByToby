@@ -132,6 +132,7 @@ namespace TimingForToby
                         CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
                     }
                     MessageBox.Show("Import Complete for " + race);
+                    CommonSQL.BackupDB();
                 }
                 else
                 {
