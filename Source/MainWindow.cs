@@ -61,6 +61,7 @@ namespace TimingForToby
                         daTimer.Fill(timing);
                         dataGridTiming.DataSource = timing;
                         dataGridTiming.AllowUserToAddRows = false;
+
                     }
                 }
                 catch (Exception e) { MessageBox.Show(this, e.Message); }
@@ -119,9 +120,6 @@ namespace TimingForToby
                 }
                 TimingTableLoad();
             }
-
-            
-
             dataGridRunners.AllowUserToAddRows = false;
             dataGridRunners.DataSource = runners;
         }
@@ -216,11 +214,36 @@ namespace TimingForToby
             //build filters
             buildResults(filters);
         }
+        private void HilightTimingErrors()
+        {
+            //find bad data in the table
+            var test = CommonSQL.FindBadBibs(raceData.RaceID);
+            //look through visable cells
+            if (test.Count > 0)
+            {
+                var vivibleRowsCount = dataGridTiming.DisplayedRowCount(true);
+                var firstDisplayedRowIndex = dataGridTiming.FirstDisplayedCell.RowIndex;
+                var lastvibileRowIndex = (firstDisplayedRowIndex + vivibleRowsCount) - 1;
+                for (int rowIndex = firstDisplayedRowIndex; rowIndex <= lastvibileRowIndex; rowIndex++)
+                {
+                    var cells = dataGridTiming.Rows[rowIndex].Cells;
+                    foreach (DataGridViewCell cell in cells)
+                    {
+                        if (cell.Displayed && test.Contains(cell.Value.ToString()))
+                        {
+                            cell.Style.BackColor = Color.Red;
+                        }
+                    }
+                }
+            }
+
+        }
 
         private void TimingTableCellChange(object sender, DataGridViewCellEventArgs e)
         {
             TimingTableLoad();
             buildResults(filters);
+            HilightTimingErrors();
         }
 
         private void TimingTableCellChanging(object sender, DataGridViewCellValidatingEventArgs e)
