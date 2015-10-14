@@ -169,18 +169,26 @@ namespace TimingForToby
         {
             if (timingDevice == null) {
                 RadioButton rb = groupBox1.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
-                switch(rb.Name)
+                try
                 {
-                    case "radioButtonKB":
-                        timingDevice = new KeybordTimer(this);
-                        break;
-                    case "radioButtonTM":
-                        timingDevice = new KeybordTimer();
-                        break;
-                    default:
-                        timingDevice = new KeybordTimer(this);
-                        break;
+                    switch (rb.Name)
+                    {
+                        case "radioButtonKB":
+                            timingDevice = new KeybordTimer(this);
+                            break;
+                        case "radioButtonTM":
+                            timingDevice = new KeybordTimer();
+                            break;
+                        default:
+                            timingDevice = new KeybordTimer(this);
+                            break;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Select a timing method.");
+                }
+                
             }
             //note! this is different frrom else, we want this to run so long as not null (should be based on above)
             if (timingDevice != null)
