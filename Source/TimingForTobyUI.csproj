@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filter.cs" />
+    <Compile Include="ITimerListener.cs" />
     <Compile Include="RaceData.cs" />
     <Compile Include="CommonSQL.cs" />
     <Compile Include="KeybordTimer.cs" />

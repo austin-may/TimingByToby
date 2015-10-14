@@ -197,16 +197,17 @@
             this.groupBox1.Controls.Add(this.radioButtonTM);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Location = new System.Drawing.Point(753, 68);
+            this.groupBox1.Location = new System.Drawing.Point(728, 68);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.Size = new System.Drawing.Size(225, 100);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "Timing Method";
             // 
             // radioButtonKB
             // 
             this.radioButtonKB.AutoSize = true;
+            this.radioButtonKB.Checked = true;
             this.radioButtonKB.Location = new System.Drawing.Point(6, 19);
             this.radioButtonKB.Name = "radioButtonKB";
             this.radioButtonKB.Size = new System.Drawing.Size(71, 17);
@@ -219,17 +220,16 @@
             // radioButtonTM
             // 
             this.radioButtonTM.AutoSize = true;
-            this.radioButtonTM.Location = new System.Drawing.Point(0, 42);
+            this.radioButtonTM.Location = new System.Drawing.Point(6, 42);
             this.radioButtonTM.Name = "radioButtonTM";
             this.radioButtonTM.Size = new System.Drawing.Size(92, 17);
             this.radioButtonTM.TabIndex = 2;
-            this.radioButtonTM.TabStop = true;
             this.radioButtonTM.Text = "Time Machine";
             this.radioButtonTM.UseVisualStyleBackColor = true;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(94, 16);
+            this.textBox1.Location = new System.Drawing.Point(114, 16);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 4;
@@ -237,7 +237,7 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(97, 42);
+            this.comboBox1.Location = new System.Drawing.Point(107, 41);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(107, 21);
             this.comboBox1.TabIndex = 3;
