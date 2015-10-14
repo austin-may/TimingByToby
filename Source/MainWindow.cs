@@ -12,9 +12,9 @@ using System.IO;
 
 namespace TimingForToby
 {
-    public partial class MainWindow : Form
+    public partial class MainWindow : Form, ITimerListener
     {
-        private TimingDevice timingDevice;
+        private TimingDevice TimingDevice;
         private RaceData raceData;
         private List<Filter> filters = new List<Filter>();
         public MainWindow()
@@ -157,7 +157,7 @@ namespace TimingForToby
         {
             if(radioButtonKB.Checked)
             {
-                timingDevice = new KeybordTimer(this);
+                this.SetTimingDevice(new KeybordTimer(this));
             }
         }
 
@@ -167,37 +167,29 @@ namespace TimingForToby
         }
         private void StartRace(object sender, EventArgs e)
         {
-            if (timingDevice == null) {
+            if (TimingDevice == null) {
                 RadioButton rb = groupBox1.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
-                try
+                switch(rb.Name)
                 {
-                    switch (rb.Name)
-                    {
-                        case "radioButtonKB":
-                            timingDevice = new KeybordTimer(this);
-                            break;
-                        case "radioButtonTM":
-                            timingDevice = new KeybordTimer();
-                            break;
-                        default:
-                            timingDevice = new KeybordTimer(this);
-                            break;
-                    }
+                    case "radioButtonKB":
+                        this.SetTimingDevice(new KeybordTimer(this));
+                        break;
+                    case "radioButtonTM":
+                        TimingDevice = new KeybordTimer();
+                        break;
+                    default:
+                        TimingDevice = new KeybordTimer(this);
+                        break;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Select a timing method.");
-                }
-                
             }
             //note! this is different frrom else, we want this to run so long as not null (should be based on above)
-            if (timingDevice != null)
-                timingDevice.StartRace();
+            if (TimingDevice != null)
+                TimingDevice.StartRace();
         }
         private void StopRace(object sender, EventArgs e)
         {
-            if(timingDevice!=null)
-                timingDevice.StopRace();
+            if(TimingDevice!=null)
+                TimingDevice.StopRace();
         }
 
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -269,6 +261,23 @@ namespace TimingForToby
                     MessageBox.Show("That value can not be edited");
                 }
             }
+        }
+
+        public void OnTime()
+        {
+            TimingTableLoad();
+            HilightTimingErrors();
+            dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
+        }
+
+        private void SetTimingDevice(TimingDevice timeDevice)
+        {
+            //set TimingDevice
+            this.TimingDevice = timeDevice;
+            //set RaceID so the device knows what race to update in DB
+            TimingDevice.SetRaceID(raceData.RaceID);
+            //listen for change to update Table
+            TimingDevice.addListener(this);
         }
     }
 }

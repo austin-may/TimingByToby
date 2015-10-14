@@ -226,6 +226,34 @@ namespace TimingForToby
                 }
             }
             return badBibs;
-        }        
+        }
+        internal static void AddTimeAndBib(int raceID, string bib, string time)
+        {
+            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "insert into raceresults(RaceID, BibID, Time) values(@RaceID, @Bib, @Time);";
+                        cmd.Parameters.AddWithValue("@RaceID", raceID);
+                        cmd.Parameters.AddWithValue("@Bib", bib);
+                        cmd.Parameters.AddWithValue("@Time", time);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception sqlError)
+                {
+                    MessageBox.Show(sqlError.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
     }
 }

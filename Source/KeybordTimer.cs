@@ -29,8 +29,11 @@ namespace TimingForToby
         {
             if (e.KeyChar == ' ')
             {
-                if(timer.IsRunning)
-                    MessageBox.Show(timer.Elapsed.ToString(@"hh\:mm\:ss\.ffff"));
+                if (timer.IsRunning)
+                {
+                    //MessageBox.Show(timer.Elapsed.ToString(@"hh\:mm\:ss\.ffff"));
+                    this.RecordTime("DEFAULT", timer.Elapsed.ToString(@"hh\:mm\:ss\.ffff"));
+                }
                 else
                     MessageBox.Show("Race Has Not Started");
             }
