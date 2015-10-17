@@ -32,6 +32,7 @@ namespace TimingForToby
         {
             var newRaceScreen = new NewRaceWindow();
             newRaceScreen.Show();
+            
         }
 
         //populate the race comboBox
@@ -95,11 +96,12 @@ namespace TimingForToby
             Console.WriteLine(result); // <-- For debugging use.
         }
 
-        private void AddUsersToRace(String filename)
+        private async void AddUsersToRace(String filename)
         {
             int curRow = 1;
             try {
-                this.UseWaitCursor = true;
+                Cursor.Current = Cursors.WaitCursor;
+                lblProgress.Text = "Scanning Excel document...";
                 var excelApp = new Excel.Application();
                 var workbook = excelApp.Workbooks.Open(filename);
                 if(workbook.Worksheets.Count>0)
@@ -118,6 +120,7 @@ namespace TimingForToby
                         var BibIDs = new string[rowCount - 1];
                         var Orginizations = new string[rowCount - 1];
                         var Teams = new string[rowCount - 1];
+                        
                         for (curRow = 2; curRow <= rowCount; curRow++)
                         {        
                             FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
@@ -128,10 +131,17 @@ namespace TimingForToby
                             Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
                         }
                         workbook.Close();
-                        MessageBox.Show("Exporting to database");
-                        CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
+                        //CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
+                        var progress = new Progress<ProgressReport>();
+                        lblProgress.Text = "Importing...";
+                        progress.ProgressChanged += (o, report) =>
+                        {
+                            progressBar1.Value = report.PercentComplete;
+                            progressBar1.Update();
+                        };
+                        await CommonSQL.ProcessData(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
                     }
-                    MessageBox.Show("Import Complete for " + race);
+                    lblProgress.Text = "Import complete for " + race;
                     CommonSQL.BackupDB();
                 }
                 else
@@ -148,5 +158,6 @@ namespace TimingForToby
             }
 
         }
-    }
+
+      }
 }

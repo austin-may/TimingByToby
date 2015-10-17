@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -76,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Filter.cs" />
     <Compile Include="ITimerListener.cs" />
+    <Compile Include="ProgressReport.cs" />
     <Compile Include="RaceData.cs" />
     <Compile Include="CommonSQL.cs" />
     <Compile Include="KeybordTimer.cs" />

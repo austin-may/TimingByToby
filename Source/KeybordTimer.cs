@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 
 namespace TimingForToby
@@ -22,11 +23,11 @@ namespace TimingForToby
         public KeybordTimer(MainWindow window)
             : this()
         {
-            // TODO: Complete member initialization
+            // TODO: Complete member initialization         
             window.KeyPress += new KeyPressEventHandler(this.keyPressEvent);
         }
         private void keyPressEvent(Object sender, KeyPressEventArgs e)
-        {
+        {    
             if (e.KeyChar == ' ')
             {
                 if (timer.IsRunning)
@@ -38,6 +39,8 @@ namespace TimingForToby
                     MessageBox.Show("Race Has Not Started");
             }
         }
+
+        
         private void keyEvent()
         {
             DialogResult results2 = MessageBox.Show("event triggered");
@@ -47,7 +50,9 @@ namespace TimingForToby
         public override void StartRace()
         {
             timer.Start();
+            
         }
+
         public override void StopRace()
         {
             timer.Stop();

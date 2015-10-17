@@ -61,7 +61,6 @@ namespace TimingForToby
                         daTimer.Fill(timing);
                         dataGridTiming.DataSource = timing;
                         dataGridTiming.AllowUserToAddRows = false;
-
                     }
                 }
                 catch (Exception e) { MessageBox.Show(this, e.Message); }
@@ -163,7 +162,7 @@ namespace TimingForToby
 
         private void MainWindow_KeyPress(object sender, KeyPressEventArgs e)
         {
-            DialogResult results = MessageBox.Show("Key Selected");
+            DialogResult results = MessageBox.Show("Key Selected");   
         }
         private void StartRace(object sender, EventArgs e)
         {
@@ -252,16 +251,17 @@ namespace TimingForToby
             var newValue = e.FormattedValue.ToString();
             if (oldValue != newValue)
             {
-                if (e.ColumnIndex == 1)//if we are changing the bib
-                { CommonSQL.UpdateTimingBib(raceData.RaceID, oldValue, dataGridTiming[2, e.RowIndex].Value.ToString(), newValue); }
-                else if (e.ColumnIndex == 2)//if we are changing the time
-                { CommonSQL.UpdateTimingTime(raceData.RaceID, dataGridTiming[1, e.RowIndex].Value.ToString(), oldValue, newValue); }
-                else
-                {
-                    MessageBox.Show("That value can not be edited");
-                }
+               if (e.ColumnIndex == 1)//if we are changing the bib
+               { CommonSQL.UpdateTimingBib(raceData.RaceID, oldValue, dataGridTiming[2, e.RowIndex].Value.ToString(), newValue); }
+               else if (e.ColumnIndex == 2)//if we are changing the time
+               { CommonSQL.UpdateTimingTime(raceData.RaceID, dataGridTiming[1, e.RowIndex].Value.ToString(), oldValue, newValue); }
+               else
+               {
+                 MessageBox.Show("That value can not be edited");
+               }            
             }
         }
+
 
         public void OnTime()
         {
@@ -279,5 +279,8 @@ namespace TimingForToby
             //listen for change to update Table
             TimingDevice.addListener(this);
         }
+
+
+
     }
 }
