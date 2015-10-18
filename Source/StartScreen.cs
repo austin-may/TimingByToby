@@ -120,26 +120,41 @@ namespace TimingForToby
                         var BibIDs = new string[rowCount - 1];
                         var Orginizations = new string[rowCount - 1];
                         var Teams = new string[rowCount - 1];
-                        
+                        Dictionary<string, int> dictionary = new Dictionary<string, int>();
+                        bool duplicateBibsFound = false;
                         for (curRow = 2; curRow <= rowCount; curRow++)
                         {        
                             FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
                             LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
                             DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
-                            BibIDs[curRow-2] = range.Cells[curRow, 4].Value2.ToString() ?? "";
+                            string BibID = range.Cells[curRow, 4].Value2.ToString() ?? "";
+                            if (!dictionary.ContainsKey(BibID))
+                            {
+                                dictionary.Add(BibID, 1);
+                                BibIDs[curRow - 2] = range.Cells[curRow, 4].Value2.ToString() ?? "";
+                            }
+                            else
+                            {
+                              int duplicateBib = 2;
+                              dictionary.TryGetValue(BibID, out duplicateBib);
+                              duplicateBibsFound = true;
+                            }
                             Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
                             Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
                         }
+                        if (duplicateBibsFound == true) { MessageBox.Show("Some duplicate bibs were found. They can be edited in home page.");}
                         workbook.Close();
                         //CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
                         var progress = new Progress<ProgressReport>();
                         lblProgress.Text = "Importing...";
+                        //updates the progress bar
                         progress.ProgressChanged += (o, report) =>
                         {
                             progressBar1.Value = report.PercentComplete;
                             progressBar1.Update();
                         };
-                        await CommonSQL.ProcessData(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
+                        //waits for runners to be inserted asynchrously
+                        await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
                     }
                     lblProgress.Text = "Import complete for " + race;
                     CommonSQL.BackupDB();

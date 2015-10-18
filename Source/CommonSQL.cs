@@ -90,9 +90,8 @@ namespace TimingForToby
             }
         }
 
-
-
-        public static Task ProcessData(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)
+        //the inserting of every runner that happens on an asynchronous thread
+        public static Task ProcessRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)
         {
             int raceID = GetRaceID(RaceName);
             int index = 1;
