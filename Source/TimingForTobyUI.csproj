@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Filter.cs" />
     <Compile Include="ITimerListener.cs" />
+    <Compile Include="LogFile.cs" />
     <Compile Include="ProgressReport.cs" />
     <Compile Include="RaceData.cs" />
     <Compile Include="CommonSQL.cs" />

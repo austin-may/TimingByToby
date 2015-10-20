@@ -281,6 +281,7 @@ namespace TimingForToby
             }
             return badBibs;
         }
+
         internal static void AddTimeAndBib(int raceID, string bib, string time)
         {
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
