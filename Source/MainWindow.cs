@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using System.IO;
+using System.IO.Ports;
 
 namespace TimingForToby
 {
@@ -44,6 +45,13 @@ namespace TimingForToby
         }
         private void TimingTableLoad()
         {
+            if (InvokeRequired)
+            {
+                MethodInvoker method = new MethodInvoker(TimingTableLoad);
+                Invoke(method);
+                return;
+            }
+
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -174,7 +182,8 @@ namespace TimingForToby
                         this.SetTimingDevice(new KeybordTimer(this));
                         break;
                     case "radioButtonTM":
-                        TimingDevice = new KeybordTimer();
+                        if(comPortComboBox.SelectedItem!=null)
+                            MessageBox.Show("Create Time Machine Timer");
                         break;
                     default:
                         TimingDevice = new KeybordTimer(this);
@@ -220,15 +229,12 @@ namespace TimingForToby
             //look through visable cells
             if (test.Count > 0)
             {
-                var vivibleRowsCount = dataGridTiming.DisplayedRowCount(true);
-                var firstDisplayedRowIndex = dataGridTiming.FirstDisplayedCell.RowIndex;
-                var lastvibileRowIndex = (firstDisplayedRowIndex + vivibleRowsCount) - 1;
-                for (int rowIndex = firstDisplayedRowIndex; rowIndex <= lastvibileRowIndex; rowIndex++)
+                for (int rowIndex = 0; rowIndex <= dataGridTiming.RowCount-1; rowIndex++)
                 {
                     var cells = dataGridTiming.Rows[rowIndex].Cells;
                     foreach (DataGridViewCell cell in cells)
                     {
-                        if (cell.Displayed && test.Contains(cell.Value.ToString()))
+                        if (test.Contains(cell.Value.ToString()))
                         {
                             cell.Style.BackColor = Color.Red;
                         }
@@ -267,7 +273,7 @@ namespace TimingForToby
         {
             TimingTableLoad();
             HilightTimingErrors();
-            dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
+            //dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
         }
 
         private void SetTimingDevice(TimingDevice timeDevice)
@@ -280,7 +286,40 @@ namespace TimingForToby
             TimingDevice.addListener(this);
         }
 
+        private void SelectCom(object sender, EventArgs e)
+        {
 
+        }
 
+        private void ComDropDown(object sender, EventArgs e)
+        {
+            PopulateCom();
+        }
+        private void PopulateCom()
+        {
+            comPortComboBox.Items.Clear();
+            comPortComboBox.Items.AddRange(SerialPort.GetPortNames());
+        }
+
+        private void ValidateTimeMachine(object sender, EventArgs e)
+        {
+            if (radioButtonTM.Checked)
+            {
+                if (comPortComboBox.SelectedItem==null || comPortComboBox.SelectedItem.ToString() == "")
+                {
+                    radioButtonTM.Checked = false;
+                    MessageBox.Show("No COM Port Selected");
+                }
+                else
+                {
+                    this.SetTimingDevice(new TimeMachineTimer(comPortComboBox.SelectedItem.ToString()));
+                }
+            }
+        }
+
+        private void CellBeingEdited(object sender, EventArgs e)
+        {
+
+        }
     }
 }
