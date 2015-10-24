@@ -280,6 +280,17 @@ namespace TimingForToby
             TimingDevice.addListener(this);
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Creates a filterbuilder window
+            NewFilterBuilder FilterWin = new NewFilterBuilder();
+            //Checks that the "Create Filter" button was pressed on the filterbuilder window and then adds that filter to the list
+            if (FilterWin.ShowDialog(this) == DialogResult.OK)
+            {
+                checkedListBox1.Items.Add(FilterWin.FilterName);
+            }
+        }
+
 
 
     }
