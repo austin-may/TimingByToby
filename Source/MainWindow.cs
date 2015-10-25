@@ -18,6 +18,7 @@ namespace TimingForToby
         private TimingDevice TimingDevice;
         private RaceData raceData;
         private List<Filter> filters = new List<Filter>();
+        private bool TimingCellBeingEdited = false;
         public MainWindow()
         {
             InitializeComponent();            
@@ -31,6 +32,7 @@ namespace TimingForToby
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
+        //builds and populates the results table
         private void buildResults(List<Filter> filters)
         {
             resultTable.Controls.Clear();
@@ -43,6 +45,7 @@ namespace TimingForToby
                 resultTable.Controls.Add(filters[i].GetDataTable(), i, 1);
             }
         }
+        //builds and populates the timing table
         private void TimingTableLoad()
         {
             if (InvokeRequired)
@@ -51,30 +54,33 @@ namespace TimingForToby
                 Invoke(method);
                 return;
             }
-
-            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            //if the cells in the timing table are not currently being edited
+            if (!TimingCellBeingEdited)
             {
-                try
+                using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
                 {
-                    conn.Open();
-                    using (var cmd = new SQLiteCommand())
+                    try
                     {
-                        var timing = new DataTable();
-                        if (conn.State == ConnectionState.Closed)
-                            conn.Open();
-                        cmd.Connection = conn;
-                        cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time";
-                        cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
-                        var daTimer = new SQLiteDataAdapter(cmd);
-                        daTimer.Fill(timing);
-                        dataGridTiming.DataSource = timing;
-                        dataGridTiming.AllowUserToAddRows = false;
+                        conn.Open();
+                        using (var cmd = new SQLiteCommand())
+                        {
+                            var timing = new DataTable();
+                            if (conn.State == ConnectionState.Closed)
+                                conn.Open();
+                            cmd.Connection = conn;
+                            cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time";
+                            cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
+                            var daTimer = new SQLiteDataAdapter(cmd);
+                            daTimer.Fill(timing);
+                            dataGridTiming.DataSource = timing;
+                            dataGridTiming.AllowUserToAddRows = false;
+                        }
                     }
-                }
-                catch (Exception e) { MessageBox.Show(this, e.Message); }
-                finally
-                {
-                    conn.Close();
+                    catch (Exception e) { MessageBox.Show(this, e.Message); }
+                    finally
+                    {
+                        conn.Close();
+                    }
                 }
             }
         }
@@ -108,12 +114,6 @@ namespace TimingForToby
                         cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
                         var daRunners = new SQLiteDataAdapter(cmd);
                         daRunners.Fill(runners);
-
-                         
-                        //Testing results
-                        cmd.CommandText = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults";
-                        var daResults = new SQLiteDataAdapter(cmd);
-                        daResults.Fill(results);
                     }
 
                 }
@@ -135,7 +135,7 @@ namespace TimingForToby
         {
             MainWindow_Load(null, null);
         }
-        
+        //adding user button
         private void btnAddRunner_Click(object sender, EventArgs e)
         {
             var user = new NewUserWindow(raceData, this);
@@ -150,7 +150,7 @@ namespace TimingForToby
                 this.Dispose();
             }
         }
-
+        //temp... this is to ensure that the parent window (StartScreen) is also closed
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (raceData.StartWindow != null)
@@ -159,7 +159,7 @@ namespace TimingForToby
                 raceData.StartWindow.Close();
             }
         }
-
+        //creates and assigns keybord timer when the kebord radio button is selected
         private void radioButtonKB_CheckedChanged(object sender, EventArgs e)
         {
             if(radioButtonKB.Checked)
@@ -199,7 +199,7 @@ namespace TimingForToby
             if(TimingDevice!=null)
                 TimingDevice.StopRace();
         }
-
+        //this handles the filters.  finds the related file and builds filter
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             filters.Clear();
@@ -222,6 +222,7 @@ namespace TimingForToby
             //build filters
             buildResults(filters);
         }
+        //highlight duplicated bibs
         private void HilightTimingErrors()
         {
             //find bad data in the table
@@ -243,18 +244,19 @@ namespace TimingForToby
             }
 
         }
-
+        //runs after a cell has been updated in the timing table
         private void TimingTableCellChange(object sender, DataGridViewCellEventArgs e)
         {
             TimingTableLoad();
             buildResults(filters);
             HilightTimingErrors();
         }
-
+        //validateds and updates changes in the timing table
         private void TimingTableCellChanging(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var oldValue = dataGridTiming[e.ColumnIndex, e.RowIndex].Value.ToString();
             var newValue = e.FormattedValue.ToString();
+            TimingCellBeingEdited = false;
             if (oldValue != newValue)
             {
                if (e.ColumnIndex == 1)//if we are changing the bib
@@ -268,14 +270,14 @@ namespace TimingForToby
             }
         }
 
-
+        //to be called everytime an time is added (timing Device action)
         public void OnTime()
         {
             TimingTableLoad();
             HilightTimingErrors();
             //dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
         }
-
+        //takes timing device and sets it to be able to be used
         private void SetTimingDevice(TimingDevice timeDevice)
         {
             //set TimingDevice
@@ -295,12 +297,13 @@ namespace TimingForToby
         {
             PopulateCom();
         }
+        //get Com ports and populate select box
         private void PopulateCom()
         {
             comPortComboBox.Items.Clear();
             comPortComboBox.Items.AddRange(SerialPort.GetPortNames());
         }
-
+        //the time machine can and should only be used if the com port is also selected
         private void ValidateTimeMachine(object sender, EventArgs e)
         {
             if (radioButtonTM.Checked)
@@ -316,10 +319,10 @@ namespace TimingForToby
                 }
             }
         }
-
+        //there is a cell in the timeing table that is being changed, toggle flag
         private void CellBeingEdited(object sender, EventArgs e)
         {
-
+            TimingCellBeingEdited = true;
         }
     }
 }
