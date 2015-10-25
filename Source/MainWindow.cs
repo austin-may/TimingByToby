@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using System.IO;
 using System.IO.Ports;
+using System.Timers;
 
 namespace TimingForToby
 {
@@ -19,6 +20,7 @@ namespace TimingForToby
         private RaceData raceData;
         private List<Filter> filters = new List<Filter>();
         private bool TimingCellBeingEdited = false;
+        private System.Timers.Timer ClockRefreshTimer = new System.Timers.Timer(500);
         public MainWindow()
         {
             InitializeComponent();            
@@ -27,6 +29,10 @@ namespace TimingForToby
         {
             raceData=data;
             InitializeComponent();
+            //becouse the default is to start with the Keyboard Timer
+            //set clock to inital default of 0
+            SetClock(new TimeSpan(0,0,0));
+            panelClock.Visible = true;
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -74,6 +80,7 @@ namespace TimingForToby
                             daTimer.Fill(timing);
                             dataGridTiming.DataSource = timing;
                             dataGridTiming.AllowUserToAddRows = false;
+                            dataGridTiming.Columns[0].ReadOnly = true;
                         }
                     }
                     catch (Exception e) { MessageBox.Show(this, e.Message); }
@@ -192,12 +199,24 @@ namespace TimingForToby
             }
             //note! this is different frrom else, we want this to run so long as not null (should be based on above)
             if (TimingDevice != null)
-                TimingDevice.StartRace();
+            {
+                TimingDevice.StartRace(GetClockTime());
+                ClockEditable(false);
+            }
+            KeybordTimer keybord = TimingDevice as KeybordTimer;
+            if(keybord!=null)
+            {
+                //this should refresh the clock that the user sees
+                ClockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(keybord.GetCurrentTime()); });
+                ClockRefreshTimer.Enabled = true;
+            }
         }
         private void StopRace(object sender, EventArgs e)
         {
             if(TimingDevice!=null)
                 TimingDevice.StopRace();
+            ClockEditable(true);
+            ClockRefreshTimer.Enabled=false;
         }
         //this handles the filters.  finds the related file and builds filter
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -286,6 +305,14 @@ namespace TimingForToby
             TimingDevice.SetRaceID(raceData.RaceID);
             //listen for change to update Table
             TimingDevice.addListener(this);
+            //if we are using the keyboard, report the time
+            var keybord=timeDevice as KeybordTimer;
+            if (keybord!=null)
+            {
+                panelClock.Visible = true;
+            }
+            else
+                panelClock.Visible = false;
         }
 
         private void SelectCom(object sender, EventArgs e)
@@ -324,5 +351,45 @@ namespace TimingForToby
         {
             TimingCellBeingEdited = true;
         }
+        //sets clock editability
+        public void ClockEditable(bool edit)
+        {
+            textBoxHours.Enabled = edit;
+            textBoxMin.Enabled = edit;
+            textBoxSeconds.Enabled = edit;
+        }
+
+        delegate void ClockCallBack(TimeSpan ts);
+        public void SetClock(TimeSpan ts)
+        {
+            //cross threading non-sense
+            if (textBoxHours.InvokeRequired || textBoxMin.InvokeRequired || textBoxSeconds.InvokeRequired)
+            {
+                ClockCallBack d = new ClockCallBack(SetClock);
+                this.Invoke(d, new object[] { ts });
+            }
+            textBoxHours.Text = ts.Hours.ToString();
+            textBoxMin.Text = ts.Minutes.ToString();
+            textBoxSeconds.Text = ts.Seconds.ToString();
+        }
+        //returns value of clock as timespan, 0 if improper value
+        public TimeSpan GetClockTime()
+        {
+            string errorString="";
+            int hh,mm,ss;
+            if (!int.TryParse(textBoxHours.Text, out hh))
+                errorString += "Hours not proper value\n";
+            if (!int.TryParse(textBoxMin.Text, out mm))
+                errorString += "Hours not proper value\n";
+            if (!int.TryParse(textBoxSeconds.Text, out ss))
+                errorString += "Hours not proper value\n";
+            if(errorString!="")
+            {
+                MessageBox.Show(errorString);
+                return TimeSpan.Zero;
+            }
+            return new TimeSpan(hh, mm, ss);
+        }
+
     }
 }

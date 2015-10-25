@@ -14,11 +14,10 @@ namespace TimingForToby
 {
     public class KeybordTimer : TimingDevice
     {
-        private Stopwatch timer;
+        private TobyTimer timer;
 
         public KeybordTimer()
         {
-            timer = new Stopwatch();
         }
         public KeybordTimer(MainWindow window)
             : this()
@@ -30,10 +29,10 @@ namespace TimingForToby
         {    
             if (e.KeyChar == ' ')
             {
-                if (timer.IsRunning)
+                if (timer!=null)
                 {
-                    //MessageBox.Show(timer.Elapsed.ToString(@"hh\:mm\:ss\.ffff"));
-                    this.RecordTime("DEFAULT", timer.Elapsed.ToString(@"hh\:mm\:ss\.ffff"));
+                    //MessageBox.Show(timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
+                    this.RecordTime("DEFAULT", timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
                 }
                 else
                     MessageBox.Show("Race Has Not Started");
@@ -49,17 +48,32 @@ namespace TimingForToby
         
         public override void StartRace()
         {
-            timer.Start();
-            
+            if(timer==null)
+                timer=new TobyTimer();            
         }
 
         public override void StopRace()
         {
-            timer.Stop();
+            timer=null;
+        }
+        public override void StartRace(TimeSpan ts)
+        {
+            StartRace();
+            OffsetTimer(ts);            
         }
         public override void ClearTimer()
         {
             timer.Reset();
+        }
+        public TimeSpan GetCurrentTime()
+        {
+            if (timer == null)
+                return new TimeSpan(0, 0, 0);
+            return timer.Elapsed();
+        }
+        public override void OffsetTimer(TimeSpan ts)
+        {
+            timer.OffSetTime(ts);
         }
     }
 }

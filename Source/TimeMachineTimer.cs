@@ -118,20 +118,25 @@ namespace TimingForToby
         {
             return (c == 1 || c == 4 || c == 20 || c == 23);
         }
-
+        //I know, this is kinda bad, but I didnt figure out how to send commands so is has to do for now
         public override void StartRace()
         {
-            throw new NotImplementedException();
         }
 
         public override void StopRace()
         {
-            throw new NotImplementedException();
         }
 
         public override void ClearTimer()
         {
-            throw new NotImplementedException();
+        }
+
+        public override void OffsetTimer(TimeSpan ts)
+        {
+        }
+
+        public override void StartRace(TimeSpan ts)
+        {
         }
     }
 }
