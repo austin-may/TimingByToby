@@ -137,6 +137,12 @@ namespace TimingForToby
 
         public override void StartRace(TimeSpan ts)
         {
+            StartRace();
+        }
+
+        public override TimeSpan GetCurrentTime()
+        {
+            return TimeSpan.Zero;
         }
     }
 }

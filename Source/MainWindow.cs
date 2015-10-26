@@ -91,24 +91,9 @@ namespace TimingForToby
             }
         }
         }
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
+        private void BuildRunnersTable(){
             var runners = new DataTable();
-            var results = new DataTable();
             this.dataGridRunners.AllowUserToAddRows = true;
-            //look in the Filters folder (should be in the same directory, grab all xml files and list them in the checkbox.
-            try {
-                checkedListBox1.Items.Clear();
-                foreach (string file in Directory.GetFiles(CommonSQL.filterFolder, "*.XML"))
-                {
-                    int index=file.LastIndexOf('\\');
-                    //the length is -5 (1 for general overflow, 4 for ".xml"
-                    checkedListBox1.Items.Add(file.Substring(index+1,file.Length-index-5));
-                }
-            }
-            catch (Exception filterError) {
-                MessageBox.Show(filterError.Message);
-            }
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -132,10 +117,33 @@ namespace TimingForToby
                 {
                     conn.Close();
                 }
-                TimingTableLoad();
             }
             dataGridRunners.AllowUserToAddRows = false;
             dataGridRunners.DataSource = runners;
+        }
+        private void BuildFilters()
+        {
+            //look in the Filters folder (should be in the same directory, grab all xml files and list them in the checkbox.
+            try
+            {
+                checkedListBox1.Items.Clear();
+                foreach (string file in Directory.GetFiles(CommonSQL.filterFolder, "*.XML"))
+                {
+                    int index = file.LastIndexOf('\\');
+                    //the length is -5 (1 for general overflow, 4 for ".xml"
+                    checkedListBox1.Items.Add(file.Substring(index + 1, file.Length - index - 5));
+                }
+            }
+            catch (Exception filterError)
+            {
+                MessageBox.Show(filterError.Message);
+            }
+        }
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            BuildFilters();
+            BuildRunnersTable();
+            TimingTableLoad();            
         }
 
         public void reload()
@@ -174,42 +182,45 @@ namespace TimingForToby
                 this.SetTimingDevice(new KeybordTimer(this));
             }
         }
-
-        private void MainWindow_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            DialogResult results = MessageBox.Show("Key Selected");   
-        }
+        //what happens when the start race button is pressed
         private void StartRace(object sender, EventArgs e)
         {
-            if (TimingDevice == null) {
-                RadioButton rb = groupBox1.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
-                switch(rb.Name)
-                {
-                    case "radioButtonKB":
-                        this.SetTimingDevice(new KeybordTimer(this));
-                        break;
-                    case "radioButtonTM":
-                        if(comPortComboBox.SelectedItem!=null)
-                            MessageBox.Show("Create Time Machine Timer");
-                        break;
-                    default:
-                        TimingDevice = new KeybordTimer(this);
-                        break;
+            //ensure we have a timing devices, one is set by default
+            if (TimingDevice == null)
+            {
+                RadioButton rb = gbTimerOptions.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
+                if (rb != null) {
+                    switch(rb.Name)
+                    {
+                        case "radioButtonKB":
+                            this.SetTimingDevice(new KeybordTimer(this));
+                            break;
+                        case "radioButtonTM":
+                            if (comPortComboBox.SelectedItem != null)
+                                ValidateTimeMachine();
+                            break;
+                        default:
+                            TimingDevice = new KeybordTimer(this);
+                            break;
+                    }
                 }
             }
-            //note! this is different frrom else, we want this to run so long as not null (should be based on above)
+            //note! this is different from else, we want this to run so long as not null (should be based on above)
             if (TimingDevice != null)
             {
                 TimingDevice.StartRace(GetClockTime());
                 ClockEditable(false);
             }
-            KeybordTimer keybord = TimingDevice as KeybordTimer;
-            if(keybord!=null)
+            //the clock should run for timers (except for the time machine becouse it is an external clock and we cant pull this data...)
+            if(!radioButtonTM.Checked)
             {
                 //this should refresh the clock that the user sees
-                ClockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(keybord.GetCurrentTime()); });
+                ClockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(TimingDevice.GetCurrentTime()); });
                 ClockRefreshTimer.Enabled = true;
             }
+            //disable Start buton, enable stop
+            btnStartRace.Enabled = false;
+            btnEndRace.Enabled = true;
         }
         private void StopRace(object sender, EventArgs e)
         {
@@ -217,6 +228,10 @@ namespace TimingForToby
                 TimingDevice.StopRace();
             ClockEditable(true);
             ClockRefreshTimer.Enabled=false;
+
+            //disable Start buton, enable stop
+            btnStartRace.Enabled = true;
+            btnEndRace.Enabled = false;
         }
         //this handles the filters.  finds the related file and builds filter
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -242,7 +257,7 @@ namespace TimingForToby
             buildResults(filters);
         }
         //highlight duplicated bibs
-        private void HilightTimingErrors()
+        private void HighlightTimingErrors()
         {
             //find bad data in the table
             var test = CommonSQL.FindBadBibs(raceData.RaceID);
@@ -268,7 +283,7 @@ namespace TimingForToby
         {
             TimingTableLoad();
             buildResults(filters);
-            HilightTimingErrors();
+            HighlightTimingErrors();
         }
         //validateds and updates changes in the timing table
         private void TimingTableCellChanging(object sender, DataGridViewCellValidatingEventArgs e)
@@ -289,13 +304,25 @@ namespace TimingForToby
             }
         }
 
+
+        delegate void OnTimeCallBack();
         //to be called everytime an time is added (timing Device action)
         public void OnTime()
         {
+            //cross threading non-sense
+            if (dataGridTiming.InvokeRequired)
+            {
+                try
+                {
+                    OnTimeCallBack d = new OnTimeCallBack(OnTime);
+                    this.Invoke(d);
+                }
+                catch (ObjectDisposedException ode) { }//saw this when app was closed without ending race first
+                catch (Exception e) { MessageBox.Show(e.Message); }
+            }
             TimingTableLoad();
+            HighlightTimingErrors();
             dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
-            HilightTimingErrors();
-            //dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
         }
         //takes timing device and sets it to be able to be used
         private void SetTimingDevice(TimingDevice timeDevice)
@@ -306,9 +333,8 @@ namespace TimingForToby
             TimingDevice.SetRaceID(raceData.RaceID);
             //listen for change to update Table
             TimingDevice.addListener(this);
-            //if we are using the keyboard, report the time
-            var keybord=timeDevice as KeybordTimer;
-            if (keybord!=null)
+            //if we are using a timer with internal clock, report the time
+            if (!(TimingDevice is TimeMachineTimer))
             {
                 panelClock.Visible = true;
         }
@@ -316,35 +342,33 @@ namespace TimingForToby
                 panelClock.Visible = false;
         }
 
-        private void SelectCom(object sender, EventArgs e)
-        {
-
-        }
-
         private void ComDropDown(object sender, EventArgs e)
         {
-            PopulateCom();
-        }
-        //get Com ports and populate select box
-        private void PopulateCom()
-        {
+            //get Com ports and populate select box
             comPortComboBox.Items.Clear();
             comPortComboBox.Items.AddRange(SerialPort.GetPortNames());
         }
         //the time machine can and should only be used if the com port is also selected
-        private void ValidateTimeMachine(object sender, EventArgs e)
+        private void radioButtonTM_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonTM.Checked)
             {
-                if (comPortComboBox.SelectedItem==null || comPortComboBox.SelectedItem.ToString() == "")
-                {
-                    radioButtonTM.Checked = false;
-                    MessageBox.Show("No COM Port Selected");
-                }
-                else
-                {
-                    this.SetTimingDevice(new TimeMachineTimer(comPortComboBox.SelectedItem.ToString()));
-                }
+                ValidateTimeMachine();
+                //the start and end race buttons are basicaly meaningless....
+                btnStartRace.Enabled = false;
+                btnEndRace.Enabled = false;
+            }
+        }
+        private void ValidateTimeMachine()
+        {
+            if (comPortComboBox.SelectedItem == null || comPortComboBox.SelectedItem.ToString() == "")
+            {
+                radioButtonTM.Checked = false;
+                MessageBox.Show("No COM Port Selected");
+            }
+            else
+            {
+                this.SetTimingDevice(new TimeMachineTimer(comPortComboBox.SelectedItem.ToString()));
             }
         }
         //there is a cell in the timeing table that is being changed, toggle flag
@@ -366,12 +390,20 @@ namespace TimingForToby
             //cross threading non-sense
             if (textBoxHours.InvokeRequired || textBoxMin.InvokeRequired || textBoxSeconds.InvokeRequired)
             {
-                ClockCallBack d = new ClockCallBack(SetClock);
-                this.Invoke(d, new object[] { ts });
+                try
+                {
+                    ClockCallBack d = new ClockCallBack(SetClock);
+                    this.Invoke(d, new object[] { ts });
+                }
+                catch (ObjectDisposedException ode) { }//saw this when app was closed without ending race first
+                catch (Exception e) { MessageBox.Show(e.Message); }
             }
-            textBoxHours.Text = ts.Hours.ToString();
-            textBoxMin.Text = ts.Minutes.ToString();
-            textBoxSeconds.Text = ts.Seconds.ToString();
+            else
+            {
+                textBoxHours.Text = ts.Hours.ToString();
+                textBoxMin.Text = ts.Minutes.ToString();
+                textBoxSeconds.Text = ts.Seconds.ToString();
+            }
         }
         //returns value of clock as timespan, 0 if improper value
         public TimeSpan GetClockTime()

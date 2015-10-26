@@ -65,7 +65,7 @@ namespace TimingForToby
         {
             timer.Reset();
         }
-        public TimeSpan GetCurrentTime()
+        public override TimeSpan GetCurrentTime()
         {
             if (timer == null)
                 return new TimeSpan(0, 0, 0);

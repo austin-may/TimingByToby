@@ -38,7 +38,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabTiming = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panelClock = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBoxSeconds = new System.Windows.Forms.TextBox();
+            this.textBoxMin = new System.Windows.Forms.TextBox();
+            this.textBoxHours = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.gbTimerOptions = new System.Windows.Forms.GroupBox();
             this.radioButtonKB = new System.Windows.Forms.RadioButton();
             this.radioButtonTM = new System.Windows.Forms.RadioButton();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -50,22 +57,15 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panelClock = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBoxHours = new System.Windows.Forms.TextBox();
-            this.textBoxMin = new System.Windows.Forms.TextBox();
-            this.textBoxSeconds = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabRunners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRunners)).BeginInit();
             this.tabResults.SuspendLayout();
             this.tabTiming.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.panelClock.SuspendLayout();
+            this.gbTimerOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTiming)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            this.panelClock.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -188,7 +188,7 @@
             // tabTiming
             // 
             this.tabTiming.Controls.Add(this.panelClock);
-            this.tabTiming.Controls.Add(this.groupBox1);
+            this.tabTiming.Controls.Add(this.gbTimerOptions);
             this.tabTiming.Controls.Add(this.btnEndRace);
             this.tabTiming.Controls.Add(this.btnStartRace);
             this.tabTiming.Controls.Add(this.label2);
@@ -200,18 +200,83 @@
             this.tabTiming.Text = "Timing";
             this.tabTiming.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // panelClock
             // 
-            this.groupBox1.Controls.Add(this.radioButtonKB);
-            this.groupBox1.Controls.Add(this.radioButtonTM);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.comPortComboBox);
-            this.groupBox1.Location = new System.Drawing.Point(728, 68);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(225, 100);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Timing Method";
+            this.panelClock.Controls.Add(this.label5);
+            this.panelClock.Controls.Add(this.textBoxSeconds);
+            this.panelClock.Controls.Add(this.textBoxMin);
+            this.panelClock.Controls.Add(this.textBoxHours);
+            this.panelClock.Controls.Add(this.label4);
+            this.panelClock.Controls.Add(this.label3);
+            this.panelClock.Location = new System.Drawing.Point(741, 175);
+            this.panelClock.Name = "panelClock";
+            this.panelClock.Size = new System.Drawing.Size(200, 100);
+            this.panelClock.TabIndex = 9;
+            this.panelClock.Visible = false;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(78, 28);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(33, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Timer";
+            // 
+            // textBoxSeconds
+            // 
+            this.textBoxSeconds.Location = new System.Drawing.Point(118, 61);
+            this.textBoxSeconds.MaxLength = 2;
+            this.textBoxSeconds.Name = "textBoxSeconds";
+            this.textBoxSeconds.Size = new System.Drawing.Size(28, 20);
+            this.textBoxSeconds.TabIndex = 11;
+            // 
+            // textBoxMin
+            // 
+            this.textBoxMin.Location = new System.Drawing.Point(81, 61);
+            this.textBoxMin.MaxLength = 2;
+            this.textBoxMin.Name = "textBoxMin";
+            this.textBoxMin.Size = new System.Drawing.Size(30, 20);
+            this.textBoxMin.TabIndex = 10;
+            // 
+            // textBoxHours
+            // 
+            this.textBoxHours.Location = new System.Drawing.Point(47, 61);
+            this.textBoxHours.MaxLength = 2;
+            this.textBoxHours.Name = "textBoxHours";
+            this.textBoxHours.Size = new System.Drawing.Size(26, 20);
+            this.textBoxHours.TabIndex = 10;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(110, 64);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(10, 13);
+            this.label4.TabIndex = 1;
+            this.label4.Text = ":";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(73, 64);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(10, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = ":";
+            // 
+            // gbTimerOptions
+            // 
+            this.gbTimerOptions.Controls.Add(this.radioButtonKB);
+            this.gbTimerOptions.Controls.Add(this.radioButtonTM);
+            this.gbTimerOptions.Controls.Add(this.textBox1);
+            this.gbTimerOptions.Controls.Add(this.comPortComboBox);
+            this.gbTimerOptions.Location = new System.Drawing.Point(728, 68);
+            this.gbTimerOptions.Name = "gbTimerOptions";
+            this.gbTimerOptions.Size = new System.Drawing.Size(225, 100);
+            this.gbTimerOptions.TabIndex = 8;
+            this.gbTimerOptions.TabStop = false;
+            this.gbTimerOptions.Text = "Timing Method";
             // 
             // radioButtonKB
             // 
@@ -235,7 +300,7 @@
             this.radioButtonTM.TabIndex = 2;
             this.radioButtonTM.Text = "Time Machine";
             this.radioButtonTM.UseVisualStyleBackColor = true;
-            this.radioButtonTM.CheckedChanged += new System.EventHandler(this.ValidateTimeMachine);
+            this.radioButtonTM.CheckedChanged += new System.EventHandler(this.radioButtonTM_CheckedChanged);
             // 
             // textBox1
             // 
@@ -252,11 +317,11 @@
             this.comPortComboBox.Size = new System.Drawing.Size(107, 21);
             this.comPortComboBox.TabIndex = 3;
             this.comPortComboBox.DropDown += new System.EventHandler(this.ComDropDown);
-            this.comPortComboBox.SelectedIndexChanged += new System.EventHandler(this.SelectCom);
             // 
             // btnEndRace
             // 
             this.btnEndRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEndRace.Enabled = false;
             this.btnEndRace.Location = new System.Drawing.Point(894, 399);
             this.btnEndRace.Name = "btnEndRace";
             this.btnEndRace.Size = new System.Drawing.Size(75, 23);
@@ -322,71 +387,6 @@
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
             this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.mainMenueToolStripMenuItem_Click);
             // 
-            // panelClock
-            // 
-            this.panelClock.Controls.Add(this.label5);
-            this.panelClock.Controls.Add(this.textBoxSeconds);
-            this.panelClock.Controls.Add(this.textBoxMin);
-            this.panelClock.Controls.Add(this.textBoxHours);
-            this.panelClock.Controls.Add(this.label4);
-            this.panelClock.Controls.Add(this.label3);
-            this.panelClock.Location = new System.Drawing.Point(741, 175);
-            this.panelClock.Name = "panelClock";
-            this.panelClock.Size = new System.Drawing.Size(200, 100);
-            this.panelClock.TabIndex = 9;
-            this.panelClock.Visible = false;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(73, 64);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(10, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = ":";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(110, 64);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(10, 13);
-            this.label4.TabIndex = 1;
-            this.label4.Text = ":";
-            // 
-            // textBoxHours
-            // 
-            this.textBoxHours.Location = new System.Drawing.Point(47, 61);
-            this.textBoxHours.MaxLength = 2;
-            this.textBoxHours.Name = "textBoxHours";
-            this.textBoxHours.Size = new System.Drawing.Size(26, 20);
-            this.textBoxHours.TabIndex = 10;
-            // 
-            // textBoxMin
-            // 
-            this.textBoxMin.Location = new System.Drawing.Point(81, 61);
-            this.textBoxMin.MaxLength = 2;
-            this.textBoxMin.Name = "textBoxMin";
-            this.textBoxMin.Size = new System.Drawing.Size(30, 20);
-            this.textBoxMin.TabIndex = 10;
-            // 
-            // textBoxSeconds
-            // 
-            this.textBoxSeconds.Location = new System.Drawing.Point(118, 61);
-            this.textBoxSeconds.MaxLength = 2;
-            this.textBoxSeconds.Name = "textBoxSeconds";
-            this.textBoxSeconds.Size = new System.Drawing.Size(28, 20);
-            this.textBoxSeconds.TabIndex = 11;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(78, 28);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(33, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Timer";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -407,13 +407,13 @@
             this.tabResults.PerformLayout();
             this.tabTiming.ResumeLayout(false);
             this.tabTiming.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.panelClock.ResumeLayout(false);
+            this.panelClock.PerformLayout();
+            this.gbTimerOptions.ResumeLayout(false);
+            this.gbTimerOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTiming)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.panelClock.ResumeLayout(false);
-            this.panelClock.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,7 +442,7 @@
         private System.Windows.Forms.RadioButton radioButtonKB;
         private System.Windows.Forms.Button btnEndRace;
         private System.Windows.Forms.Button btnStartRace;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbTimerOptions;
         private System.Windows.Forms.TableLayoutPanel resultTable;
         private System.Windows.Forms.Panel panelClock;
         private System.Windows.Forms.TextBox textBoxSeconds;

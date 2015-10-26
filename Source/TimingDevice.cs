@@ -14,6 +14,7 @@ namespace TimingForToby
         public abstract void StartRace(TimeSpan ts);
         public abstract void StopRace();
         public abstract void ClearTimer();
+        public abstract TimeSpan GetCurrentTime();
         public abstract void OffsetTimer(TimeSpan ts);
         public void SetRaceID(int id) { _RaceID=id;}
         public List<Tuple<TimeSpan, String>> buffer= new List<Tuple<TimeSpan,string>>();

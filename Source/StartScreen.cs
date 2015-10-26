@@ -155,8 +155,12 @@ namespace TimingForToby
                             progressBar1.Value = report.PercentComplete;
                             progressBar1.Update();
                         };
+                        //keep user from messing things up
+                        LockGUI(true);
                         //waits for runners to be inserted asynchrously
                         await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
+                        //re-enable user interaction
+                        LockGUI(false);
                     }
                     lblProgress.Text = "Import complete for " + race;
                     importProgressPanel.Visible = false;
@@ -175,7 +179,13 @@ namespace TimingForToby
             {
                 this.UseWaitCursor = false;
             }
+        }
 
+        private void LockGUI(bool lockGui)
+        {
+            comboBox1.Enabled = !lockGui;
+            btnRace.Enabled = !lockGui;
+            btnImport.Enabled = !lockGui;
         }
 
 
