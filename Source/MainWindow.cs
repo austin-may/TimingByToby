@@ -103,9 +103,9 @@ namespace TimingForToby
 
                          
                         //Testing results
-                        cmd.CommandText = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults";
+                        /*cmd.CommandText = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults";
                         var daResults = new SQLiteDataAdapter(cmd);
-                        daResults.Fill(results);
+                        daResults.Fill(results);*/
                     }
 
                 }
@@ -221,14 +221,14 @@ namespace TimingForToby
             if (test.Count > 0)
             {
                 var vivibleRowsCount = dataGridTiming.DisplayedRowCount(true);
-                var firstDisplayedRowIndex = dataGridTiming.FirstDisplayedCell.RowIndex;
-                var lastvibileRowIndex = (firstDisplayedRowIndex + vivibleRowsCount) - 1;
+                var firstDisplayedRowIndex = 0;//dataGridTiming.FirstDisplayedCell.RowIndex;
+                var lastvibileRowIndex = dataGridTiming.RowCount-1;//(firstDisplayedRowIndex + vivibleRowsCount) - 1;
                 for (int rowIndex = firstDisplayedRowIndex; rowIndex <= lastvibileRowIndex; rowIndex++)
                 {
                     var cells = dataGridTiming.Rows[rowIndex].Cells;
                     foreach (DataGridViewCell cell in cells)
                     {
-                        if (cell.Displayed && test.Contains(cell.Value.ToString()))
+                        if (test.Contains(cell.Value.ToString()))
                         {
                             cell.Style.BackColor = Color.Red;
                         }
@@ -266,8 +266,8 @@ namespace TimingForToby
         public void OnTime()
         {
             TimingTableLoad();
-            HilightTimingErrors();
             dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
+            HilightTimingErrors();
         }
 
         private void SetTimingDevice(TimingDevice timeDevice)

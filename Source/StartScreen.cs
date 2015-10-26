@@ -102,6 +102,7 @@ namespace TimingForToby
             try {
                 Cursor.Current = Cursors.WaitCursor;
                 lblProgress.Text = "Scanning Excel document...";
+                importProgressPanel.Visible = true;
                 var excelApp = new Excel.Application();
                 var workbook = excelApp.Workbooks.Open(filename);
                 if(workbook.Worksheets.Count>0)
@@ -157,6 +158,8 @@ namespace TimingForToby
                         await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
                     }
                     lblProgress.Text = "Import complete for " + race;
+                    importProgressPanel.Visible = false;
+                    progressBar1.Value = 0;
                     CommonSQL.BackupDB();
                 }
                 else
