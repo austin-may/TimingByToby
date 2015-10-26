@@ -99,6 +99,7 @@ namespace TimingForToby
         private async void AddUsersToRace(String filename)
         {
             int curRow = 1;
+            LogFile logErrors = new LogFile();
             try {
                 Cursor.Current = Cursors.WaitCursor;
                 lblProgress.Text = "Scanning Excel document...";
@@ -136,9 +137,9 @@ namespace TimingForToby
                             }
                             else
                             {
-                              int duplicateBib = 2;
-                              dictionary.TryGetValue(BibID, out duplicateBib);
-                              duplicateBibsFound = true;
+                                duplicateBibsFound = true;
+                                string date = DateTime.Now.ToString(" M-d-yyyy (hh:mm)");
+                                logErrors.WriteToErrorLog("Duplicate bib #" + BibID + " found." + date + "\r\n");
                             }
                             Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
                             Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
@@ -176,6 +177,8 @@ namespace TimingForToby
             }
 
         }
+
+
 
       }
 }

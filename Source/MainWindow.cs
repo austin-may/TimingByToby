@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using System.IO;
+using System.IO.Ports;
+using System.Timers;
 
 namespace TimingForToby
 {
@@ -17,6 +19,8 @@ namespace TimingForToby
         private TimingDevice TimingDevice;
         private RaceData raceData;
         private List<Filter> filters = new List<Filter>();
+        private bool TimingCellBeingEdited = false;
+        private System.Timers.Timer ClockRefreshTimer = new System.Timers.Timer(500);
         public MainWindow()
         {
             InitializeComponent();            
@@ -25,11 +29,16 @@ namespace TimingForToby
         {
             raceData=data;
             InitializeComponent();
+            //becouse the default is to start with the Keyboard Timer
+            //set clock to inital default of 0
+            SetClock(new TimeSpan(0,0,0));
+            panelClock.Visible = true;
         }
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
+        //builds and populates the results table
         private void buildResults(List<Filter> filters)
         {
             resultTable.Controls.Clear();
@@ -42,8 +51,18 @@ namespace TimingForToby
                 resultTable.Controls.Add(filters[i].GetDataTable(), i, 1);
             }
         }
+        //builds and populates the timing table
         private void TimingTableLoad()
         {
+            if (InvokeRequired)
+            {
+                MethodInvoker method = new MethodInvoker(TimingTableLoad);
+                Invoke(method);
+                return;
+            }
+            //if the cells in the timing table are not currently being edited
+            if (!TimingCellBeingEdited)
+            {
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -61,6 +80,7 @@ namespace TimingForToby
                         daTimer.Fill(timing);
                         dataGridTiming.DataSource = timing;
                         dataGridTiming.AllowUserToAddRows = false;
+                            dataGridTiming.Columns[0].ReadOnly = true;
                     }
                 }
                 catch (Exception e) { MessageBox.Show(this, e.Message); }
@@ -69,6 +89,7 @@ namespace TimingForToby
                     conn.Close();
                 }
             }
+        }
         }
         private void MainWindow_Load(object sender, EventArgs e)
         {
@@ -100,12 +121,6 @@ namespace TimingForToby
                         cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
                         var daRunners = new SQLiteDataAdapter(cmd);
                         daRunners.Fill(runners);
-
-                         
-                        //Testing results
-                        /*cmd.CommandText = "select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults";
-                        var daResults = new SQLiteDataAdapter(cmd);
-                        daResults.Fill(results);*/
                     }
 
                 }
@@ -127,7 +142,7 @@ namespace TimingForToby
         {
             MainWindow_Load(null, null);
         }
-        
+        //adding user button
         private void btnAddRunner_Click(object sender, EventArgs e)
         {
             var user = new NewUserWindow(raceData, this);
@@ -142,7 +157,7 @@ namespace TimingForToby
                 this.Dispose();
             }
         }
-
+        //temp... this is to ensure that the parent window (StartScreen) is also closed
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (raceData.StartWindow != null)
@@ -151,7 +166,7 @@ namespace TimingForToby
                 raceData.StartWindow.Close();
             }
         }
-
+        //creates and assigns keybord timer when the kebord radio button is selected
         private void radioButtonKB_CheckedChanged(object sender, EventArgs e)
         {
             if(radioButtonKB.Checked)
@@ -174,7 +189,8 @@ namespace TimingForToby
                         this.SetTimingDevice(new KeybordTimer(this));
                         break;
                     case "radioButtonTM":
-                        TimingDevice = new KeybordTimer();
+                        if(comPortComboBox.SelectedItem!=null)
+                            MessageBox.Show("Create Time Machine Timer");
                         break;
                     default:
                         TimingDevice = new KeybordTimer(this);
@@ -183,14 +199,26 @@ namespace TimingForToby
             }
             //note! this is different frrom else, we want this to run so long as not null (should be based on above)
             if (TimingDevice != null)
-                TimingDevice.StartRace();
+            {
+                TimingDevice.StartRace(GetClockTime());
+                ClockEditable(false);
+            }
+            KeybordTimer keybord = TimingDevice as KeybordTimer;
+            if(keybord!=null)
+            {
+                //this should refresh the clock that the user sees
+                ClockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(keybord.GetCurrentTime()); });
+                ClockRefreshTimer.Enabled = true;
+            }
         }
         private void StopRace(object sender, EventArgs e)
         {
             if(TimingDevice!=null)
                 TimingDevice.StopRace();
+            ClockEditable(true);
+            ClockRefreshTimer.Enabled=false;
         }
-
+        //this handles the filters.  finds the related file and builds filter
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             filters.Clear();
@@ -213,6 +241,7 @@ namespace TimingForToby
             //build filters
             buildResults(filters);
         }
+        //highlight duplicated bibs
         private void HilightTimingErrors()
         {
             //find bad data in the table
@@ -220,10 +249,7 @@ namespace TimingForToby
             //look through visable cells
             if (test.Count > 0)
             {
-                var vivibleRowsCount = dataGridTiming.DisplayedRowCount(true);
-                var firstDisplayedRowIndex = 0;//dataGridTiming.FirstDisplayedCell.RowIndex;
-                var lastvibileRowIndex = dataGridTiming.RowCount-1;//(firstDisplayedRowIndex + vivibleRowsCount) - 1;
-                for (int rowIndex = firstDisplayedRowIndex; rowIndex <= lastvibileRowIndex; rowIndex++)
+                for (int rowIndex = 0; rowIndex <= dataGridTiming.RowCount-1; rowIndex++)
                 {
                     var cells = dataGridTiming.Rows[rowIndex].Cells;
                     foreach (DataGridViewCell cell in cells)
@@ -237,18 +263,19 @@ namespace TimingForToby
             }
 
         }
-
+        //runs after a cell has been updated in the timing table
         private void TimingTableCellChange(object sender, DataGridViewCellEventArgs e)
         {
             TimingTableLoad();
             buildResults(filters);
             HilightTimingErrors();
         }
-
+        //validateds and updates changes in the timing table
         private void TimingTableCellChanging(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var oldValue = dataGridTiming[e.ColumnIndex, e.RowIndex].Value.ToString();
             var newValue = e.FormattedValue.ToString();
+            TimingCellBeingEdited = false;
             if (oldValue != newValue)
             {
                if (e.ColumnIndex == 1)//if we are changing the bib
@@ -262,14 +289,15 @@ namespace TimingForToby
             }
         }
 
-
+        //to be called everytime an time is added (timing Device action)
         public void OnTime()
         {
             TimingTableLoad();
             dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
             HilightTimingErrors();
+            //dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
         }
-
+        //takes timing device and sets it to be able to be used
         private void SetTimingDevice(TimingDevice timeDevice)
         {
             //set TimingDevice
@@ -278,9 +306,91 @@ namespace TimingForToby
             TimingDevice.SetRaceID(raceData.RaceID);
             //listen for change to update Table
             TimingDevice.addListener(this);
+            //if we are using the keyboard, report the time
+            var keybord=timeDevice as KeybordTimer;
+            if (keybord!=null)
+            {
+                panelClock.Visible = true;
+        }
+            else
+                panelClock.Visible = false;
         }
 
+        private void SelectCom(object sender, EventArgs e)
+        {
 
+        }
+
+        private void ComDropDown(object sender, EventArgs e)
+        {
+            PopulateCom();
+        }
+        //get Com ports and populate select box
+        private void PopulateCom()
+        {
+            comPortComboBox.Items.Clear();
+            comPortComboBox.Items.AddRange(SerialPort.GetPortNames());
+        }
+        //the time machine can and should only be used if the com port is also selected
+        private void ValidateTimeMachine(object sender, EventArgs e)
+        {
+            if (radioButtonTM.Checked)
+            {
+                if (comPortComboBox.SelectedItem==null || comPortComboBox.SelectedItem.ToString() == "")
+                {
+                    radioButtonTM.Checked = false;
+                    MessageBox.Show("No COM Port Selected");
+                }
+                else
+                {
+                    this.SetTimingDevice(new TimeMachineTimer(comPortComboBox.SelectedItem.ToString()));
+                }
+            }
+        }
+        //there is a cell in the timeing table that is being changed, toggle flag
+        private void CellBeingEdited(object sender, EventArgs e)
+        {
+            TimingCellBeingEdited = true;
+        }
+        //sets clock editability
+        public void ClockEditable(bool edit)
+        {
+            textBoxHours.Enabled = edit;
+            textBoxMin.Enabled = edit;
+            textBoxSeconds.Enabled = edit;
+        }
+
+        delegate void ClockCallBack(TimeSpan ts);
+        public void SetClock(TimeSpan ts)
+        {
+            //cross threading non-sense
+            if (textBoxHours.InvokeRequired || textBoxMin.InvokeRequired || textBoxSeconds.InvokeRequired)
+            {
+                ClockCallBack d = new ClockCallBack(SetClock);
+                this.Invoke(d, new object[] { ts });
+            }
+            textBoxHours.Text = ts.Hours.ToString();
+            textBoxMin.Text = ts.Minutes.ToString();
+            textBoxSeconds.Text = ts.Seconds.ToString();
+        }
+        //returns value of clock as timespan, 0 if improper value
+        public TimeSpan GetClockTime()
+        {
+            string errorString="";
+            int hh,mm,ss;
+            if (!int.TryParse(textBoxHours.Text, out hh))
+                errorString += "Hours not proper value\n";
+            if (!int.TryParse(textBoxMin.Text, out mm))
+                errorString += "Hours not proper value\n";
+            if (!int.TryParse(textBoxSeconds.Text, out ss))
+                errorString += "Hours not proper value\n";
+            if(errorString!="")
+            {
+                MessageBox.Show(errorString);
+                return TimeSpan.Zero;
+            }
+            return new TimeSpan(hh, mm, ss);
+        }
 
     }
 }
