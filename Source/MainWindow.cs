@@ -11,6 +11,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.IO.Ports;
 using System.Timers;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace TimingForToby
 {
@@ -33,10 +34,6 @@ namespace TimingForToby
             //set clock to inital default of 0
             SetClock(new TimeSpan(0,0,0));
             panelClock.Visible = true;
-        }
-
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
         //builds and populates the results table
         private void buildResults(List<Filter> filters)
@@ -424,5 +421,67 @@ namespace TimingForToby
             return new TimeSpan(hh, mm, ss);
         }
 
+        private void ExportResults(object sender, EventArgs e)
+        {
+            if (filters.Count == 0)
+            {
+                MessageBox.Show("No Results to export");
+            }
+            else
+            {
+                //save dialog
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Excel File|*.xlsx";//type is excel
+                saveFileDialog.FileName = "Results_" + raceData.RaceName;//default name of file
+                DialogResult result = saveFileDialog.ShowDialog(); // Show the dialog.
+                var xlApp = new Microsoft.Office.Interop.Excel.Application();
+
+
+                Excel.Workbook xlWorkBook;
+                Excel.Worksheet xlWorkSheet;
+                object misValue = System.Reflection.Missing.Value;
+
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+                
+                for (int f=0; f<filters.Count;f++)
+                {
+                    Filter filter = filters[f];
+                    xlWorkSheet.Cells[1, f*3+2] = filter.Name;
+                    var table = filter.GetDataTable();
+                    foreach (var row in table.Rows)
+                    {
+
+                    }
+                }
+
+                xlWorkBook.SaveAs(saveFileDialog.FileName);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                releaseObject(xlWorkSheet);
+                releaseObject(xlWorkBook);
+                releaseObject(xlApp);
+
+                MessageBox.Show("Excel file created");
+            }
+        }
+        private void releaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                obj = null;
+                MessageBox.Show("Exception Occured while releasing object " + ex.ToString());
+            }
+            finally
+            {
+                GC.Collect();
+            }
+        }
     }
 }
