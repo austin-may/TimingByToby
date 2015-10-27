@@ -103,6 +103,7 @@ namespace TimingForToby
             try {
                 Cursor.Current = Cursors.WaitCursor;
                 lblProgress.Text = "Scanning Excel document...";
+                importProgressPanel.Visible = true;
                 var excelApp = new Excel.Application();
                 var workbook = excelApp.Workbooks.Open(filename);
                 if(workbook.Worksheets.Count>0)
@@ -154,10 +155,16 @@ namespace TimingForToby
                             progressBar1.Value = report.PercentComplete;
                             progressBar1.Update();
                         };
+                        //keep user from messing things up
+                        LockGUI(true);
                         //waits for runners to be inserted asynchrously
                         await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
+                        //re-enable user interaction
+                        LockGUI(false);
                     }
                     lblProgress.Text = "Import complete for " + race;
+                    importProgressPanel.Visible = false;
+                    progressBar1.Value = 0;
                     CommonSQL.BackupDB();
                 }
                 else
@@ -172,7 +179,13 @@ namespace TimingForToby
             {
                 this.UseWaitCursor = false;
             }
+        }
 
+        private void LockGUI(bool lockGui)
+        {
+            comboBox1.Enabled = !lockGui;
+            btnRace.Enabled = !lockGui;
+            btnImport.Enabled = !lockGui;
         }
 
 

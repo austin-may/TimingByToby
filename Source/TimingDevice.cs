@@ -11,8 +11,11 @@ namespace TimingForToby
         private int _RaceID=-1;
         private List<Object> listeners=new List<object>();
         public abstract void StartRace();
+        public abstract void StartRace(TimeSpan ts);
         public abstract void StopRace();
         public abstract void ClearTimer();
+        public abstract TimeSpan GetCurrentTime();
+        public abstract void OffsetTimer(TimeSpan ts);
         public void SetRaceID(int id) { _RaceID=id;}
         public List<Tuple<TimeSpan, String>> buffer= new List<Tuple<TimeSpan,string>>();
         public void addListener(ITimerListener obs) { listeners.Add(obs); }
