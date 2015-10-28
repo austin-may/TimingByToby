@@ -77,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filter.cs" />
+    <Compile Include="NewFilterBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewFilterBuilder.Designer.cs">
+      <DependentUpon>NewFilterBuilder.cs</DependentUpon>
+    </Compile>
     <Compile Include="ITimerListener.cs" />
     <Compile Include="LogFile.cs" />
     <Compile Include="ProgressReport.cs" />
@@ -117,6 +123,9 @@
     <Compile Include="TimeMachineTimer.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="TimingDevice.cs" />
+    <EmbeddedResource Include="NewFilterBuilder.resx">
+      <DependentUpon>NewFilterBuilder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -198,6 +207,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Filters\OveralFilter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Filters\OveralFilter2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

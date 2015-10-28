@@ -187,27 +187,27 @@ namespace TimingForToby
             {
                 RadioButton rb = gbTimerOptions.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
                 if (rb != null) {
-                    switch(rb.Name)
-                    {
-                        case "radioButtonKB":
-                            this.SetTimingDevice(new KeybordTimer(this));
-                            break;
-                        case "radioButtonTM":
+                switch(rb.Name)
+                {
+                    case "radioButtonKB":
+                        this.SetTimingDevice(new KeybordTimer(this));
+                        break;
+                    case "radioButtonTM":
                             if (comPortComboBox.SelectedItem != null)
                                 ValidateTimeMachine();
-                            break;
-                        default:
-                            TimingDevice = new KeybordTimer(this);
-                            break;
-                    }
+                        break;
+                    default:
+                        TimingDevice = new KeybordTimer(this);
+                        break;
                 }
+            }
             }
             //note! this is different from else, we want this to run so long as not null (should be based on above)
             if (TimingDevice != null)
             {
                 TimingDevice.StartRace(GetClockTime());
                 ClockEditable(false);
-            }
+        }
             //the clock should run for timers (except for the time machine becouse it is an external clock and we cant pull this data...)
             if(!radioButtonTM.Checked)
             {
@@ -453,11 +453,8 @@ namespace TimingForToby
                     {
 
                     }
-                }
-                //need to check if user actually clicked ok
-                xlWorkBook.SaveAs(saveFileDialog.FileName);
-                xlWorkBook.Close(true, misValue, misValue);
-                xlApp.Quit();
+        }
+
 
                 releaseObject(xlWorkSheet);
                 releaseObject(xlWorkBook);
@@ -481,6 +478,16 @@ namespace TimingForToby
             finally
             {
                 GC.Collect();
+            }
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Creates a filterbuilder window
+            NewFilterBuilder FilterWin = new NewFilterBuilder();
+            //Checks that the "Create Filter" button was pressed on the filterbuilder window and then adds that filter to the list
+            if (FilterWin.ShowDialog(this) == DialogResult.OK)
+            {
+                checkedListBox1.Items.Add(FilterWin.FilterName);
             }
         }
     }

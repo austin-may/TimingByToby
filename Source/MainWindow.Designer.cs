@@ -33,6 +33,7 @@
             this.btnAddRunner = new System.Windows.Forms.Button();
             this.dataGridRunners = new System.Windows.Forms.DataGridView();
             this.tabResults = new System.Windows.Forms.TabPage();
+            this.btnCreateFilter = new System.Windows.Forms.Button();
             this.resultTable = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -89,7 +90,7 @@
             this.tabRunners.Controls.Add(this.dataGridRunners);
             this.tabRunners.Location = new System.Drawing.Point(4, 22);
             this.tabRunners.Name = "tabRunners";
-            this.tabRunners.Padding = new System.Windows.Forms.Padding(3);
+            this.tabRunners.Padding = new System.Windows.Forms.Padding(4);
             this.tabRunners.Size = new System.Drawing.Size(977, 430);
             this.tabRunners.TabIndex = 0;
             this.tabRunners.Text = "Runners";
@@ -120,17 +121,29 @@
             // 
             // tabResults
             // 
+            this.tabResults.Controls.Add(this.btnCreateFilter);
             this.tabResults.Controls.Add(this.resultTable);
             this.tabResults.Controls.Add(this.button1);
             this.tabResults.Controls.Add(this.label1);
             this.tabResults.Controls.Add(this.checkedListBox1);
             this.tabResults.Location = new System.Drawing.Point(4, 22);
             this.tabResults.Name = "tabResults";
-            this.tabResults.Padding = new System.Windows.Forms.Padding(3);
+            this.tabResults.Padding = new System.Windows.Forms.Padding(4);
             this.tabResults.Size = new System.Drawing.Size(977, 430);
             this.tabResults.TabIndex = 1;
             this.tabResults.Text = "Results";
             this.tabResults.UseVisualStyleBackColor = true;
+            // 
+            // btnCreateFilter
+            // 
+            this.btnCreateFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCreateFilter.Location = new System.Drawing.Point(818, 147);
+            this.btnCreateFilter.Name = "btnCreateFilter";
+            this.btnCreateFilter.Size = new System.Drawing.Size(88, 53);
+            this.btnCreateFilter.TabIndex = 6;
+            this.btnCreateFilter.Text = "Create Custom Filter";
+            this.btnCreateFilter.UseVisualStyleBackColor = true;
+            this.btnCreateFilter.Click += new System.EventHandler(this.button2_Click);
             // 
             // resultTable
             // 
@@ -202,6 +215,7 @@
             // 
             // panelClock
             // 
+            this.panelClock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panelClock.Controls.Add(this.label5);
             this.panelClock.Controls.Add(this.textBoxSeconds);
             this.panelClock.Controls.Add(this.textBoxMin);
@@ -267,12 +281,15 @@
             // 
             // gbTimerOptions
             // 
+            this.gbTimerOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTimerOptions.Controls.Add(this.radioButtonKB);
             this.gbTimerOptions.Controls.Add(this.radioButtonTM);
             this.gbTimerOptions.Controls.Add(this.textBox1);
             this.gbTimerOptions.Controls.Add(this.comPortComboBox);
             this.gbTimerOptions.Location = new System.Drawing.Point(728, 68);
+            this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(4);
             this.gbTimerOptions.Name = "gbTimerOptions";
+            this.gbTimerOptions.Padding = new System.Windows.Forms.Padding(4);
             this.gbTimerOptions.Size = new System.Drawing.Size(225, 100);
             this.gbTimerOptions.TabIndex = 8;
             this.gbTimerOptions.TabStop = false;
@@ -312,17 +329,18 @@
             // comPortComboBox
             // 
             this.comPortComboBox.FormattingEnabled = true;
-            this.comPortComboBox.Location = new System.Drawing.Point(107, 41);
+            this.comPortComboBox.Location = new System.Drawing.Point(114, 43);
+            this.comPortComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.comPortComboBox.Name = "comPortComboBox";
-            this.comPortComboBox.Size = new System.Drawing.Size(107, 21);
+            this.comPortComboBox.Size = new System.Drawing.Size(100, 21);
             this.comPortComboBox.TabIndex = 3;
-            this.comPortComboBox.DropDown += new System.EventHandler(this.ComDropDown);
             // 
             // btnEndRace
             // 
             this.btnEndRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEndRace.Enabled = false;
-            this.btnEndRace.Location = new System.Drawing.Point(894, 399);
+            this.btnEndRace.Location = new System.Drawing.Point(873, 400);
+            this.btnEndRace.Margin = new System.Windows.Forms.Padding(4);
             this.btnEndRace.Name = "btnEndRace";
             this.btnEndRace.Size = new System.Drawing.Size(75, 23);
             this.btnEndRace.TabIndex = 7;
@@ -343,6 +361,7 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(765, 36);
@@ -353,6 +372,9 @@
             // 
             // dataGridTiming
             // 
+            this.dataGridTiming.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridTiming.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridTiming.Location = new System.Drawing.Point(3, 3);
             this.dataGridTiming.Name = "dataGridTiming";
@@ -445,11 +467,12 @@
         private System.Windows.Forms.GroupBox gbTimerOptions;
         private System.Windows.Forms.TableLayoutPanel resultTable;
         private System.Windows.Forms.Panel panelClock;
-        private System.Windows.Forms.TextBox textBoxSeconds;
-        private System.Windows.Forms.TextBox textBoxMin;
         private System.Windows.Forms.TextBox textBoxHours;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBoxMin;
+        private System.Windows.Forms.TextBox textBoxSeconds;
+        private System.Windows.Forms.Button btnCreateFilter;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
     }
 }
