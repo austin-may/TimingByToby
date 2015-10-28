@@ -52,7 +52,7 @@ namespace TimingForToby
                 conn.Close();
             }
         }
-        internal static void AddRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection)
+        /*internal static void AddRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection)
         {
             int raceID = GetRaceID(RaceName);
             StartScreen importProgress = new StartScreen();
@@ -88,7 +88,7 @@ namespace TimingForToby
                 }
                 conn.Close();
             }
-        }
+        }*/
 
         //the inserting of every runner that happens on an asynchronous thread
         public static Task ProcessRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)

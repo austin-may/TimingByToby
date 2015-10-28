@@ -454,7 +454,7 @@ namespace TimingForToby
 
                     }
                 }
-
+                //need to check if user actually clicked ok
                 xlWorkBook.SaveAs(saveFileDialog.FileName);
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();
