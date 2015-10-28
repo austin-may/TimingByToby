@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabRunners = new System.Windows.Forms.TabPage();
             this.btnAddRunner = new System.Windows.Forms.Button();
             this.dataGridRunners = new System.Windows.Forms.DataGridView();
             this.tabResults = new System.Windows.Forms.TabPage();
+            this.btnCreateFilter = new System.Windows.Forms.Button();
             this.resultTable = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -58,8 +58,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnCreateFilter = new System.Windows.Forms.Button();
-            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.tabControl1.SuspendLayout();
             this.tabRunners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRunners)).BeginInit();
@@ -93,7 +91,7 @@
             this.tabRunners.Location = new System.Drawing.Point(4, 22);
             this.tabRunners.Name = "tabRunners";
             this.tabRunners.Padding = new System.Windows.Forms.Padding(4);
-            this.tabRunners.Size = new System.Drawing.Size(1305, 532);
+            this.tabRunners.Size = new System.Drawing.Size(977, 430);
             this.tabRunners.TabIndex = 0;
             this.tabRunners.Text = "Runners";
             this.tabRunners.UseVisualStyleBackColor = true;
@@ -131,10 +129,21 @@
             this.tabResults.Location = new System.Drawing.Point(4, 22);
             this.tabResults.Name = "tabResults";
             this.tabResults.Padding = new System.Windows.Forms.Padding(4);
-            this.tabResults.Size = new System.Drawing.Size(1305, 532);
+            this.tabResults.Size = new System.Drawing.Size(977, 430);
             this.tabResults.TabIndex = 1;
             this.tabResults.Text = "Results";
             this.tabResults.UseVisualStyleBackColor = true;
+            // 
+            // btnCreateFilter
+            // 
+            this.btnCreateFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCreateFilter.Location = new System.Drawing.Point(818, 147);
+            this.btnCreateFilter.Name = "btnCreateFilter";
+            this.btnCreateFilter.Size = new System.Drawing.Size(88, 53);
+            this.btnCreateFilter.TabIndex = 6;
+            this.btnCreateFilter.Text = "Create Custom Filter";
+            this.btnCreateFilter.UseVisualStyleBackColor = true;
+            this.btnCreateFilter.Click += new System.EventHandler(this.button2_Click);
             // 
             // resultTable
             // 
@@ -260,18 +269,7 @@
             this.label4.TabIndex = 1;
             this.label4.Text = ":";
             // 
-            this.groupBox1.Controls.Add(this.radioButtonKB);
-            this.groupBox1.Controls.Add(this.radioButtonTM);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.comboBox1);
-            this.groupBox1.Location = new System.Drawing.Point(971, 84);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(300, 123);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Timing Method";
+            // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(73, 64);
@@ -287,7 +285,9 @@
             this.gbTimerOptions.Controls.Add(this.textBox1);
             this.gbTimerOptions.Controls.Add(this.comPortComboBox);
             this.gbTimerOptions.Location = new System.Drawing.Point(728, 68);
+            this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(4);
             this.gbTimerOptions.Name = "gbTimerOptions";
+            this.gbTimerOptions.Padding = new System.Windows.Forms.Padding(4);
             this.gbTimerOptions.Size = new System.Drawing.Size(225, 100);
             this.gbTimerOptions.TabIndex = 8;
             this.gbTimerOptions.TabStop = false;
@@ -326,12 +326,12 @@
             // 
             // comPortComboBox
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(143, 50);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(141, 24);
-            this.comboBox1.TabIndex = 3;
+            this.comPortComboBox.FormattingEnabled = true;
+            this.comPortComboBox.Location = new System.Drawing.Point(143, 50);
+            this.comPortComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.comPortComboBox.Name = "comPortComboBox";
+            this.comPortComboBox.Size = new System.Drawing.Size(141, 21);
+            this.comPortComboBox.TabIndex = 3;
             // 
             // btnEndRace
             // 
@@ -402,16 +402,6 @@
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
             this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.mainMenueToolStripMenuItem_Click);
             // 
-            // btnCreateFilter
-            // 
-            this.btnCreateFilter.Location = new System.Drawing.Point(818, 147);
-            this.btnCreateFilter.Name = "btnCreateFilter";
-            this.btnCreateFilter.Size = new System.Drawing.Size(88, 53);
-            this.btnCreateFilter.TabIndex = 6;
-            this.btnCreateFilter.Text = "Create Custom Filter";
-            this.btnCreateFilter.UseVisualStyleBackColor = true;
-            this.btnCreateFilter.Click += new System.EventHandler(this.button2_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -469,6 +459,14 @@
         private System.Windows.Forms.Button btnStartRace;
         private System.Windows.Forms.GroupBox gbTimerOptions;
         private System.Windows.Forms.TableLayoutPanel resultTable;
+        private System.Windows.Forms.Panel panelClock;
+        private System.Windows.Forms.TextBox textBoxHours;
+        private System.Windows.Forms.TextBox textBoxMin;
+        private System.Windows.Forms.TextBox textBoxSeconds;
+        private System.Windows.Forms.Button btnCreateFilter;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }
 
