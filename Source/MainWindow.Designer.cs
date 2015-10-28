@@ -215,6 +215,7 @@
             // 
             // panelClock
             // 
+            this.panelClock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panelClock.Controls.Add(this.label5);
             this.panelClock.Controls.Add(this.textBoxSeconds);
             this.panelClock.Controls.Add(this.textBoxMin);
@@ -280,6 +281,7 @@
             // 
             // gbTimerOptions
             // 
+            this.gbTimerOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTimerOptions.Controls.Add(this.radioButtonKB);
             this.gbTimerOptions.Controls.Add(this.radioButtonTM);
             this.gbTimerOptions.Controls.Add(this.textBox1);
@@ -327,16 +329,17 @@
             // comPortComboBox
             // 
             this.comPortComboBox.FormattingEnabled = true;
-            this.comPortComboBox.Location = new System.Drawing.Point(143, 50);
+            this.comPortComboBox.Location = new System.Drawing.Point(114, 43);
             this.comPortComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.comPortComboBox.Name = "comPortComboBox";
-            this.comPortComboBox.Size = new System.Drawing.Size(141, 21);
+            this.comPortComboBox.Size = new System.Drawing.Size(100, 21);
             this.comPortComboBox.TabIndex = 3;
             // 
             // btnEndRace
             // 
             this.btnEndRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEndRace.Location = new System.Drawing.Point(1192, 491);
+            this.btnEndRace.Enabled = false;
+            this.btnEndRace.Location = new System.Drawing.Point(873, 400);
             this.btnEndRace.Margin = new System.Windows.Forms.Padding(4);
             this.btnEndRace.Name = "btnEndRace";
             this.btnEndRace.Size = new System.Drawing.Size(75, 23);
@@ -358,6 +361,7 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(765, 36);
@@ -368,6 +372,9 @@
             // 
             // dataGridTiming
             // 
+            this.dataGridTiming.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridTiming.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridTiming.Location = new System.Drawing.Point(3, 3);
             this.dataGridTiming.Name = "dataGridTiming";
