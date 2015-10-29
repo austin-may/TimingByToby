@@ -1,10 +1,10 @@
 <FilterSet>
   <Filter>
 	  <Name>Overall2</Name>
-	  <SQL>select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults</SQL>
+    <SQL>select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time&lt; r.time and RaceID=@RaceID) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time</SQL>
   </Filter>
   <Filter>
 	  <Name>Overall3</Name>
-	  <SQL>select BibID, CAST(Time as varchar(10)) as 'Time', ROWID as 'Position' from RaceResults</SQL>
+    <SQL>select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time&lt; r.time and RaceID=@RaceID) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time</SQL>
   </Filter>
 </FilterSet>

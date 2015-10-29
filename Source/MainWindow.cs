@@ -71,7 +71,7 @@ namespace TimingForToby
                         if (conn.State == ConnectionState.Closed)
                             conn.Open();
                         cmd.Connection = conn;
-                        cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time";
+                        cmd.CommandText = "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time< r.time and RaceID=@RaceID) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time";
                         cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
                         var daTimer = new SQLiteDataAdapter(cmd);
                         daTimer.Fill(timing);
