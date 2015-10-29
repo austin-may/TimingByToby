@@ -436,31 +436,48 @@ namespace TimingForToby
                 DialogResult result = saveFileDialog.ShowDialog(); // Show the dialog.
                 var xlApp = new Microsoft.Office.Interop.Excel.Application();
 
-
-                Excel.Workbook xlWorkBook;
-                Excel.Worksheet xlWorkSheet;
-                object misValue = System.Reflection.Missing.Value;
-
-                xlWorkBook = xlApp.Workbooks.Add(misValue);
-                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-                
-                for (int f=0; f<filters.Count;f++)
-                {
-                    Filter filter = filters[f];
-                    xlWorkSheet.Cells[1, f*3+2] = filter.Name;
-                    var table = filter.GetDataTable();
-                    foreach (var row in table.Rows)
+                try {
+                    Excel.Workbook xlWorkBook;
+                    Excel.Worksheet xlWorkSheet;
+                    object misValue = System.Reflection.Missing.Value;
+                    xlWorkBook = xlApp.Workbooks.Add(misValue);
+                    xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+                    //itterate over all filters
+                    for (int f=0; f<filters.Count;f++)
                     {
-
+                        Filter filter = filters[f];
+                        xlWorkSheet.Cells[1, f*3+2] = filter.Name;
+                        var table = filter.GetDataTable();
+                        for (int i = 0; i < table.ColumnCount; i++)
+                        {
+                            //print out column name
+                            xlWorkSheet.Cells[2, f * 3 + i + 1] = table.Columns[i].Name;
+                        }
+                        //print out each row of content
+                        for (int r = 0; r < table.Rows.Count; r++)
+                        {
+                            for (int c = 0; c < table.ColumnCount; c++)
+                            {
+                                xlWorkSheet.Cells[r + 3, f * 3 + c + 1] = table[c, r].Value.ToString();
+                            }
+                        }
                     }
-        }
-
-
-                releaseObject(xlWorkSheet);
-                releaseObject(xlWorkBook);
-                releaseObject(xlApp);
-
-                MessageBox.Show("Excel file created");
+                    xlWorkBook.SaveAs(saveFileDialog.FileName);
+                    xlWorkBook.Close();
+                    releaseObject(xlWorkSheet);
+                    releaseObject(xlWorkBook);
+                    releaseObject(xlApp);
+                    MessageBox.Show("Excel file created");
+                }
+                catch (Exception er)
+                {
+                    //for now, only show the error message if in Debug
+#if DEBUG
+                        MessageBox.Show(er.Message+"\n");
+#else
+                        MessageBox.Show("An error occured and the Excel file could not be saved");
+#endif
+                }
             }
         }
         private void releaseObject(object obj)

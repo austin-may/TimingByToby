@@ -91,7 +91,7 @@ namespace TimingForToby
         }
 
         //the inserting of every runner that happens on an asynchronous thread
-        public static Task ProcessRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)
+        public static Task ProcessRunners(string[] FirstName, string[] LastName, DateTime[] DOB, char[] Genders, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)
         {
             int raceID = GetRaceID(RaceName);
             int index = 1;
@@ -108,10 +108,11 @@ namespace TimingForToby
                         for (int i = 0; i < totalProcess; i++)
                         {
                             cmd.Connection = conn;
-                            cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
+                            cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB, Gender) Values(@FirstName, @LastName, @DOB, @Sex);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
                             cmd.Parameters.AddWithValue("@FirstName", FirstName[i]);
                             cmd.Parameters.AddWithValue("@LastName", LastName[i]);
-                            cmd.Parameters.AddWithValue("@DOB", DOB[i].ToString("MM/dd/yyyy"));
+                            cmd.Parameters.AddWithValue("@DOB", DOB[i].ToString("yyyy-MM-dd"));
+                            cmd.Parameters.AddWithValue("@Sex", Genders[i]);
                             cmd.ExecuteNonQuery();
                             //cmd.Parameters.Add(new SQLiteParameter("@FirstName", SqlDbType.Text) { Value = FirstName });
                             //cmd.Parameters.Add(new SQLiteParameter("@LastName", SqlDbType.Text) { Value = LastName });
