@@ -242,7 +242,52 @@ namespace TimingForToby
             CommonSQL.BackupDB();
         }
 
+        //prompts for a save dialog
+        //will copy the original database
+        //store its data into the exported database that user can point anywhere to on disk
+        private void ExportDatabase_Click(object sender, EventArgs e)
+        {
+             SaveFileDialog saveFileDialog = new SaveFileDialog();
+             saveFileDialog.Filter = "SQLite|*.sqlite";//type is sqlite
+             saveFileDialog.FileName = "TheExportedDatabase";
+             try
+             {
+                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                 {
+                     CopyDB("MyDatabase.sqlite", saveFileDialog.FileName, 0);
+                 } 
+             }
+             catch (FileNotFoundException exception)
+             {
+                 MessageBox.Show(exception.Message);
+             }
+             
+        }
 
+        private void RestoreDatabase_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //assuming this, but if data from original db is corrupted you would want
+                //to fetch the data from the backup db...
+                CopyDB("BackupDatabase.sqlite", "RestoredDatabase.sqlite", 1);
+            }
+            catch (FileLoadException exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+            
+        }
+
+        //the int parameter signifies what messagebox will be shown based on whether it was an 
+        //export of the database or restore
+        private void CopyDB(string ExistingFileName, string DestinationFileName, int actionInvoked)
+        {
+            //copies an existing file to a new file
+            File.Copy(ExistingFileName, DestinationFileName, true);
+            if (actionInvoked == 0) MessageBox.Show("Database exported!");
+            else if (actionInvoked == 1) MessageBox.Show("Database restored!");
+        }
 
         }
 
