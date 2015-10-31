@@ -49,17 +49,19 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(32, 13);
+            this.comboBox1.Location = new System.Drawing.Point(43, 16);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(160, 24);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.Click += new System.EventHandler(this.comboBox1_Click);
             // 
             // btnNewRace
             // 
-            this.btnNewRace.Location = new System.Drawing.Point(420, 104);
+            this.btnNewRace.Location = new System.Drawing.Point(560, 128);
+            this.btnNewRace.Margin = new System.Windows.Forms.Padding(4);
             this.btnNewRace.Name = "btnNewRace";
-            this.btnNewRace.Size = new System.Drawing.Size(136, 23);
+            this.btnNewRace.Size = new System.Drawing.Size(181, 28);
             this.btnNewRace.TabIndex = 1;
             this.btnNewRace.Text = "New Race";
             this.btnNewRace.UseVisualStyleBackColor = true;
@@ -67,9 +69,10 @@
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(420, 147);
+            this.btnImport.Location = new System.Drawing.Point(560, 181);
+            this.btnImport.Margin = new System.Windows.Forms.Padding(4);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(136, 23);
+            this.btnImport.Size = new System.Drawing.Size(181, 28);
             this.btnImport.TabIndex = 2;
             this.btnImport.Text = "Import Runners";
             this.btnImport.UseVisualStyleBackColor = true;
@@ -77,9 +80,10 @@
             // 
             // btnRace
             // 
-            this.btnRace.Location = new System.Drawing.Point(420, 196);
+            this.btnRace.Location = new System.Drawing.Point(560, 241);
+            this.btnRace.Margin = new System.Windows.Forms.Padding(4);
             this.btnRace.Name = "btnRace";
-            this.btnRace.Size = new System.Drawing.Size(136, 23);
+            this.btnRace.Size = new System.Drawing.Size(181, 28);
             this.btnRace.TabIndex = 3;
             this.btnRace.Text = "Race!";
             this.btnRace.UseVisualStyleBackColor = true;
@@ -106,19 +110,18 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(2, 24);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBar1.Location = new System.Drawing.Point(3, 30);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(315, 19);
+            this.progressBar1.Size = new System.Drawing.Size(420, 23);
             this.progressBar1.TabIndex = 4;
             // 
             // lblProgress
             // 
             this.lblProgress.AutoSize = true;
-            this.lblProgress.Location = new System.Drawing.Point(2, 9);
-            this.lblProgress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblProgress.Location = new System.Drawing.Point(3, 11);
             this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(35, 13);
+            this.lblProgress.Size = new System.Drawing.Size(46, 17);
             this.lblProgress.TabIndex = 5;
             this.lblProgress.Text = "label1";
             // 
@@ -126,24 +129,27 @@
             // 
             this.importProgressPanel.Controls.Add(this.lblProgress);
             this.importProgressPanel.Controls.Add(this.progressBar1);
-            this.importProgressPanel.Location = new System.Drawing.Point(94, 246);
+            this.importProgressPanel.Location = new System.Drawing.Point(4, 305);
+            this.importProgressPanel.Margin = new System.Windows.Forms.Padding(4);
             this.importProgressPanel.Name = "importProgressPanel";
-            this.importProgressPanel.Size = new System.Drawing.Size(321, 57);
+            this.importProgressPanel.Size = new System.Drawing.Size(428, 70);
             this.importProgressPanel.TabIndex = 6;
             this.importProgressPanel.Visible = false;
             // 
             // StartScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(568, 315);
+            this.ClientSize = new System.Drawing.Size(757, 388);
             this.Controls.Add(this.importProgressPanel);
             this.Controls.Add(this.btnRace);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnNewRace);
             this.Controls.Add(this.comboBox1);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "StartScreen";
             this.Text = "Timing By Toby";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.StartScreen_FormClosing);
             this.Load += new System.EventHandler(this.StartScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.myDatabaseDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.myDatabaseDataSetBindingSource)).EndInit();

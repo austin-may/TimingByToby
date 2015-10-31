@@ -24,12 +24,13 @@ namespace TimingForToby
         private System.Timers.Timer ClockRefreshTimer = new System.Timers.Timer(500);
         public MainWindow()
         {
-            InitializeComponent();            
+            InitializeComponent(); 
         }
         public MainWindow(RaceData data)
         {
             raceData=data;
             InitializeComponent();
+            //TobyTimer.SetTimer();
             //becouse the default is to start with the Keyboard Timer
             //set clock to inital default of 0
             SetClock(new TimeSpan(0,0,0));
@@ -170,6 +171,8 @@ namespace TimingForToby
                 this.Dispose();
                 raceData.StartWindow.Close();
             }
+            //One last backup of the database is called when user closes form
+            CommonSQL.BackupDB();
         }
         //creates and assigns keybord timer when the kebord radio button is selected
         private void radioButtonKB_CheckedChanged(object sender, EventArgs e)

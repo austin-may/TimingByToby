@@ -18,6 +18,9 @@ namespace TimingForToby
         public StartScreen()
         {
             InitializeComponent();
+            //Watch dog component
+            //Immediately starts the clock as soon as user opens the app
+            TobyTimer.SetTimer();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -107,7 +110,6 @@ namespace TimingForToby
             int orgRow = -1;
             int shirtRow = -1;
             int curRow = 1;
-            LogFile logErrors = new LogFile();
             try {
                 Cursor.Current = Cursors.WaitCursor;
                 lblProgress.Text = "Scanning Excel document...";
@@ -184,8 +186,8 @@ namespace TimingForToby
                             else
                             {
                                 duplicateBibsFound = true;
-                                string date = DateTime.Now.ToString(" M-d-yyyy (hh:mm)");
-                                logErrors.WriteToErrorLog("Duplicate bib #" + BibID + " found." + date + "\r\n");
+                                string date = string.Format("{0:G}", DateTime.Now);
+                                LogFile.WriteToErrorLog("Duplicate bib #" + BibID + " found. " + date + "\r\n");
                             }
                             Teams[curRow-2] = range.Cells[curRow, teamRow].Value2 as string ?? "";
                             Orginizations[curRow-2] = range.Cells[curRow, orgRow] as string ?? "";
@@ -234,7 +236,18 @@ namespace TimingForToby
             btnImport.Enabled = !lockGui;
         }
 
+        private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Backup the database on close
+            CommonSQL.BackupDB();
+        }
 
 
-      }
+
+        }
+
+
+
+
+      
 }

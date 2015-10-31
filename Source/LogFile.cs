@@ -9,7 +9,7 @@ namespace TimingForToby
 {
     public class LogFile
     {     
-        internal void WriteToErrorLog(string message)
+        internal static void WriteToErrorLog(string message)
         {
             File.AppendAllText(@"..\..\ErrorLog.txt", message);
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Forms;
 
 namespace TimingForToby
 {
@@ -31,5 +33,25 @@ namespace TimingForToby
         {
             _StartTime = DateTime.Now - ts;
         }
+
+        private static System.Timers.Timer BackupTimer;
+        internal static void SetTimer()
+        {
+            // Create a timer that fires every minute
+            BackupTimer = new System.Timers.Timer(60000);
+            //Sync lapsed events to timer
+            BackupTimer.Elapsed += OnTimedEvent;
+            BackupTimer.AutoReset = true;
+            BackupTimer.Enabled = true;
+        }
+
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            //MessageBox.Show("Backup just occured at " + 
+               //               e.SignalTime);
+            CommonSQL.BackupDB();
+        }
+
+
     }
 }
