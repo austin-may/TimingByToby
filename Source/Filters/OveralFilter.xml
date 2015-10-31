@@ -1,5 +1,5 @@
 <Filter>
   <!--Must Use @RaceID in order to fullfill valid data retrevial-->
 	<Name>Overall</Name>
-	<SQL>select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time&lt; r.time) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time</SQL>
+	<SQL>select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time&lt; r.time and RaceID=@RaceID) as Position, BibID, CAST(Time as varchar(10)) as Time from RaceResults r where r.RaceID=@RaceID order by Time</SQL>
 </Filter>

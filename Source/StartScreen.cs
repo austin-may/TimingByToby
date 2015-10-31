@@ -98,6 +98,14 @@ namespace TimingForToby
 
         private async void AddUsersToRace(String filename)
         {
+            int firstNameRow = -1;
+            int lastNameRow = -1;
+            int bibIDRow = -1;
+            int dobRow = -1;
+            int genderRow = -1;
+            int teamRow = -1;
+            int orgRow = -1;
+            int shirtRow = -1;
             int curRow = 1;
             LogFile logErrors = new LogFile();
             try {
@@ -106,10 +114,45 @@ namespace TimingForToby
                 importProgressPanel.Visible = true;
                 var excelApp = new Excel.Application();
                 var workbook = excelApp.Workbooks.Open(filename);
+                var worksheet=workbook.Worksheets[1] as Excel.Worksheet;//first page
+                Excel.Range range = worksheet.UsedRange as Excel.Range;
+                //parse the first line to get the positions of each column
+                int i = 1;
+                while (range.Cells[1, i].Value2 != null && range.Cells[1, i].Value2+"" != "")
+                {
+                    string title = range.Cells[1, i].Value2 + "";
+                    switch (title.ToLower()) {
+                        case "bibid":
+                            bibIDRow = i;
+                            break;
+                        case "firstname":
+                            firstNameRow = i;
+                            break;
+                        case "lastname":
+                            lastNameRow = i;
+                            break;
+                        case "dob":
+                            dobRow = i;
+                            break;
+                        case "gender":
+                            genderRow = i;
+                            break;
+                        case "orginization":
+                            orgRow = i;
+                            break;
+                        case "team":
+                            teamRow = i;
+                            break;
+                        case "shirt":
+                            shirtRow = i;
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
+                }
                 if(workbook.Worksheets.Count>0)
                 {
-                    var worksheet=workbook.Worksheets[1] as Excel.Worksheet;//first page
-                    var range = worksheet.UsedRange as Excel.Range;
                     int rowCount = range.Rows.Count;
                     int colCount = range.Columns.Count;
                     string race=this.comboBox1.SelectedItem.ToString();
@@ -119,6 +162,7 @@ namespace TimingForToby
                         var FirstNames = new string[rowCount-1];
                         var LastNames = new string[rowCount - 1];
                         var DOBs = new DateTime[rowCount - 1];
+                        var Genders = new char[rowCount - 1];
                         var BibIDs = new string[rowCount - 1];
                         var Orginizations = new string[rowCount - 1];
                         var Teams = new string[rowCount - 1];
@@ -126,14 +170,16 @@ namespace TimingForToby
                         bool duplicateBibsFound = false;
                         for (curRow = 2; curRow <= rowCount; curRow++)
                         {        
-                            FirstNames[curRow-2] = range.Cells[curRow, 1].Value2 as string;
-                            LastNames[curRow-2] = range.Cells[curRow, 2].Value2 as string;
-                            DOBs[curRow-2] = DateTime.FromOADate(range.Cells[curRow, 3].Value2);
-                            string BibID = range.Cells[curRow, 4].Value2.ToString() ?? "";
+                            FirstNames[curRow-2] = range.Cells[curRow, firstNameRow].Value2 as string;
+                            LastNames[curRow-2] = range.Cells[curRow, lastNameRow].Value2 as string;
+                            DOBs[curRow - 2] = DateTime.FromOADate(range.Cells[curRow, dobRow].Value2);
+                            //might be male, might be female, just take first letter
+                            Genders[curRow - 2] = (range.Cells[curRow, genderRow].Value2 as string).ToUpper().ToCharArray()[0];
+                            string BibID = range.Cells[curRow, bibIDRow].Value2.ToString() ?? "";
                             if (!dictionary.ContainsKey(BibID))
                             {
                                 dictionary.Add(BibID, 1);
-                                BibIDs[curRow - 2] = range.Cells[curRow, 4].Value2.ToString() ?? "";
+                                BibIDs[curRow - 2] = range.Cells[curRow, bibIDRow].Value2.ToString() ?? "";
                             }
                             else
                             {
@@ -141,8 +187,8 @@ namespace TimingForToby
                                 string date = DateTime.Now.ToString(" M-d-yyyy (hh:mm)");
                                 logErrors.WriteToErrorLog("Duplicate bib #" + BibID + " found." + date + "\r\n");
                             }
-                            Teams[curRow-2] = range.Cells[curRow, 5].Value2 as string ?? "";
-                            Orginizations[curRow-2] = range.Cells[curRow, 6] as string ?? "";
+                            Teams[curRow-2] = range.Cells[curRow, teamRow].Value2 as string ?? "";
+                            Orginizations[curRow-2] = range.Cells[curRow, orgRow] as string ?? "";
                         }
                         if (duplicateBibsFound == true) { MessageBox.Show("Some duplicate bibs were found. They can be edited in home page.");}
                         workbook.Close();
@@ -158,7 +204,7 @@ namespace TimingForToby
                         //keep user from messing things up
                         LockGUI(true);
                         //waits for runners to be inserted asynchrously
-                        await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
+                        await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, Genders, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
                         //re-enable user interaction
                         LockGUI(false);
                     }
