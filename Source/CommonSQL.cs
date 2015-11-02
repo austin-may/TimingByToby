@@ -311,5 +311,32 @@ namespace TimingForToby
                 }
             }
         }
+        internal static void DelTimingRow(int raceID, string time)
+        {
+            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            {
+                try
+                {
+                    conn.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        cmd.Connection = conn;
+                        cmd.CommandText = "delete from raceresults where RaceID=@RaceID AND Time=@time;";
+                        cmd.Parameters.AddWithValue("@RaceID", raceID);
+                        cmd.Parameters.AddWithValue("@time", time);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception sqlError)
+                {
+                    MessageBox.Show(sqlError.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
     }
 }

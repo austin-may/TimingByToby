@@ -121,6 +121,7 @@
             this.dataGridRunners.Size = new System.Drawing.Size(802, 418);
             this.dataGridRunners.TabIndex = 0;
             this.dataGridRunners.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RunnerTableDoubleClick);
+            this.dataGridRunners.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DataGridViewRunnerRowDel);
             // 
             // tabResults
             // 
@@ -386,6 +387,7 @@
             this.dataGridTiming.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.TimingTableCellChanging);
             this.dataGridTiming.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.TimingTableCellChange);
             this.dataGridTiming.CurrentCellDirtyStateChanged += new System.EventHandler(this.CellBeingEdited);
+            this.dataGridTiming.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DataGridViewTimingRowDel);
             // 
             // menuStrip1
             // 

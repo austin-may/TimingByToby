@@ -523,7 +523,6 @@ namespace TimingForToby
             string org = "";
             foreach (DataGridViewTextBoxCell data in row.Cells)
             {
-                info += dataGridRunners.Columns[data.ColumnIndex].Name + ": " + dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString() + "\n";
                 switch (dataGridRunners.Columns[data.ColumnIndex].Name)
                 {
                     case "FirstName":
@@ -551,6 +550,16 @@ namespace TimingForToby
             }
             var person = new NewUserWindow(raceData, this, firstName, lastName, dob, bibId, team, org);
             person.Show();
+        }
+
+        private void DataGridViewTimingRowDel(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            CommonSQL.DelTimingRow(raceData.RaceID, dataGridTiming[2, e.Row.Index].Value.ToString());        
+        }
+
+        private void DataGridViewRunnerRowDel(object sender, DataGridViewRowCancelEventArgs e)
+        {
+
         }
     }
 }
