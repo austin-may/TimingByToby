@@ -22,7 +22,7 @@ namespace TimingForToby
           Label filLabel = new Label();
           private int RaceID;
          private String connectionSting;
-          string ageString = "(strftime('%Y', 'now') - strftime('%Y', DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', DOB)) = ";
+          string ageString = "(strftime('%Y', 'now') - strftime('%Y', DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', DOB))";
           private String _Sql;
          public String Name;
           
@@ -56,7 +56,7 @@ namespace TimingForToby
                       connect.Open();
                       command.Connection = connect;
                       command.CommandText = _Sql;
-                      command.Parameters.AddWithValue("@RaceID", RaceID);
+                      command.Parameters.AddWithValue("@RaceID", RaceID);  
                       var filterTable = new DataTable();
                       var daFilter = new SQLiteDataAdapter(command);
                       daFilter.Fill(filterTable);
