@@ -24,6 +24,17 @@ namespace TimingForToby
             this.parent = _parent;
         }
 
+        public NewUserWindow(RaceData _raceData, MainWindow _parent, string firstName, string lastName, DateTime dob, string bibID, string team, string org)
+            : this(_raceData, _parent)
+        {
+            textBoxFirstName.Text = firstName;
+            textBoxLastName.Text = lastName;
+            dateTimePicker1.Value = dob;
+            textBoxBibId.Text = bibID;
+            textBoxTeam.Text = team;
+            textBoxOrginization.Text=org;
+        }
+
         private void btnDone_Click(object sender, EventArgs e)
         {
             CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
@@ -31,16 +42,6 @@ namespace TimingForToby
                 parent.reload();
             CommonSQL.BackupDB();
             this.Close();
-        }
-
-        private void NewUserWindow_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBoxFirstName_TextChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

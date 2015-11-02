@@ -61,7 +61,6 @@
             this.textBoxFirstName.Name = "textBoxFirstName";
             this.textBoxFirstName.Size = new System.Drawing.Size(100, 20);
             this.textBoxFirstName.TabIndex = 1;
-            this.textBoxFirstName.TextChanged += new System.EventHandler(this.textBoxFirstName_TextChanged);
             // 
             // textBoxLastName
             // 
@@ -173,8 +172,7 @@
             this.Controls.Add(this.textBoxFirstName);
             this.Controls.Add(this.btnDone);
             this.Name = "NewUserWindow";
-            this.Text = "Add Runner";
-            this.Load += new System.EventHandler(this.NewUserWindow_Load);
+            this.Text = "Add/Edit Runner";
             this.ResumeLayout(false);
             this.PerformLayout();
 

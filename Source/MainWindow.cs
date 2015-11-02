@@ -100,7 +100,7 @@ namespace TimingForToby
                     using (var cmd = new SQLiteCommand())
                     {
                         cmd.Connection = conn;
-                        cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=@RaceID;";
+                        cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB, Team, Orginization from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=@RaceID;";
                         cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
                         var daRunners = new SQLiteDataAdapter(cmd);
                         daRunners.Fill(runners);
@@ -509,6 +509,48 @@ namespace TimingForToby
             {
                 checkedListBox1.Items.Add(FilterWin.FilterName);
             }
+        }
+
+        private void RunnerTableDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var row=dataGridRunners.Rows[e.RowIndex];
+            string info = "";
+            string firstName = "";
+            string lastName = "";
+            DateTime dob = DateTime.MinValue;
+            string bibId = "";
+            string team = "";
+            string org = "";
+            foreach (DataGridViewTextBoxCell data in row.Cells)
+            {
+                info += dataGridRunners.Columns[data.ColumnIndex].Name + ": " + dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString() + "\n";
+                switch (dataGridRunners.Columns[data.ColumnIndex].Name)
+                {
+                    case "FirstName":
+                        firstName = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString();
+                        break;
+                    case "LastName":
+                        lastName = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString();
+                        break;
+                    case "BibID":
+                        bibId = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString();
+                        break;
+                    case "DOB":
+                        var parts = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString().Split('-');
+                        dob = new DateTime(Int32.Parse(parts[0]), Int32.Parse(parts[1]), Int32.Parse(parts[2]));
+                        break;
+                    case "Team":
+                        team = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString();
+                        break;
+                    case "Orginization":
+                        org = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            var person = new NewUserWindow(raceData, this, firstName, lastName, dob, bibId, team, org);
+            person.Show();
         }
     }
 }
