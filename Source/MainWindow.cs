@@ -505,7 +505,7 @@ namespace TimingForToby
             //Creates a filterbuilder window
             NewFilterBuilder FilterWin = new NewFilterBuilder();
             //Checks that the "Create Filter" button was pressed on the filterbuilder window and then adds that filter to the list
-            if (FilterWin.ShowDialog(this) == DialogResult.OK)
+            if (FilterWin.ShowDialog(this) == DialogResult.OK && FilterWin.FilterName!=null)
             {
                 checkedListBox1.Items.Add(FilterWin.FilterName);
             }
