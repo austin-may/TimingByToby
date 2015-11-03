@@ -19,6 +19,7 @@ namespace TimingForToby
         public static string filterFolder="Filters";
         public static SQLiteConnection originalDatabase;
         public static SQLiteConnection backupDatabase;
+        private static SQLiteConnection db = new SQLiteConnection(SQLiteConnection);
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string Team, string Orginization, string RaceName, string Connection){
         int raceID = GetRaceID(RaceName);
             using (var conn = new SQLiteConnection(Connection))
@@ -336,6 +337,75 @@ namespace TimingForToby
                 {
                     conn.Close();
                 }
+            }
+        }
+        //reuturn runner ID based on name and dob. return -1 if none is found
+        internal static int GetRunnerID(string firstName, string LastName, DateTime dob)
+        {
+            int runnerID = -1;
+            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+                try
+                {
+                    if(!alreadyOpen)
+                        db.Open();
+                    using (var cmd = new SQLiteCommand())
+                    {
+                        cmd.Connection = db;
+                        cmd.CommandText = "select RunnerID from runners where FirstName=@firstName and LastName=@lastName and DOB=@dob;";
+                        cmd.Parameters.AddWithValue("@firstName", firstName);
+                        cmd.Parameters.AddWithValue("@lastName", LastName);
+                        cmd.Parameters.AddWithValue("@dob", dob.ToString("yyyy-MM-dd"));
+
+                        SQLiteDataReader r = cmd.ExecuteReader();
+                        if (r.HasRows)
+                        {
+                            r.Read();
+                            runnerID = r.GetInt32(0);
+                            r.Dispose();
+                        }
+                        else
+                        {
+                            Console.WriteLine("No rows found.");
+                        }
+                    }
+                }
+                catch (Exception sqlError)
+                {
+                    MessageBox.Show(sqlError.Message);
+                }
+                finally
+                {
+                    if(!alreadyOpen)
+                        db.Close();
+                }
+            return runnerID;
+        }
+        internal static void DelRunner(string firstName, string LastName, DateTime dob, int raceID)
+        {
+            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            try
+            {
+                if (!alreadyOpen)
+                    db.Open();
+                int id = GetRunnerID(firstName, LastName, dob);
+                using (var cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = db;
+                    cmd.CommandText = "delete from RaceRunner where RunnerID=@id and RaceID=@RaceID;";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@RaceID", raceID);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception sqlError)
+            {
+                MessageBox.Show(sqlError.Message);
+            }
+            finally
+            {
+                if (!alreadyOpen)
+                    db.Close();
             }
         }
     }

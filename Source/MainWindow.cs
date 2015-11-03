@@ -559,7 +559,11 @@ namespace TimingForToby
 
         private void DataGridViewRunnerRowDel(object sender, DataGridViewRowCancelEventArgs e)
         {
-
+            string first = dataGridRunners["FirstName", e.Row.Index].Value.ToString();
+            string last = dataGridRunners["LastName", e.Row.Index].Value.ToString();
+            var parts = dataGridRunners["DOB", e.Row.Index].Value.ToString().Split('-');
+            DateTime dob = new DateTime(Int32.Parse(parts[0]), Int32.Parse(parts[1]), Int32.Parse(parts[2]));
+            CommonSQL.DelRunner(first, last, dob, raceData.RaceID);
         }
     }
 }
