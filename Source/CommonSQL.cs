@@ -16,81 +16,48 @@ namespace TimingForToby
     {
         internal static string SQLiteConnection = "Data Source=MyDatabase.sqlite;Version=3;";
         internal static string backupDB = "Data Source=BackupDatabase.sqlite;Version=3;";
+        private static Dictionary<string, int> RaceIdMap = new Dictionary<string, int>();
         public static string filterFolder="Filters";
         public static SQLiteConnection originalDatabase;
         public static SQLiteConnection backupDatabase;
         private static SQLiteConnection db = new SQLiteConnection(SQLiteConnection);
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string Team, string Orginization, string RaceName, string Connection){
-        int raceID = GetRaceID(RaceName);
+            int raceID = GetRaceID(RaceName);
             using (var conn = new SQLiteConnection(Connection))
             {
                 conn.Open();
                 using (var cmd = new SQLiteCommand())
                 {
-                        cmd.Connection = conn;
-                        cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
-                        cmd.Parameters.AddWithValue("@FirstName", FirstName);
-                        cmd.Parameters.AddWithValue("@LastName", LastName);
-                        cmd.Parameters.AddWithValue("@DOB", DOB.ToString("MM/dd/yyyy"));
-                        cmd.ExecuteNonQuery();
-                        //cmd.Parameters.Add(new SQLiteParameter("@FirstName", SqlDbType.Text) { Value = FirstName });
-                        //cmd.Parameters.Add(new SQLiteParameter("@LastName", SqlDbType.Text) { Value = LastName });
-                        //cmd.Parameters.Add(new SQLiteParameter("@DOB", DbType.Date) { Value =  });
-                        //cmd.Parameters.Add(DOB.ToString("MM/DD/YYYY"));
-                        cmd.CommandText = "Insert into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values(" +
-                            "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1)," +
-                            "@Race," +
-                            "@BibID,@Orginization,@Team);";
+                    cmd.Connection = conn;
+                    cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
+                    cmd.Parameters.AddWithValue("@FirstName", FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", LastName);
+                    cmd.Parameters.AddWithValue("@DOB", DOB.ToString("MM/dd/yyyy"));
+                    //check to ensure that value was added, if not, break
+                    if(cmd.ExecuteNonQuery()==0)
+                    {
+                        MessageBox.Show("No Runner added");
+                        return;
+                    }
 
+                    cmd.CommandText =
+                        "Insert or ignore into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values(" +
+                        "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1)," +
+                        "@Race," +
+                        "@BibID,@Orginization,@Team);";
 
-                        cmd.Parameters.AddWithValue("@Race", raceID);
-                        cmd.Parameters.AddWithValue("@BibID", BibID);
-                        cmd.Parameters.AddWithValue("@Team", Team);
-                        cmd.Parameters.AddWithValue("@Orginization", Orginization);
-                        cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@Race", raceID);
+                    cmd.Parameters.AddWithValue("@BibID", BibID);
+                    cmd.Parameters.AddWithValue("@Team", Team);
+                    cmd.Parameters.AddWithValue("@Orginization", Orginization);
+                    if(cmd.ExecuteNonQuery()>0)
+                        MessageBox.Show("No Runner added for this Race... Check BibID");
                     
                 }
                 conn.Close();
             }
         }
-        /*internal static void AddRunners(string[] FirstName, string[] LastName, DateTime[] DOB, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection)
-        {
-            int raceID = GetRaceID(RaceName);
-            StartScreen importProgress = new StartScreen();
-            //big assumption that all arrays are same size or atleast larger than the FirstName array
-            using (var conn = new SQLiteConnection(Connection))
-            {
-                conn.Open();
-                using (var cmd = new SQLiteCommand())
-                {
-                    for (int i = 0; i < FirstName.Length; i++)
-                    {
-                        cmd.Connection = conn;
-                        cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
-                        cmd.Parameters.AddWithValue("@FirstName", FirstName[i]);
-                        cmd.Parameters.AddWithValue("@LastName", LastName[i]);
-                        cmd.Parameters.AddWithValue("@DOB", DOB[i].ToString("MM/dd/yyyy"));
-                        cmd.ExecuteNonQuery();
-                        //cmd.Parameters.Add(new SQLiteParameter("@FirstName", SqlDbType.Text) { Value = FirstName });
-                        //cmd.Parameters.Add(new SQLiteParameter("@LastName", SqlDbType.Text) { Value = LastName });
-                        //cmd.Parameters.Add(new SQLiteParameter("@DOB", DbType.Date) { Value =  });
-                        //cmd.Parameters.Add(DOB.ToString("MM/DD/YYYY"));
-                        cmd.CommandText = "Insert into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values(" +
-                            "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1)," +
-                            "@Race," +
-                            "@BibID,@Orginization,@Team);";
-
-                        cmd.Parameters.AddWithValue("@Race", raceID);
-                        cmd.Parameters.AddWithValue("@BibID", BibID[i]);
-                        cmd.Parameters.AddWithValue("@Team", Team[i]);
-                        cmd.Parameters.AddWithValue("@Orginization", Orginization[i]);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                conn.Close();
-            }
-        }*/
-
+        
         //the inserting of every runner that happens on an asynchronous thread
         public static Task ProcessRunners(string[] FirstName, string[] LastName, DateTime[] DOB, char[] Genders, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)
         {
@@ -109,16 +76,13 @@ namespace TimingForToby
                         for (int i = 0; i < totalProcess; i++)
                         {
                             cmd.Connection = conn;
-                            cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB, Gender) Values(@FirstName, @LastName, @DOB, @Sex);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
+                            cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB, Gender) Values(@FirstName, @LastName, @DOB, @Sex);";
                             cmd.Parameters.AddWithValue("@FirstName", FirstName[i]);
                             cmd.Parameters.AddWithValue("@LastName", LastName[i]);
                             cmd.Parameters.AddWithValue("@DOB", DOB[i].ToString("yyyy-MM-dd"));
                             cmd.Parameters.AddWithValue("@Sex", Genders[i]);
                             cmd.ExecuteNonQuery();
-                            //cmd.Parameters.Add(new SQLiteParameter("@FirstName", SqlDbType.Text) { Value = FirstName });
-                            //cmd.Parameters.Add(new SQLiteParameter("@LastName", SqlDbType.Text) { Value = LastName });
-                            //cmd.Parameters.Add(new SQLiteParameter("@DOB", DbType.Date) { Value =  });
-                            //cmd.Parameters.Add(DOB.ToString("MM/DD/YYYY"));
+
                             cmd.CommandText = "Insert into RaceRunner(RunnerID, RaceID, BibID, Orginization, Team) Values(" +
                                 "(select RunnerID from Runners where FirstName=@FirstName AND LastName=@LastName Limit 1)," +
                                 "@Race," +
@@ -135,11 +99,8 @@ namespace TimingForToby
                     }
                     conn.Close();
                 }
-            }); 
-
-            
-        }
-        
+            });            
+        }        
 
         internal static void BackupDB()
         {
@@ -151,8 +112,6 @@ namespace TimingForToby
             originalDatabase.Close();
             backupDatabase.Close();
         }
-
-
         
         internal static void UpdateTimingBib(int raceID, string oldBib, string time, string newBib)
         {
@@ -214,7 +173,13 @@ namespace TimingForToby
         }
         //returns -1 if no race is found
         public static int GetRaceID(string raceName){
-            int RaceID=-1;
+            int raceID;
+            if (RaceIdMap.TryGetValue(raceName, out raceID))
+            {
+                return raceID;
+            }
+            //becouse if it wasnt found before, RaceID is now Default int (0)
+            raceID = -1;
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -229,7 +194,8 @@ namespace TimingForToby
                         if (r.HasRows)
                         {
                             r.Read();
-                            RaceID=r.GetInt32(0);
+                            raceID=r.GetInt32(0);
+                            RaceIdMap.Add(raceName, raceID);
                             r.Dispose();                            
                         }
                         else
@@ -246,7 +212,7 @@ namespace TimingForToby
                 {
                     conn.Close();
                 }
-                return RaceID;
+                return raceID;
             }
         }
         public static List<string> FindBadBibs(int raceID)
@@ -407,6 +373,36 @@ namespace TimingForToby
                 if (!alreadyOpen)
                     db.Close();
             }
+        }
+        internal static bool BibExist(string bibID, int raceID)
+        {
+            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            try
+            {
+                if (!alreadyOpen)
+                    db.Open();
+                using (var cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = db;
+                    cmd.CommandText = "select from RaceRunner where BibID=@id and RaceID=@RaceID;";
+                    cmd.Parameters.AddWithValue("@id", bibID);
+                    cmd.Parameters.AddWithValue("@RaceID", raceID);
+
+                    var r=cmd.ExecuteReader();
+                    return r.HasRows;
+                }
+            }
+            catch (Exception sqlError)
+            {
+                MessageBox.Show(sqlError.Message);
+            }
+            finally
+            {
+                if (!alreadyOpen)
+                    db.Close();
+            }
+            //if we get here then ya, it doesnt exsist
+            return false;
         }
     }
 }

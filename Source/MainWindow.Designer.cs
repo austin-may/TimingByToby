@@ -49,7 +49,6 @@
             this.gbTimerOptions = new System.Windows.Forms.GroupBox();
             this.radioButtonKB = new System.Windows.Forms.RadioButton();
             this.radioButtonTM = new System.Windows.Forms.RadioButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.comPortComboBox = new System.Windows.Forms.ComboBox();
             this.btnEndRace = new System.Windows.Forms.Button();
             this.btnStartRace = new System.Windows.Forms.Button();
@@ -288,7 +287,6 @@
             this.gbTimerOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTimerOptions.Controls.Add(this.radioButtonKB);
             this.gbTimerOptions.Controls.Add(this.radioButtonTM);
-            this.gbTimerOptions.Controls.Add(this.textBox1);
             this.gbTimerOptions.Controls.Add(this.comPortComboBox);
             this.gbTimerOptions.Location = new System.Drawing.Point(728, 68);
             this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(4);
@@ -323,13 +321,6 @@
             this.radioButtonTM.UseVisualStyleBackColor = true;
             this.radioButtonTM.CheckedChanged += new System.EventHandler(this.radioButtonTM_CheckedChanged);
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(114, 16);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 4;
-            // 
             // comPortComboBox
             // 
             this.comPortComboBox.FormattingEnabled = true;
@@ -338,6 +329,7 @@
             this.comPortComboBox.Name = "comPortComboBox";
             this.comPortComboBox.Size = new System.Drawing.Size(100, 21);
             this.comPortComboBox.TabIndex = 3;
+            this.comPortComboBox.DropDown += new System.EventHandler(this.ComDropDown);
             // 
             // btnEndRace
             // 
@@ -463,7 +455,6 @@
         private System.Windows.Forms.ToolStripMenuItem mainMenueToolStripMenuItem;
         private System.Windows.Forms.DataGridView dataGridTiming;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox comPortComboBox;
         private System.Windows.Forms.RadioButton radioButtonTM;
         private System.Windows.Forms.RadioButton radioButtonKB;
