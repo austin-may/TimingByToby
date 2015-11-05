@@ -57,6 +57,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.comboBoxKeySelect = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabRunners.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridRunners)).BeginInit();
@@ -285,6 +286,7 @@
             // gbTimerOptions
             // 
             this.gbTimerOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbTimerOptions.Controls.Add(this.comboBoxKeySelect);
             this.gbTimerOptions.Controls.Add(this.radioButtonKB);
             this.gbTimerOptions.Controls.Add(this.radioButtonTM);
             this.gbTimerOptions.Controls.Add(this.comPortComboBox);
@@ -372,6 +374,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridTiming.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridTiming.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.dataGridTiming.Location = new System.Drawing.Point(3, 3);
             this.dataGridTiming.Name = "dataGridTiming";
             this.dataGridTiming.Size = new System.Drawing.Size(692, 421);
@@ -405,6 +408,28 @@
             this.mainMenueToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
             this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.mainMenueToolStripMenuItem_Click);
+            // 
+            // comboBoxKeySelect
+            // 
+            this.comboBoxKeySelect.FormattingEnabled = true;
+            this.comboBoxKeySelect.Items.AddRange(new object[] {
+            "Any F Key",
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "F10",
+            "F11",
+            "F12"});
+            this.comboBoxKeySelect.Location = new System.Drawing.Point(114, 18);
+            this.comboBoxKeySelect.Name = "comboBoxKeySelect";
+            this.comboBoxKeySelect.Size = new System.Drawing.Size(99, 21);
+            this.comboBoxKeySelect.TabIndex = 4;
             // 
             // MainWindow
             // 
@@ -470,6 +495,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox comboBoxKeySelect;
     }
 }
 

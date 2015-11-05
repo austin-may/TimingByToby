@@ -15,19 +15,61 @@ namespace TimingForToby
     public class KeybordTimer : TimingDevice
     {
         private TobyTimer timer;
+        private List<Keys> triggerKeys=new List<Keys>();
 
-        public KeybordTimer()
+        public KeybordTimer(string keyCode)
         {
+            switch(keyCode){
+                case "F1":
+                    triggerKeys.Add(Keys.F1);
+                    break;
+                case "F2":
+                    triggerKeys.Add(Keys.F2);
+                    break;
+                case "F3":
+                    triggerKeys.Add(Keys.F3);
+                    break;
+                case "F4":
+                    triggerKeys.Add(Keys.F4);
+                    break;
+                case "F5":
+                    triggerKeys.Add(Keys.F5);
+                    break;
+                case "F6":
+                    triggerKeys.Add(Keys.F6);
+                    break;
+                case "F7":
+                    triggerKeys.Add(Keys.F7);
+                    break;
+                case "F8":
+                    triggerKeys.Add(Keys.F8);
+                    break;
+                case "F9":
+                    triggerKeys.Add(Keys.F9);
+                    break;
+                case "F10":
+                    triggerKeys.Add(Keys.F10);
+                    break;
+                case "F11":
+                    triggerKeys.Add(Keys.F11);
+                    break;
+                case "F12":
+                    triggerKeys.Add(Keys.F12);
+                    break;
+                default:
+                    triggerKeys.AddRange(new[] {Keys.F1,Keys.F2,Keys.F3,Keys.F4,Keys.F5,Keys.F6,Keys.F7,Keys.F8,Keys.F9,Keys.F10,Keys.F11,Keys.F12});
+                    break;
+            }
         }
-        public KeybordTimer(MainWindow window)
-            : this()
+        public KeybordTimer(MainWindow window, string keyCode)
+            : this(keyCode)
         {
             // TODO: Complete member initialization         
-            window.KeyPress += new KeyPressEventHandler(this.keyPressEvent);
+            window.KeyDown += new KeyEventHandler(this.keyPressEvent);
         }
-        private void keyPressEvent(Object sender, KeyPressEventArgs e)
+        private void keyPressEvent(Object sender, KeyEventArgs e)
         {    
-            if (e.KeyChar == ' ')
+            if (triggerKeys.Contains(e.KeyData))
             {
                 if (timer!=null)
                 {
