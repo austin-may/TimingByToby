@@ -128,21 +128,21 @@
             this.textBoxTeam.Location = new System.Drawing.Point(222, 120);
             this.textBoxTeam.Name = "textBoxTeam";
             this.textBoxTeam.Size = new System.Drawing.Size(100, 20);
-            this.textBoxTeam.TabIndex = 11;
+            this.textBoxTeam.TabIndex = 12;
             // 
             // textBoxOrginization
             // 
             this.textBoxOrginization.Location = new System.Drawing.Point(222, 144);
             this.textBoxOrginization.Name = "textBoxOrginization";
             this.textBoxOrginization.Size = new System.Drawing.Size(100, 20);
-            this.textBoxOrginization.TabIndex = 12;
+            this.textBoxOrginization.TabIndex = 13;
             // 
             // textBoxBibId
             // 
             this.textBoxBibId.Location = new System.Drawing.Point(222, 94);
             this.textBoxBibId.Name = "textBoxBibId";
             this.textBoxBibId.Size = new System.Drawing.Size(100, 20);
-            this.textBoxBibId.TabIndex = 13;
+            this.textBoxBibId.TabIndex = 11;
             // 
             // BibID
             // 
@@ -159,7 +159,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(334, 220);
             this.Controls.Add(this.BibID);
-            this.Controls.Add(this.textBoxBibId);
             this.Controls.Add(this.textBoxOrginization);
             this.Controls.Add(this.textBoxTeam);
             this.Controls.Add(this.label5);
@@ -167,6 +166,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBoxBibId);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.textBoxLastName);
             this.Controls.Add(this.textBoxFirstName);
@@ -184,6 +184,7 @@
         private System.Windows.Forms.TextBox textBoxFirstName;
         private System.Windows.Forms.TextBox textBoxLastName;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.TextBox textBoxBibId;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
@@ -191,7 +192,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxTeam;
         private System.Windows.Forms.TextBox textBoxOrginization;
-        private System.Windows.Forms.TextBox textBoxBibId;
         private System.Windows.Forms.Label BibID;
     }
 }

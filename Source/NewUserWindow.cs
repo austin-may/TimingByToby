@@ -37,7 +37,11 @@ namespace TimingForToby
 
         private void btnDone_Click(object sender, EventArgs e)
         {
-            if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
+            if (textBoxFirstName.Text.Trim() == "" || textBoxLastName.Text.Trim() == "" || textBoxBibId.Text.Trim() == "")
+            {
+                MessageBox.Show("Can not add: First Name, Last Name, and Bib can not be empty");
+            }
+            else if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
             {
                 CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
                 if (parent != null)

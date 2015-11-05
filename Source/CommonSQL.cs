@@ -50,9 +50,12 @@ namespace TimingForToby
                     cmd.Parameters.AddWithValue("@BibID", BibID);
                     cmd.Parameters.AddWithValue("@Team", Team);
                     cmd.Parameters.AddWithValue("@Orginization", Orginization);
-                    if(cmd.ExecuteNonQuery()>0)
-                        MessageBox.Show("No Runner added for this Race... Check BibID");
-                    
+                    //check to ensure that value was added, if not, break
+                    if (cmd.ExecuteNonQuery() == 0)
+                    {
+                        MessageBox.Show("No Runner added to race");
+                        return;
+                    }                 
                 }
                 conn.Close();
             }
@@ -384,7 +387,7 @@ namespace TimingForToby
                 using (var cmd = new SQLiteCommand())
                 {
                     cmd.Connection = db;
-                    cmd.CommandText = "select from RaceRunner where BibID=@id and RaceID=@RaceID;";
+                    cmd.CommandText = "select * from RaceRunner where BibID=@id and RaceID=@RaceID;";
                     cmd.Parameters.AddWithValue("@id", bibID);
                     cmd.Parameters.AddWithValue("@RaceID", raceID);
 
