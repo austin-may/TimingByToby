@@ -10,6 +10,7 @@ namespace TimingForToby
 {
     class TobyTimer
     {
+        
         private DateTime _StartTime;
         public TobyTimer()
         {
@@ -40,16 +41,24 @@ namespace TimingForToby
             // Create a timer that fires every minute
             BackupTimer = new System.Timers.Timer(60000);
             //Sync lapsed events to timer
-            BackupTimer.Elapsed += OnTimedEvent;
-            BackupTimer.AutoReset = true;
-            BackupTimer.Enabled = true;
+                BackupTimer.Elapsed += OnTimedEvent;
+                BackupTimer.AutoReset = true;
+                BackupTimer.Enabled = true;            
         }
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            //MessageBox.Show("Backup just occured at " + 
-               //               e.SignalTime);
-            CommonSQL.BackupDB();
+            //CommonSQL.BackupDB();
+            StartScreen.TimeStampedBackup(false);
+        }
+
+        //resets automatic backup clock back to zero if an event has fired
+        //call this method when an event should trigger a backup
+        //otherwise whenever there is a dormant 60 seconds the automatic backup will occur
+        internal static void KeepTimerDormant()
+        {
+            BackupTimer.Stop();
+            BackupTimer.Start();
         }
 
 
