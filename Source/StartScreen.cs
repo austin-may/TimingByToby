@@ -272,7 +272,7 @@ namespace TimingForToby
             //Very important! This variable will search for the "TimingForToby" folder on the Desktop! 
             //If the folder is not put there an error will occur!
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string sourcePath = desktopPath+"\\TimingByToby\\Source";
+            string sourcePath = desktopPath+@"\TimingByToby\Source\bin\Debug";
             string destinationPath = AppDataPath+"\\TimingForToby";
             string sourceFileName = desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite";
             //There's no colon in the time because as you might know that's not allowed in file names :(
@@ -304,6 +304,7 @@ namespace TimingForToby
             //openFileDialog.FileName = "TheExportedDatabase";
             //path to the appdata folder
             string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             //prompts the appdata folder to open on default
             openFileDialog.InitialDirectory = AppDataPath + "\\TimingForToby";
             try
@@ -311,7 +312,7 @@ namespace TimingForToby
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     //will show up in bin folder with the name "TheRestoredDatabase"
-                    CopyDB(openFileDialog.FileName, "TheRestoredDatabase.sqlite", 1);
+                    CopyDB(openFileDialog.FileName, DesktopPath + @"\TimingByToby\Source\TheRestoredDatabase.sqlite", 1);
                 }
             }
             catch (FileNotFoundException exception)
