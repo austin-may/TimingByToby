@@ -256,7 +256,7 @@ namespace TimingForToby
              {
                  if (saveFileDialog.ShowDialog() == DialogResult.OK)
                  {
-                     CopyDB("MyDatabase.sqlite", saveFileDialog.FileName, 0);
+                     CopyDB(desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite", saveFileDialog.FileName, 0);
                  } 
              }
              catch (FileNotFoundException exception)
@@ -274,7 +274,7 @@ namespace TimingForToby
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string sourcePath = desktopPath+"\\TimingByToby\\Source";
             string destinationPath = AppDataPath+"\\TimingForToby";
-            string sourceFileName = "MyDatabase.sqlite";
+            string sourceFileName = desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite";
             //There's no colon in the time because as you might know that's not allowed in file names :(
             string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
             string destinationFileName = "";
