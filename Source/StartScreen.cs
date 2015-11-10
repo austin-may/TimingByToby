@@ -269,12 +269,9 @@ namespace TimingForToby
         internal static void TimeStampedBackup(bool isClosing)
         {
             string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            //Very important! This variable will search for the "TimingForToby" folder on the Desktop! 
-            //If the folder is not put there an error will occur!
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string sourcePath = desktopPath+@"\TimingByToby\Source\bin\Debug";
+            string sourcePath = Directory.GetCurrentDirectory();
             string destinationPath = AppDataPath+"\\TimingForToby";
-            string sourceFileName = desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite";
+            string sourceFileName = @"MyDatabase.sqlite";
             //There's no colon in the time because as you might know that's not allowed in file names :(
             string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
             string destinationFileName = "";
@@ -287,14 +284,13 @@ namespace TimingForToby
             {
                destinationFileName = "Last Close " + timestamp + ".sqlite";
             }
-            string sourceFile = Path.Combine(sourcePath, sourceFileName);
             string destinationFile = Path.Combine(destinationPath, destinationFileName);
 
             if (!Directory.Exists(destinationPath))
             {
                 Directory.CreateDirectory(destinationPath);
             }
-            File.Copy(sourceFile, destinationFile, true);
+            File.Copy(sourceFileName, destinationFile, true);
         }
 
         private void RestoreDatabase_Click(object sender, EventArgs e)

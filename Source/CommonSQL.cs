@@ -32,7 +32,7 @@ namespace TimingForToby
                     cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
                     cmd.Parameters.AddWithValue("@FirstName", FirstName);
                     cmd.Parameters.AddWithValue("@LastName", LastName);
-                    cmd.Parameters.AddWithValue("@DOB", DOB.ToString("MM/dd/yyyy"));
+                    cmd.Parameters.AddWithValue("@DOB", DOB.ToString("yyyy-MM-dd"));
                     //check to ensure that value was added, if not, break
                     if(cmd.ExecuteNonQuery()==0)
                     {
