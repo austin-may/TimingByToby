@@ -32,7 +32,6 @@ namespace TimingForToby
             raceData=data;
             InitializeComponent();
             comboBoxKeySelect.SelectedIndex = 0;
-            //TobyTimer.SetTimer();
             //becouse the default is to start with the Keyboard Timer
             //set clock to inital default of 0
             SetClock(new TimeSpan(0,0,0));
@@ -221,7 +220,7 @@ namespace TimingForToby
             if(!radioButtonTM.Checked)
             {
                 //this should refresh the clock that the user sees
-                //ClockRefreshTimer.Enabled = true;
+                ClockRefreshTimer.Enabled = true;
             }
             //disable Start buton, enable stop
             btnStartRace.Enabled = false;
@@ -577,5 +576,8 @@ namespace TimingForToby
             DateTime dob = new DateTime(Int32.Parse(parts[0]), Int32.Parse(parts[1]), Int32.Parse(parts[2]));
             CommonSQL.DelRunner(first, last, dob, raceData.RaceID);
         }
+
+
+
     }
 }

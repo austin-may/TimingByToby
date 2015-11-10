@@ -111,13 +111,13 @@ namespace TimingForToby
              {
                   XDocument doc = new XDocument(new XElement("Filter", 
                        new XElement("Name", name + "-Male"),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, rn.BibID, CAST(Time as varchar(10)) as Time " 
+                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time " 
                                                        + "from RaceResults r " 
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID " 
                                                        + "where r.RaceID=@RaceID AND run.Gender=77 order by Time"),
                        new XElement("Name", name + "-Female"),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, rn.BibID, CAST(Time as varchar(10)) as Time "
+                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time "
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
@@ -131,7 +131,7 @@ namespace TimingForToby
              {
                   XDocument doc = new XDocument(new XElement("Filter",
                        new XElement("Name", name),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, rn.BibID, CAST(Time as varchar(10)) as Time, "
+                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                        + ageString
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
@@ -145,14 +145,14 @@ namespace TimingForToby
              {
                   XDocument doc = new XDocument(new XElement("Filter",
                        new XElement("Name", name + "-Male"),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, rn.BibID, CAST(Time as varchar(10)) as Time, "
+                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                        + ageString
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
                                                        + "where r.RaceID=@RaceID AND run.Gender=77 AND Age<=" + AgeMaximum + " AND Age>=" + AgeMinimum + " order by Time"),
                        new XElement("Name", name + "-Female"),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, rn.BibID, CAST(Time as varchar(10)) as Time, "
+                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                        + ageString
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "

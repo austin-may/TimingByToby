@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using System.IO;
 using Excel=Microsoft.Office.Interop.Excel;
+using System.Web;
 
 namespace TimingForToby
 {
@@ -213,7 +214,6 @@ namespace TimingForToby
                     lblProgress.Text = "Import complete for " + race;
                     importProgressPanel.Visible = false;
                     progressBar1.Value = 0;
-                    CommonSQL.BackupDB();
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace TimingForToby
         private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Backup the database on close
-            CommonSQL.BackupDB();
+            TimeStampedBackup(true);
         }
 
         //prompts for a save dialog
@@ -250,11 +250,13 @@ namespace TimingForToby
              SaveFileDialog saveFileDialog = new SaveFileDialog();
              saveFileDialog.Filter = "SQLite|*.sqlite";//type is sqlite
              saveFileDialog.FileName = "TheExportedDatabase";
+             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+             saveFileDialog.InitialDirectory = desktopPath + "\\TimingByToby\\Source";
              try
              {
                  if (saveFileDialog.ShowDialog() == DialogResult.OK)
                  {
-                     CopyDB("MyDatabase.sqlite", saveFileDialog.FileName, 0);
+                     CopyDB(desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite", saveFileDialog.FileName, 0);
                  } 
              }
              catch (FileNotFoundException exception)
@@ -264,15 +266,56 @@ namespace TimingForToby
              
         }
 
+        internal static void TimeStampedBackup(bool isClosing)
+        {
+            string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            //Very important! This variable will search for the "TimingForToby" folder on the Desktop! 
+            //If the folder is not put there an error will occur!
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string sourcePath = desktopPath+@"\TimingByToby\Source\bin\Debug";
+            string destinationPath = AppDataPath+"\\TimingForToby";
+            string sourceFileName = desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite";
+            //There's no colon in the time because as you might know that's not allowed in file names :(
+            string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
+            string destinationFileName = "";
+            //determines if the auto backup is being called because of a close event or because of a period.
+            if(isClosing == false)
+            { 
+               destinationFileName = "Auto Backup " + timestamp + ".sqlite";
+            }
+            else
+            {
+               destinationFileName = "Last Close " + timestamp + ".sqlite";
+            }
+            string sourceFile = Path.Combine(sourcePath, sourceFileName);
+            string destinationFile = Path.Combine(destinationPath, destinationFileName);
+
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+            File.Copy(sourceFile, destinationFile, true);
+        }
+
         private void RestoreDatabase_Click(object sender, EventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "SQLite|*.sqlite";//type is sqlite
+            //openFileDialog.FileName = "TheExportedDatabase";
+            //path to the appdata folder
+            string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //prompts the appdata folder to open on default
+            openFileDialog.InitialDirectory = AppDataPath + "\\TimingForToby";
             try
             {
-                //assuming this, but if data from original db is corrupted you would want
-                //to fetch the data from the backup db...
-                CopyDB("BackupDatabase.sqlite", "RestoredDatabase.sqlite", 1);
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //will show up in bin folder with the name "TheRestoredDatabase"
+                    CopyDB(openFileDialog.FileName, DesktopPath + @"\TimingByToby\Source\TheRestoredDatabase.sqlite", 1);
+                }
             }
-            catch (FileLoadException exception)
+            catch (FileNotFoundException exception)
             {
                 MessageBox.Show(exception.Message);
             }
@@ -281,7 +324,7 @@ namespace TimingForToby
 
         //the int parameter signifies what messagebox will be shown based on whether it was an 
         //export of the database or restore
-        private void CopyDB(string ExistingFileName, string DestinationFileName, int actionInvoked)
+        private static void CopyDB(string ExistingFileName, string DestinationFileName, int actionInvoked)
         {
             //copies an existing file to a new file
             File.Copy(ExistingFileName, DestinationFileName, true);
