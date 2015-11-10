@@ -144,5 +144,11 @@ namespace TimingForToby
         {
             return TimeSpan.Zero;
         }
+
+        public override void Dispose()
+        {
+            com.Close();
+            com.Dispose();
+        }
     }
 }

@@ -336,6 +336,8 @@ namespace TimingForToby
         //takes timing device and sets it to be able to be used
         private void SetTimingDevice(TimingDevice timeDevice)
         {
+            if (this.TimingDevice != null)
+                this.TimingDevice.Dispose();
             //set TimingDevice
             this.TimingDevice = timeDevice;
             //set RaceID so the device knows what race to update in DB

@@ -16,6 +16,7 @@ namespace TimingForToby
     {
         private TobyTimer timer;
         private List<Keys> triggerKeys=new List<Keys>();
+        private KeyEventHandler keyHandler;
 
         public KeybordTimer(string keyCode)
         {
@@ -60,12 +61,13 @@ namespace TimingForToby
                     triggerKeys.AddRange(new[] {Keys.F1,Keys.F2,Keys.F3,Keys.F4,Keys.F5,Keys.F6,Keys.F7,Keys.F8,Keys.F9,Keys.F10,Keys.F11,Keys.F12});
                     break;
             }
+            keyHandler = new KeyEventHandler(keyPressEvent);
         }
         public KeybordTimer(MainWindow window, string keyCode)
             : this(keyCode)
         {
             // TODO: Complete member initialization         
-            window.KeyDown += new KeyEventHandler(this.keyPressEvent);
+            window.KeyDown += keyHandler;
         }
         private void keyPressEvent(Object sender, KeyEventArgs e)
         {    
@@ -116,6 +118,11 @@ namespace TimingForToby
         public override void OffsetTimer(TimeSpan ts)
         {
             timer.OffSetTime(ts);
+        }
+
+        public override void Dispose()
+        {
+            keyHandler = null;
         }
     }
 }

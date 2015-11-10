@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TimingForToby
 {
-    public abstract class TimingDevice
+    public abstract class TimingDevice: IDisposable
     {
         private int _RaceID=-1;
         private List<Object> listeners=new List<object>();
@@ -41,5 +41,6 @@ namespace TimingForToby
                 obs.OnTime();
             }
         }
+        public abstract void Dispose();
     }
 }
