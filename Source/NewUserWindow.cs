@@ -43,7 +43,7 @@ namespace TimingForToby
             }
             else if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
             {
-                CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
+                CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
                 if (parent != null)
                     parent.reload();
                 CommonSQL.BackupDB();

@@ -41,12 +41,14 @@
             this.textBoxOrginization = new System.Windows.Forms.TextBox();
             this.textBoxBibId = new System.Windows.Forms.TextBox();
             this.BibID = new System.Windows.Forms.Label();
+            this.tbGender = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnDone
             // 
             this.btnDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDone.Location = new System.Drawing.Point(247, 185);
+            this.btnDone.Location = new System.Drawing.Point(247, 236);
             this.btnDone.Name = "btnDone";
             this.btnDone.Size = new System.Drawing.Size(75, 23);
             this.btnDone.TabIndex = 0;
@@ -108,7 +110,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 123);
+            this.label3.Location = new System.Drawing.Point(15, 150);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 9;
@@ -117,7 +119,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 147);
+            this.label5.Location = new System.Drawing.Point(15, 176);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(62, 13);
             this.label5.TabIndex = 10;
@@ -125,17 +127,17 @@
             // 
             // textBoxTeam
             // 
-            this.textBoxTeam.Location = new System.Drawing.Point(222, 120);
+            this.textBoxTeam.Location = new System.Drawing.Point(222, 147);
             this.textBoxTeam.Name = "textBoxTeam";
             this.textBoxTeam.Size = new System.Drawing.Size(100, 20);
-            this.textBoxTeam.TabIndex = 12;
+            this.textBoxTeam.TabIndex = 13;
             // 
             // textBoxOrginization
             // 
-            this.textBoxOrginization.Location = new System.Drawing.Point(222, 144);
+            this.textBoxOrginization.Location = new System.Drawing.Point(222, 173);
             this.textBoxOrginization.Name = "textBoxOrginization";
             this.textBoxOrginization.Size = new System.Drawing.Size(100, 20);
-            this.textBoxOrginization.TabIndex = 13;
+            this.textBoxOrginization.TabIndex = 14;
             // 
             // textBoxBibId
             // 
@@ -147,17 +149,35 @@
             // BibID
             // 
             this.BibID.AutoSize = true;
-            this.BibID.Location = new System.Drawing.Point(15, 94);
+            this.BibID.Location = new System.Drawing.Point(15, 97);
             this.BibID.Name = "BibID";
             this.BibID.Size = new System.Drawing.Size(33, 13);
             this.BibID.TabIndex = 14;
             this.BibID.Text = "BibID";
             // 
+            // tbGender
+            // 
+            this.tbGender.Location = new System.Drawing.Point(222, 121);
+            this.tbGender.Name = "tbGender";
+            this.tbGender.Size = new System.Drawing.Size(100, 20);
+            this.tbGender.TabIndex = 12;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 124);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(42, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Gender";
+            // 
             // NewUserWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 220);
+            this.ClientSize = new System.Drawing.Size(334, 271);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.tbGender);
             this.Controls.Add(this.BibID);
             this.Controls.Add(this.textBoxOrginization);
             this.Controls.Add(this.textBoxTeam);
@@ -193,5 +213,7 @@
         private System.Windows.Forms.TextBox textBoxTeam;
         private System.Windows.Forms.TextBox textBoxOrginization;
         private System.Windows.Forms.Label BibID;
+        private System.Windows.Forms.TextBox tbGender;
+        private System.Windows.Forms.Label label6;
     }
 }

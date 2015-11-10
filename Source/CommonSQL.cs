@@ -21,7 +21,7 @@ namespace TimingForToby
         public static SQLiteConnection originalDatabase;
         public static SQLiteConnection backupDatabase;
         private static SQLiteConnection db = new SQLiteConnection(SQLiteConnection);
-        internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string Team, string Orginization, string RaceName, string Connection){
+        internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string sex, string Team, string Orginization, string RaceName, string Connection){
             int raceID = GetRaceID(RaceName);
             using (var conn = new SQLiteConnection(Connection))
             {
@@ -29,10 +29,11 @@ namespace TimingForToby
                 using (var cmd = new SQLiteCommand())
                 {
                     cmd.Connection = conn;
-                    cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB) Values(@FirstName, @LastName, @DOB);";//'"+DOB.ToString("MM/dd/yyyy")+"');";
+                    cmd.CommandText = "Insert Into Runners(FirstName, LastName, DOB, Gender) Values(@FirstName, @LastName, @DOB, @Sex);";
                     cmd.Parameters.AddWithValue("@FirstName", FirstName);
                     cmd.Parameters.AddWithValue("@LastName", LastName);
                     cmd.Parameters.AddWithValue("@DOB", DOB.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Sex", sex);
                     //check to ensure that value was added, if not, break
                     if(cmd.ExecuteNonQuery()==0)
                     {
