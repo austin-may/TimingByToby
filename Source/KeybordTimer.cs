@@ -16,7 +16,8 @@ namespace TimingForToby
     {
         private TobyTimer timer;
         private List<Keys> triggerKeys=new List<Keys>();
-        private KeyEventHandler keyHandler;
+        public KeyEventHandler keyHandler;
+        private KeyEventHandler windowEvent;
 
         public KeybordTimer(string keyCode)
         {
@@ -67,7 +68,7 @@ namespace TimingForToby
             : this(keyCode)
         {
             // TODO: Complete member initialization         
-            window.KeyDown += keyHandler;
+            //window.KeyDown += keyHandler;
         }
         private void keyPressEvent(Object sender, KeyEventArgs e)
         {    

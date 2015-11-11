@@ -183,8 +183,16 @@ namespace TimingForToby
         {
             if(radioButtonKB.Checked)
             {
-                this.SetTimingDevice(new KeybordTimer(this, comboBoxKeySelect.SelectedText));
+                var timer = new KeybordTimer(this, comboBoxKeySelect.SelectedText);
+                this.SetTimingDevice(timer);
                 this.btnStartRace.Enabled = true;
+                KeyDown+=timer.keyHandler;
+            }
+            else
+            {
+                var timer = TimingDevice as KeybordTimer;
+                if(timer!=null)
+                    KeyDown -= timer.keyHandler;
             }
         }
         //what happens when the start race button is pressed
@@ -198,7 +206,9 @@ namespace TimingForToby
                 switch(rb.Name)
                 {
                     case "radioButtonKB":
-                        this.SetTimingDevice(new KeybordTimer(this, comboBoxKeySelect.SelectedText));
+                        var timer = new KeybordTimer(this, comboBoxKeySelect.SelectedText);
+                        this.SetTimingDevice(timer);
+                        KeyDown += timer.keyHandler;
                         break;
                     case "radioButtonTM":
                             if (comPortComboBox.SelectedItem != null)
