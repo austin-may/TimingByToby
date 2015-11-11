@@ -380,6 +380,7 @@ namespace TimingForToby
         }
         internal static bool BibExist(string bibID, int raceID)
         {
+            bool results = false;
             bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
             try
             {
@@ -393,7 +394,12 @@ namespace TimingForToby
                     cmd.Parameters.AddWithValue("@RaceID", raceID);
 
                     var r=cmd.ExecuteReader();
-                    return r.HasRows;
+                    results= r.HasRows;
+                    if (results)
+                    {
+                        //burn through results to prevent db lock
+                        while (r.Read()) { }
+                    }
                 }
             }
             catch (Exception sqlError)
@@ -406,7 +412,7 @@ namespace TimingForToby
                     db.Close();
             }
             //if we get here then ya, it doesnt exsist
-            return false;
+            return results;
         }
     }
 }

@@ -183,13 +183,14 @@ namespace TimingForToby
         {
             if(radioButtonKB.Checked)
             {
-                var timer = new KeybordTimer(this, comboBoxKeySelect.SelectedText);
+                var timer = new KeybordTimer(comboBoxKeySelect.SelectedText);
                 this.SetTimingDevice(timer);
                 this.btnStartRace.Enabled = true;
                 KeyDown+=timer.keyHandler;
             }
             else
             {
+                //remove the key event
                 var timer = TimingDevice as KeybordTimer;
                 if(timer!=null)
                     KeyDown -= timer.keyHandler;
@@ -206,8 +207,9 @@ namespace TimingForToby
                 switch(rb.Name)
                 {
                     case "radioButtonKB":
-                        var timer = new KeybordTimer(this, comboBoxKeySelect.SelectedText);
+                        var timer = new KeybordTimer(comboBoxKeySelect.SelectedText);
                         this.SetTimingDevice(timer);
+                        //add key event
                         KeyDown += timer.keyHandler;
                         break;
                     case "radioButtonTM":
@@ -215,7 +217,7 @@ namespace TimingForToby
                                 ValidateTimeMachine();
                         break;
                     default:
-                        this.SetTimingDevice(new KeybordTimer(this, comboBoxKeySelect.SelectedText));
+                        this.SetTimingDevice(new KeybordTimer(comboBoxKeySelect.SelectedText));
                         break;
                 }
             }
