@@ -12,7 +12,7 @@ namespace TimingByTobyTests
         [TestMethod]
         public void TestKeyboard()
         {
-            KeybordTimer keyboard = new KeybordTimer();
+            KeybordTimer keyboard = new KeybordTimer(Keys.F1.ToString());
             keyboard.StartRace();
         }
 
@@ -20,9 +20,10 @@ namespace TimingByTobyTests
         public void TestImportingRunners()
         {
             DateTime time = DateTime.Now;
-            CommonSQL.AddRunner("4343", "2323", time, "hey", "ok", "ok", "Hahaha", "ok");
-            CommonSQL.AddRunner("Bob", "Martin", time, "345", "ok", "ok", "Race 3", "huh");
-            MainWindow main = new MainWindow();
+            CommonSQL.AddRunner("4343", "2323", time, "hey", "female", "ok", "ok", "Hahaha", "Data Source=MyDatabase.sqlite;Version=3;");
+            CommonSQL.AddRunner("Bob", "Martin", time, "345", "male", "ok", "ok", "Race 3", "Data Source=MyDatabase.sqlite;Version=3;");
+            RaceData rd = new RaceData(null, "Sample Data", "Data Source=MyDatabase.sqlite;Version=3;");
+            MainWindow main = new MainWindow(rd);
             main.OnTime();
         }
     }

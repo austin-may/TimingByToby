@@ -256,7 +256,7 @@ namespace TimingForToby
              {
                  if (saveFileDialog.ShowDialog() == DialogResult.OK)
                  {
-                     CopyDB(desktopPath + @"\TimingByToby\Source\bin\Debug\MyDatabase.sqlite", saveFileDialog.FileName, 0);
+                     CopyDB("MyDatabase.sqlite", saveFileDialog.FileName, 0);
                  } 
              }
              catch (FileNotFoundException exception)
@@ -308,7 +308,7 @@ namespace TimingForToby
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     //will show up in bin folder with the name "TheRestoredDatabase"
-                    CopyDB(openFileDialog.FileName, DesktopPath + @"\TimingByToby\Source\TheRestoredDatabase.sqlite", 1);
+                    CopyDB(openFileDialog.FileName, "MyDatabase.sqlite", 1);
                 }
             }
             catch (FileNotFoundException exception)
