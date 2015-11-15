@@ -414,5 +414,83 @@ namespace TimingForToby
             //if we get here then ya, it doesnt exsist
             return results;
         }
+        //same as above except we want to check if the bib exsist excluding runner
+        internal static bool BibExistOutsideRunner(string bibID, int raceID, int runnerID)
+        {
+            bool results = false;
+            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            try
+            {
+                if (!alreadyOpen)
+                    db.Open();
+                using (var cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = db;
+                    cmd.CommandText = "select * from RaceRunner where BibID=@id and RaceID=@RaceID and RunnerID<>@runnerID;";
+                    cmd.Parameters.AddWithValue("@id", bibID);
+                    cmd.Parameters.AddWithValue("@RaceID", raceID);
+                    cmd.Parameters.AddWithValue("@runnerID", runnerID);
+
+                    var r = cmd.ExecuteReader();
+                    results = r.HasRows;
+                    if (results)
+                    {
+                        //burn through results to prevent db lock
+                        while (r.Read()) { }
+                    }
+                }
+            }
+            catch (Exception sqlError)
+            {
+                MessageBox.Show(sqlError.Message);
+            }
+            finally
+            {
+                if (!alreadyOpen)
+                    db.Close();
+            }
+            //if we get here then ya, it doesnt exsist
+            return results;
+        }
+        internal static void UpdateRunner(int runnerId, string FirstName, string LastName, DateTime DOB, string BibID, string sex, string Team, string Orginization, string RaceName, string Connection)
+        {
+            int raceID = GetRaceID(RaceName);
+            using (var conn = new SQLiteConnection(Connection))
+            {
+                conn.Open();
+                using (var cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = "Update Runners set FirstName=@FirstName, LastName=@LastName, DOB=@DOB, Gender=@Sex where RunnerID=@runnerId;";
+                    cmd.Parameters.AddWithValue("@FirstName", FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", LastName);
+                    cmd.Parameters.AddWithValue("@DOB", DOB.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("@Sex", sex);
+                    cmd.Parameters.AddWithValue("@runnerId", runnerId);
+                    //check to ensure that value was added, if not, break
+                    if (cmd.ExecuteNonQuery() == 0)
+                    {
+                        MessageBox.Show("No Runner changed");
+                        return;
+                    }
+
+                    cmd.CommandText =
+                        "Update RaceRunner set BibID=@BibID, Orginization=@Orginization, Team=@Team where RunnerID=@runnerId";
+
+                    cmd.Parameters.AddWithValue("@Race", raceID);
+                    cmd.Parameters.AddWithValue("@BibID", BibID);
+                    cmd.Parameters.AddWithValue("@Team", Team);
+                    cmd.Parameters.AddWithValue("@Orginization", Orginization);
+                    //check to ensure that value was added, if not, break
+                    if (cmd.ExecuteNonQuery() == 0)
+                    {
+                        MessageBox.Show("Runner race data not updated");
+                        return;
+                    }
+                }
+                conn.Close();
+            }
+        }
+        
     }
 }

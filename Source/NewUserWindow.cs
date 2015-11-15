@@ -14,6 +14,8 @@ namespace TimingForToby
     {
         private RaceData raceData;
         private MainWindow parent;
+        //if the user exsist already, we want their ID
+        private int _RunnerID=-1;
         public NewUserWindow(RaceData _raceData)
         {
             raceData = _raceData;
@@ -33,6 +35,7 @@ namespace TimingForToby
             textBoxBibId.Text = bibID;
             textBoxTeam.Text = team;
             textBoxOrginization.Text=org;
+            _RunnerID=CommonSQL.GetRunnerID(firstName, lastName, dob);
         }
 
         private void btnDone_Click(object sender, EventArgs e)
@@ -41,9 +44,32 @@ namespace TimingForToby
             {
                 MessageBox.Show("Can not add: First Name, Last Name, and Bib can not be empty");
             }
-            else if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
+            //if we already know the runner
+            if (_RunnerID > 0)
+                updateRunner();
+            else
+                addRunner();
+        }
+        private void addRunner()
+        {
+            if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
             {
                 CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
+                if (parent != null)
+                    parent.reload();
+                CommonSQL.BackupDB();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Can not add: Duplicate bib");
+            }
+        }
+        private void updateRunner()
+        {
+            if (!CommonSQL.BibExistOutsideRunner(textBoxBibId.Text, raceData.RaceID, _RunnerID))
+            {
+                CommonSQL.UpdateRunner(_RunnerID, textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
                 if (parent != null)
                     parent.reload();
                 CommonSQL.BackupDB();
