@@ -341,7 +341,8 @@ namespace TimingForToby
             { 
                 TimingTableLoad();
                 HighlightTimingErrors();
-                dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
+                if(dataGridTiming.RowCount>0)
+                    dataGridTiming.FirstDisplayedScrollingRowIndex = dataGridTiming.RowCount - 1;
             }
         }
         //takes timing device and sets it to be able to be used
