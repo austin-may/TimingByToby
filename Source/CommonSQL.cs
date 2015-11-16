@@ -14,7 +14,7 @@ namespace TimingForToby
 {
     public class CommonSQL
     {
-        internal static string SQLiteConnection = "Data Source=MyDatabase.sqlite;Version=3;";
+        public static string SQLiteConnection = "Data Source=MyDatabase.sqlite;Version=3;";
         internal static string backupDB = "Data Source=BackupDatabase.sqlite;Version=3;";
         private static Dictionary<string, int> RaceIdMap = new Dictionary<string, int>();
         public static string filterFolder="Filters";

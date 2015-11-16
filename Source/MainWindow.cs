@@ -27,6 +27,7 @@ namespace TimingForToby
         {
             InitializeComponent();
         }
+        //this is how we realy start the main window... sets defaults for clock and timemr
         public MainWindow(RaceData data)
         {
             raceData=data;
@@ -36,10 +37,11 @@ namespace TimingForToby
             //set clock to inital default of 0
             SetClock(new TimeSpan(0,0,0));
             panelClock.Visible = true;
+            //this is to make the clock update in the gui
             ClockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(TimingDevice.GetCurrentTime()); });
         }
         //builds and populates the results table
-        private void buildResults(List<Filter> filters)
+        private void BuildResults(List<Filter> filters)
         {
             resultTable.Controls.Clear();
             int filterCount = filters.Count;
@@ -64,7 +66,7 @@ namespace TimingForToby
             if (!TimingCellBeingEdited)
             {
                 TimingTableUpdating = true;
-                using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+                using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
                 {
                     try
                     {
@@ -93,10 +95,11 @@ namespace TimingForToby
                 TimingTableUpdating = false;
             }
         }
+        //this handles the construction of the runners table
         private void BuildRunnersTable(){
             var runners = new DataTable();
             this.dataGridRunners.AllowUserToAddRows = true;
-            using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
+            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
             {
                 try
                 {
@@ -123,17 +126,18 @@ namespace TimingForToby
             dataGridRunners.AllowUserToAddRows = false;
             dataGridRunners.DataSource = runners;
         }
+        //populates the combo box that holds the filters
         private void BuildFilters()
         {
             //look in the Filters folder (should be in the same directory, grab all xml files and list them in the checkbox.
             try
             {
-                checkedListBox1.Items.Clear();
+                checkedListBoxFilters.Items.Clear();
                 foreach (string file in Directory.GetFiles(CommonSQL.filterFolder, "*.XML"))
                 {
                     int index = file.LastIndexOf('\\');
                     //the length is -5 (1 for general overflow, 4 for ".xml"
-                    checkedListBox1.Items.Add(file.Substring(index + 1, file.Length - index - 5));
+                    checkedListBoxFilters.Items.Add(file.Substring(index + 1, file.Length - index - 5));
                 }
             }
             catch (Exception filterError)
@@ -141,13 +145,14 @@ namespace TimingForToby
                 MessageBox.Show(filterError.Message);
             }
         }
+        //refreash filters, runners, and timing tables
         private void MainWindow_Load(object sender, EventArgs e)
         {
             BuildFilters();
             BuildRunnersTable();
             TimingTableLoad();            
         }
-
+        //refreash
         public void Reload()
         {
             MainWindow_Load(null, null);
@@ -158,7 +163,7 @@ namespace TimingForToby
             var user = new NewUserWindow(raceData, this);
             user.Show();
         }
-
+        //if user clicks main menu go back to start screen
         private void MainMenueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (raceData.StartWindow != null)
@@ -238,6 +243,7 @@ namespace TimingForToby
             btnStartRace.Enabled = false;
             btnEndRace.Enabled = true;
         }
+        //end the race if applicable
         private void StopRace(object sender, EventArgs e)
         {
             if(TimingDevice!=null)
@@ -255,22 +261,22 @@ namespace TimingForToby
             filters.Clear();
             if(e.NewValue==CheckState.Checked)
             {
-                foreach (string filter in checkedListBox1.CheckedItems)
+                foreach (string filter in checkedListBoxFilters.CheckedItems)
                 {
                     filters.AddRange(Filter.BuildFromXML(raceData, CommonSQL.filterFolder + "\\" + filter + ".xml", 350, (int)(resultTable.Height * .9)));
                 }
-                filters.AddRange(Filter.BuildFromXML(raceData, CommonSQL.filterFolder + "\\" + checkedListBox1.Items[e.Index].ToString() + ".xml", 350, (int)(resultTable.Height * .9)));
+                filters.AddRange(Filter.BuildFromXML(raceData, CommonSQL.filterFolder + "\\" + checkedListBoxFilters.Items[e.Index].ToString() + ".xml", 350, (int)(resultTable.Height * .9)));
             }
             else//item was checked and is now being unchecked
             {
-                foreach (string filter in checkedListBox1.CheckedItems)
+                foreach (string filter in checkedListBoxFilters.CheckedItems)
                 {
-                    if(filter!=checkedListBox1.Items[e.Index])
+                    if(filter!=checkedListBoxFilters.Items[e.Index])
                         filters.AddRange(Filter.BuildFromXML(raceData, CommonSQL.filterFolder + "\\" + filter + ".xml", 350, (int)(resultTable.Height * .9)));
                 }
             }
             //build filters
-            buildResults(filters);
+            BuildResults(filters);
         }
         //highlight duplicated bibs
         private void HighlightTimingErrors()
@@ -324,6 +330,7 @@ namespace TimingForToby
         delegate void OnTimeCallBack();
         //to be called everytime an time is added (timing Device action)
         public void SafeReloadTimeTable(){OnTime();}
+        //this will run when the user records a new runner time
         public void OnTime()
         {
             //cross threading non-sense
@@ -364,7 +371,7 @@ namespace TimingForToby
             else
                 panelClock.Visible = false;
         }
-
+        //populate com combo box when the down arrow is selected
         private void ComDropDown(object sender, EventArgs e)
         {
             //get Com ports and populate select box
@@ -382,6 +389,7 @@ namespace TimingForToby
                 btnEndRace.Enabled = false;
             }
         }
+        //make sure that the time machine is able to be selected by checking if com port exsists
         private void ValidateTimeMachine()
         {
             if (comPortComboBox.SelectedItem == null || comPortComboBox.SelectedItem.ToString() == "")
@@ -447,7 +455,7 @@ namespace TimingForToby
             }
             return new TimeSpan(hh, mm, ss);
         }
-
+        //print the results as seen to excel
         private void ExportResults(object sender, EventArgs e)
         {
             if (filters.Count == 0)
@@ -507,6 +515,7 @@ namespace TimingForToby
                 }
             }
         }
+        //for the excel
         private void ReleaseObject(object obj)
         {
             try
@@ -524,6 +533,7 @@ namespace TimingForToby
                 GC.Collect();
             }
         }
+        //create a new filter
         private void BtnCreateFilter_Click(object sender, EventArgs e)
         {
             //Creates a filterbuilder window
@@ -534,7 +544,7 @@ namespace TimingForToby
                 BuildFilters();
             }
         }
-
+        //edit a runners data
         private void RunnerTableDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             var row=dataGridRunners.Rows[e.RowIndex];
@@ -575,12 +585,13 @@ namespace TimingForToby
             var person = new NewUserWindow(raceData, this, firstName, lastName, dob, bibId, team, org);
             person.Show();
         }
-
+        //remove row from timing table
         private void DataGridViewTimingRowDel(object sender, DataGridViewRowCancelEventArgs e)
         {
             CommonSQL.DelTimingRow(raceData.RaceID, dataGridTiming[2, e.Row.Index].Value.ToString());        
         }
 
+        //remove row from runners table
         private void DataGridViewRunnerRowDel(object sender, DataGridViewRowCancelEventArgs e)
         {
             string first = dataGridRunners["FirstName", e.Row.Index].Value.ToString();
