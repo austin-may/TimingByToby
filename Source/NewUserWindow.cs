@@ -54,9 +54,9 @@ namespace TimingForToby
         {
             if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
             {
-                CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
+                CommonSQL.AddRunner(textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.raceName, raceData.connectionString);
                 if (parent != null)
-                    parent.reload();
+                    parent.Reload();
                 CommonSQL.BackupDB();
                 this.Close();
             }
@@ -69,9 +69,9 @@ namespace TimingForToby
         {
             if (!CommonSQL.BibExistOutsideRunner(textBoxBibId.Text, raceData.RaceID, _RunnerID))
             {
-                CommonSQL.UpdateRunner(_RunnerID, textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.RaceName, raceData.ConnectionString);
+                CommonSQL.UpdateRunner(_RunnerID, textBoxFirstName.Text, textBoxLastName.Text, Convert.ToDateTime(dateTimePicker1.Value.ToShortDateString()), textBoxBibId.Text, tbGender.Text, textBoxTeam.Text, textBoxOrginization.Text, raceData.raceName, raceData.connectionString);
                 if (parent != null)
-                    parent.reload();
+                    parent.Reload();
                 CommonSQL.BackupDB();
                 this.Close();
             }

@@ -108,7 +108,7 @@
             this.btnAddRunner.TabIndex = 1;
             this.btnAddRunner.Text = "Add Runner";
             this.btnAddRunner.UseVisualStyleBackColor = true;
-            this.btnAddRunner.Click += new System.EventHandler(this.btnAddRunner_Click);
+            this.btnAddRunner.Click += new System.EventHandler(this.BtnAddRunner_Click);
             // 
             // dataGridRunners
             // 
@@ -153,7 +153,7 @@
             this.btnCreateFilter.TabIndex = 6;
             this.btnCreateFilter.Text = "Create Custom Filter";
             this.btnCreateFilter.UseVisualStyleBackColor = true;
-            this.btnCreateFilter.Click += new System.EventHandler(this.button2_Click);
+            this.btnCreateFilter.Click += new System.EventHandler(this.BtnCreateFilter_Click);
             // 
             // resultTable
             // 
@@ -210,7 +210,7 @@
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(179, 89);
             this.checkedListBox1.TabIndex = 0;
-            this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
+            this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox1_ItemCheck);
             // 
             // tabTiming
             // 
@@ -352,7 +352,7 @@
             this.radioButtonKB.TabStop = true;
             this.radioButtonKB.Text = "KeyBoard";
             this.radioButtonKB.UseVisualStyleBackColor = true;
-            this.radioButtonKB.CheckedChanged += new System.EventHandler(this.radioButtonKB_CheckedChanged);
+            this.radioButtonKB.CheckedChanged += new System.EventHandler(this.RadioButtonKB_CheckedChanged);
             // 
             // radioButtonTM
             // 
@@ -364,7 +364,7 @@
             this.radioButtonTM.TabIndex = 2;
             this.radioButtonTM.Text = "Time Machine";
             this.radioButtonTM.UseVisualStyleBackColor = true;
-            this.radioButtonTM.CheckedChanged += new System.EventHandler(this.radioButtonTM_CheckedChanged);
+            this.radioButtonTM.CheckedChanged += new System.EventHandler(this.RadioButtonTM_CheckedChanged);
             // 
             // comPortComboBox
             // 
@@ -454,7 +454,7 @@
             this.mainMenueToolStripMenuItem.Name = "mainMenueToolStripMenuItem";
             this.mainMenueToolStripMenuItem.Size = new System.Drawing.Size(95, 24);
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
-            this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.mainMenueToolStripMenuItem_Click);
+            this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.MainMenueToolStripMenuItem_Click);
             // 
             // MainWindow
             // 

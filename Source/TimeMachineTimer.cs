@@ -10,13 +10,13 @@ namespace TimingForToby
 {
     class TimeMachineTimer: TimingDevice
     {
-        private SerialPort com;
+        private SerialPort _com;
         private static readonly string START_TX = "START OF RETRANSMIT";
         private static readonly string END_TX = "END OF RETRANSMIT";
-        private bool retransmit = false;
-        private List<String> recalled = new List<string>();
-        private String currentString = "";
-        private Dictionary<string, string> raceMap = new Dictionary<string, string>();
+        private bool _retransmit = false;
+        private List<String> _recalled = new List<string>();
+        private String _currentString = "";
+        private Dictionary<string, string> _raceMap = new Dictionary<string, string>();
 
         public TimeMachineTimer() { }
         public TimeMachineTimer(String port)
@@ -25,35 +25,35 @@ namespace TimingForToby
         }
         private void ConnectToPort(string comPort)
         {
-            if (com != null)
-            { com.Close(); com.Dispose(); }
-            com = new SerialPort();
+            if (_com != null)
+            { _com.Close(); _com.Dispose(); }
+            _com = new SerialPort();
 
             // Allow the user to set the appropriate properties.
-            com.PortName = comPort;
-            com.BaudRate = 9600;
-            com.Parity = Parity.None;
-            com.DataBits = 8;
-            com.StopBits = StopBits.One;
-            com.Handshake = Handshake.None;
+            _com.PortName = comPort;
+            _com.BaudRate = 9600;
+            _com.Parity = Parity.None;
+            _com.DataBits = 8;
+            _com.StopBits = StopBits.One;
+            _com.Handshake = Handshake.None;
 
             // Set the read/write timeouts
-            com.ReadTimeout = 500;
-            com.WriteTimeout = 500;
+            _com.ReadTimeout = 500;
+            _com.WriteTimeout = 500;
             try
             {
-                com.Open();
-                com.DataReceived += new SerialDataReceivedEventHandler(responseHandler);
+                _com.Open();
+                _com.DataReceived += new SerialDataReceivedEventHandler(responseHandler);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                com.Close(); com.Dispose();
+                _com.Close(); _com.Dispose();
             }
         }
         private void responseHandler(object sender, SerialDataReceivedEventArgs args)
         {
-            ParseCom(com.ReadExisting());
+            ParseCom(_com.ReadExisting());
         }
 
         private void ParseCom(string text)
@@ -61,26 +61,26 @@ namespace TimingForToby
             foreach (char c in text.ToCharArray())
             {
                 // build the line
-                currentString += c;
+                _currentString += c;
                 //IF WE HIT THE END OF THE LINE
-                if (currentString.Contains("\r\n"))
+                if (_currentString.Contains("\r\n"))
                 {
-                    currentString = currentString.Replace("\r\n", "");
-                    recalled.Add(currentString);
-                    if (currentString.Contains(START_TX))
-                        retransmit = true;
-                    else if (currentString.Contains(END_TX))
-                        retransmit = false;
-                    else if (retransmit)
-                        ProcessRecalledData(currentString);
+                    _currentString = _currentString.Replace("\r\n", "");
+                    _recalled.Add(_currentString);
+                    if (_currentString.Contains(START_TX))
+                        _retransmit = true;
+                    else if (_currentString.Contains(END_TX))
+                        _retransmit = false;
+                    else if (_retransmit)
+                        ProcessRecalledData(_currentString);
                     else
-                        ProcessPassedData(currentString);
-                    currentString = "";
+                        ProcessPassedData(_currentString);
+                    _currentString = "";
                 }
                 //start of line
                 else if (IsSpecialChar(c))
                 {
-                    currentString = "";
+                    _currentString = "";
                 }
             }
         }
@@ -93,8 +93,8 @@ namespace TimingForToby
                 var time = test[3];
                 if (test.Length > 6)
                     bibString = test[6];
-                if(!raceMap.ContainsKey(time))
-                    raceMap.Add(time, bibString);
+                if(!_raceMap.ContainsKey(time))
+                    _raceMap.Add(time, bibString);
                 this.RecordTime(bibString, time);
             }
         }
@@ -107,9 +107,9 @@ namespace TimingForToby
                 var time = test[3];
                 if (test.Length > 6)
                     bibString = test[6];
-                if (!raceMap.ContainsKey(time))
+                if (!_raceMap.ContainsKey(time))
                 {
-                    raceMap.Add(time, bibString);
+                    _raceMap.Add(time, bibString);
                     this.RecordTime(bibString, time);
                 }
             }
@@ -147,8 +147,8 @@ namespace TimingForToby
 
         public override void Dispose()
         {
-            com.Close();
-            com.Dispose();
+            _com.Close();
+            _com.Dispose();
         }
     }
 }

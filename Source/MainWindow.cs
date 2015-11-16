@@ -46,7 +46,7 @@ namespace TimingForToby
             resultTable.ColumnCount = filterCount;
             for (int i = 0; i < filterCount;i++)
             {
-                resultTable.Controls.Add(new Label { Text = filters[i].Name, Anchor = AnchorStyles.None }, i, 0);
+                resultTable.Controls.Add(new Label { Text = filters[i].name, Anchor = AnchorStyles.None }, i, 0);
                 filters[i].LoadDataTable();
                 resultTable.Controls.Add(filters[i].GetDataTable(), i, 1);
             }
@@ -148,18 +148,18 @@ namespace TimingForToby
             TimingTableLoad();            
         }
 
-        public void reload()
+        public void Reload()
         {
             MainWindow_Load(null, null);
         }
         //adding user button
-        private void btnAddRunner_Click(object sender, EventArgs e)
+        private void BtnAddRunner_Click(object sender, EventArgs e)
         {
             var user = new NewUserWindow(raceData, this);
             user.Show();
         }
 
-        private void mainMenueToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MainMenueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (raceData.StartWindow != null)
             {
@@ -179,7 +179,7 @@ namespace TimingForToby
             CommonSQL.BackupDB();
         }
         //creates and assigns keybord timer when the kebord radio button is selected
-        private void radioButtonKB_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonKB_CheckedChanged(object sender, EventArgs e)
         {
             if(radioButtonKB.Checked)
             {
@@ -250,7 +250,7 @@ namespace TimingForToby
             btnEndRace.Enabled = false;
         }
         //this handles the filters.  finds the related file and builds filter
-        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void CheckedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             filters.Clear();
             if(e.NewValue==CheckState.Checked)
@@ -355,7 +355,7 @@ namespace TimingForToby
             //set RaceID so the device knows what race to update in DB
             TimingDevice.SetRaceID(raceData.RaceID);
             //listen for change to update Table
-            TimingDevice.addListener(this);
+            TimingDevice.AddListener(this);
             //if we are using a timer with internal clock, report the time
             if (!(TimingDevice is TimeMachineTimer))
             {
@@ -372,7 +372,7 @@ namespace TimingForToby
             comPortComboBox.Items.AddRange(SerialPort.GetPortNames());
         }
         //the time machine can and should only be used if the com port is also selected
-        private void radioButtonTM_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonTM_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonTM.Checked)
             {
@@ -459,7 +459,7 @@ namespace TimingForToby
                 //save dialog
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Excel File|*.xlsx";//type is excel
-                saveFileDialog.FileName = "Results_" + raceData.RaceName;//default name of file
+                saveFileDialog.FileName = "Results_" + raceData.raceName;//default name of file
                 DialogResult result = saveFileDialog.ShowDialog(); // Show the dialog.
                 var xlApp = new Microsoft.Office.Interop.Excel.Application();
 
@@ -473,7 +473,7 @@ namespace TimingForToby
                     for (int f=0; f<filters.Count;f++)
                     {
                         Filter filter = filters[f];
-                        xlWorkSheet.Cells[1, f*3+2] = filter.Name;
+                        xlWorkSheet.Cells[1, f*3+2] = filter.name;
                         var table = filter.GetDataTable();
                         for (int i = 0; i < table.ColumnCount; i++)
                         {
@@ -491,9 +491,9 @@ namespace TimingForToby
                     }
                     xlWorkBook.SaveAs(saveFileDialog.FileName);
                     xlWorkBook.Close();
-                    releaseObject(xlWorkSheet);
-                    releaseObject(xlWorkBook);
-                    releaseObject(xlApp);
+                    ReleaseObject(xlWorkSheet);
+                    ReleaseObject(xlWorkBook);
+                    ReleaseObject(xlApp);
                     MessageBox.Show("Excel file created");
                 }
                 catch (Exception er)
@@ -507,7 +507,7 @@ namespace TimingForToby
                 }
             }
         }
-        private void releaseObject(object obj)
+        private void ReleaseObject(object obj)
         {
             try
             {
@@ -524,14 +524,14 @@ namespace TimingForToby
                 GC.Collect();
             }
         }
-        private void button2_Click(object sender, EventArgs e)
+        private void BtnCreateFilter_Click(object sender, EventArgs e)
         {
             //Creates a filterbuilder window
             NewFilterBuilder FilterWin = new NewFilterBuilder();
             //Checks that the "Create Filter" button was pressed on the filterbuilder window and then adds that filter to the list
             if (FilterWin.ShowDialog(this) == DialogResult.OK && FilterWin.FilterName!=null)
             {
-                checkedListBox1.Items.Add(FilterWin.FilterName);
+                BuildFilters();
             }
         }
 

@@ -20,15 +20,15 @@ namespace TimingForToby
           SQLiteCommand command = new SQLiteCommand();
           DataGridView data = new DataGridView();
           Label filLabel = new Label();
-          private int RaceID;
-         private String connectionSting;
+          private int _raceID;
+         private String _connectionSting;
           string ageString = "(strftime('%Y', 'now') - strftime('%Y', DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', DOB))";
           private String _Sql;
-         public String Name;
+         public String name;
           
          public Filter(RaceData raceData){
-             RaceID = raceData.RaceID;
-             connectionSting = raceData.ConnectionString;
+             _raceID = raceData.RaceID;
+             _connectionSting = raceData.connectionString;
              data.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
              data.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Raised;
              data.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
@@ -37,7 +37,7 @@ namespace TimingForToby
           public Filter(RaceData raceData, string name, string query, int width=-1, int height=-1)
               : this(raceData)
           {
-              Name = name;
+              name = name;
               _Sql = query;
               if (width > 0 && height > 0)
               {
@@ -49,14 +49,14 @@ namespace TimingForToby
           }
           public void LoadDataTable()
           {
-              using (var connect = new SQLiteConnection(connectionSting))
+              using (var connect = new SQLiteConnection(_connectionSting))
               {
                   try
                   {
                       connect.Open();
                       command.Connection = connect;
                       command.CommandText = _Sql;
-                      command.Parameters.AddWithValue("@RaceID", RaceID);  
+                      command.Parameters.AddWithValue("@RaceID", _raceID);  
                       var filterTable = new DataTable();
                       var daFilter = new SQLiteDataAdapter(command);
                       daFilter.Fill(filterTable);

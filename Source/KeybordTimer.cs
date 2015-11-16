@@ -14,55 +14,55 @@ namespace TimingForToby
 {
     public class KeybordTimer : TimingDevice
     {
-        private TobyTimer timer;
-        private List<Keys> triggerKeys=new List<Keys>();
+        private TobyTimer _timer;
+        private List<Keys> _triggerKeys=new List<Keys>();
         public KeyEventHandler keyHandler;
-        private KeyEventHandler windowEvent;
+        private KeyEventHandler _windowEvent;
 
         public KeybordTimer(string keyCode)
         {
             switch(keyCode){
                 case "F1":
-                    triggerKeys.Add(Keys.F1);
+                    _triggerKeys.Add(Keys.F1);
                     break;
                 case "F2":
-                    triggerKeys.Add(Keys.F2);
+                    _triggerKeys.Add(Keys.F2);
                     break;
                 case "F3":
-                    triggerKeys.Add(Keys.F3);
+                    _triggerKeys.Add(Keys.F3);
                     break;
                 case "F4":
-                    triggerKeys.Add(Keys.F4);
+                    _triggerKeys.Add(Keys.F4);
                     break;
                 case "F5":
-                    triggerKeys.Add(Keys.F5);
+                    _triggerKeys.Add(Keys.F5);
                     break;
                 case "F6":
-                    triggerKeys.Add(Keys.F6);
+                    _triggerKeys.Add(Keys.F6);
                     break;
                 case "F7":
-                    triggerKeys.Add(Keys.F7);
+                    _triggerKeys.Add(Keys.F7);
                     break;
                 case "F8":
-                    triggerKeys.Add(Keys.F8);
+                    _triggerKeys.Add(Keys.F8);
                     break;
                 case "F9":
-                    triggerKeys.Add(Keys.F9);
+                    _triggerKeys.Add(Keys.F9);
                     break;
                 case "F10":
-                    triggerKeys.Add(Keys.F10);
+                    _triggerKeys.Add(Keys.F10);
                     break;
                 case "F11":
-                    triggerKeys.Add(Keys.F11);
+                    _triggerKeys.Add(Keys.F11);
                     break;
                 case "F12":
-                    triggerKeys.Add(Keys.F12);
+                    _triggerKeys.Add(Keys.F12);
                     break;
                 default:
-                    triggerKeys.AddRange(new[] {Keys.F1,Keys.F2,Keys.F3,Keys.F4,Keys.F5,Keys.F6,Keys.F7,Keys.F8,Keys.F9,Keys.F10,Keys.F11,Keys.F12});
+                    _triggerKeys.AddRange(new[] {Keys.F1,Keys.F2,Keys.F3,Keys.F4,Keys.F5,Keys.F6,Keys.F7,Keys.F8,Keys.F9,Keys.F10,Keys.F11,Keys.F12});
                     break;
             }
-            keyHandler = new KeyEventHandler(keyPressEvent);
+            keyHandler = new KeyEventHandler(KeyPressEvent);
         }
         public KeybordTimer(MainWindow window, string keyCode)
             : this(keyCode)
@@ -70,14 +70,14 @@ namespace TimingForToby
             // TODO: Complete member initialization         
             //window.KeyDown += keyHandler;
         }
-        private void keyPressEvent(Object sender, KeyEventArgs e)
+        private void KeyPressEvent(Object sender, KeyEventArgs e)
         {    
-            if (triggerKeys.Contains(e.KeyData))
+            if (_triggerKeys.Contains(e.KeyData))
             {
-                if (timer!=null)
+                if (_timer!=null)
                 {
                     //MessageBox.Show(timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
-                    this.RecordTime("DEFAULT", timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
+                    this.RecordTime("DEFAULT", _timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
                 }
                 else
                     MessageBox.Show("Race Has Not Started");
@@ -85,7 +85,7 @@ namespace TimingForToby
         }
 
         
-        private void keyEvent()
+        private void KeyEvent()
         {
             DialogResult results2 = MessageBox.Show("event triggered");
         }
@@ -93,13 +93,13 @@ namespace TimingForToby
         
         public override void StartRace()
         {
-            if(timer==null)
-                timer=new TobyTimer();            
+            if(_timer==null)
+                _timer=new TobyTimer();            
         }
 
         public override void StopRace()
         {
-            timer=null;
+            _timer=null;
         }
         public override void StartRace(TimeSpan ts)
         {
@@ -108,17 +108,17 @@ namespace TimingForToby
         }
         public override void ClearTimer()
         {
-            timer.Reset();
+            _timer.Reset();
         }
         public override TimeSpan GetCurrentTime()
         {
-            if (timer == null)
+            if (_timer == null)
                 return new TimeSpan(0, 0, 0);
-            return timer.Elapsed();
+            return _timer.Elapsed();
         }
         public override void OffsetTimer(TimeSpan ts)
         {
-            timer.OffSetTime(ts);
+            _timer.OffSetTime(ts);
         }
 
         public override void Dispose()
