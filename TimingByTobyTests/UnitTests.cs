@@ -3,6 +3,7 @@ using TimingForToby;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 
 namespace TimingByTobyTests
 {
@@ -49,6 +50,19 @@ namespace TimingByTobyTests
             Filter filter = new Filter(racedata);
             filter.LoadDataTable();
             Filter.BuildFromXML(racedata, "testFile", 5, 5);
+        }
+        [TestMethod]
+        public void TestDBExsist()
+        {
+            CommonSQL.BuildIfNotExsistDB();
+        }
+
+        [TestMethod]
+        public void TestDBNotExsist()
+        {
+            File.Delete(CommonSQL.GetDBFileName());
+            CommonSQL.BuildIfNotExsistDB();
+            File.Exists(CommonSQL.GetDBFileName());
         }
     }
 }
