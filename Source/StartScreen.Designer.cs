@@ -67,7 +67,7 @@
             this.btnNewRace.TabIndex = 1;
             this.btnNewRace.Text = "New Race";
             this.btnNewRace.UseVisualStyleBackColor = true;
-            this.btnNewRace.Click += new System.EventHandler(this.button1_Click);
+            this.btnNewRace.Click += new System.EventHandler(this.BtnNewRace_Click);
             // 
             // btnImport
             // 
@@ -89,7 +89,7 @@
             this.btnRace.TabIndex = 3;
             this.btnRace.Text = "Race!";
             this.btnRace.UseVisualStyleBackColor = true;
-            this.btnRace.Click += new System.EventHandler(this.button3_Click);
+            this.btnRace.Click += new System.EventHandler(this.BtnRace_Click);
             // 
             // myDatabaseDataSet
             // 

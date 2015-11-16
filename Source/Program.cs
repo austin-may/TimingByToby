@@ -15,6 +15,7 @@ namespace TimingForToby
         [STAThread]
         static void Main()
         {
+            CommonSQL.BuildIfNotExsistDB();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new StartScreen());
