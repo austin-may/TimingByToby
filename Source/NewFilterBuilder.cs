@@ -104,7 +104,7 @@ namespace TimingForToby
         //Creates an xml document inside of Source/bin/Debug/Filters
         /*****NOTE:  May need to save in dofferent location to avoid problems with privileges on user's PC*****/
          //DC - 11-1-2015
-        public void createXMLFilter(string name)
+        private void createXMLFilter(string name)
         {
              string ageString = "(select (strftime('%Y', 'now') - strftime('%Y', run.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run.DOB))) as Age ";
              if (this.checkBox1.Checked && !this.checkBox2.Checked)

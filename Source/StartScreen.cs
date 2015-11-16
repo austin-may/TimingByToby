@@ -145,7 +145,7 @@ namespace TimingForToby
                         case "gender":
                             genderRow = i;
                             break;
-                        case "orginization":
+                        case "organization":
                             orgRow = i;
                             break;
                         case "team":

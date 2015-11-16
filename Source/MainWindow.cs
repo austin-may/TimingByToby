@@ -82,6 +82,7 @@ namespace TimingForToby
                             dataGridTiming.DataSource = timing;
                             dataGridTiming.AllowUserToAddRows = false;
                                 dataGridTiming.Columns[0].ReadOnly = true;
+                           
                         }
                     }
                     catch (Exception e) { MessageBox.Show(this, e.Message); }
