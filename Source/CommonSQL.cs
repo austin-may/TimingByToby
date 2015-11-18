@@ -112,6 +112,7 @@ namespace TimingForToby
                     }                 
                 }
                 conn.Close();
+                TobyTimer.BackupAfter60Seconds();
             }
         }
         
@@ -156,8 +157,10 @@ namespace TimingForToby
                         }
                     }
                     conn.Close();
+                    TobyTimer.BackupAfter60Seconds();
                 }
-            });            
+            });
+            
         }        
 
         internal static void BackupDB()
@@ -190,6 +193,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -220,6 +224,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -264,6 +269,7 @@ namespace TimingForToby
                             Console.WriteLine("No rows found.");
                         }
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception e)
                 {
@@ -299,6 +305,7 @@ namespace TimingForToby
                         }
                         reader.Dispose();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -330,6 +337,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -358,6 +366,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -399,6 +408,7 @@ namespace TimingForToby
                             Console.WriteLine("No rows found.");
                         }
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -429,6 +439,7 @@ namespace TimingForToby
 
                     cmd.ExecuteNonQuery();
                 }
+                TobyTimer.BackupAfter60Seconds();
             }
             catch (Exception sqlError)
             {
@@ -464,6 +475,7 @@ namespace TimingForToby
                         while (r.Read()) { }
                     }
                 }
+                TobyTimer.BackupAfter60Seconds();
             }
             catch (Exception sqlError)
             {
@@ -503,6 +515,7 @@ namespace TimingForToby
                         while (r.Read()) { }
                     }
                 }
+                TobyTimer.BackupAfter60Seconds();
             }
             catch (Exception sqlError)
             {
@@ -554,6 +567,7 @@ namespace TimingForToby
                     }
                 }
                 conn.Close();
+                TobyTimer.BackupAfter60Seconds();
             }
         }        
     }

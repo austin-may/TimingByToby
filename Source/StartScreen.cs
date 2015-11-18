@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using System.IO;
+using System.Collections;
 using Excel=Microsoft.Office.Interop.Excel;
 using System.Web;
 
@@ -19,9 +20,6 @@ namespace TimingForToby
         public StartScreen()
         {
             InitializeComponent();
-            //Watch dog component
-            //Immediately starts the clock as soon as user opens the app
-            TobyTimer.SetTimer();
         }
 
         private void BtnRace_Click(object sender, EventArgs e)
@@ -244,7 +242,7 @@ namespace TimingForToby
         private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Backup the database on close
-            TimeStampedBackup(true);
+            TobyTimer.TimeStampedBackup(true);
         }
 
         //prompts for a save dialog
@@ -271,32 +269,7 @@ namespace TimingForToby
              
         }
 
-        internal static void TimeStampedBackup(bool isClosing)
-        {
-            string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string sourcePath = Directory.GetCurrentDirectory();
-            string destinationPath = AppDataPath+"\\TimingForToby";
-            string sourceFileName = @"MyDatabase.sqlite";
-            //There's no colon in the time because as you might know that's not allowed in file names :(
-            string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
-            string destinationFileName = "";
-            //determines if the auto backup is being called because of a close event or because of a period.
-            if(isClosing == false)
-            { 
-               destinationFileName = "Auto Backup " + timestamp + ".sqlite";
-            }
-            else
-            {
-               destinationFileName = "Last Close " + timestamp + ".sqlite";
-            }
-            string destinationFile = Path.Combine(destinationPath, destinationFileName);
-
-            if (!Directory.Exists(destinationPath))
-            {
-                Directory.CreateDirectory(destinationPath);
-            }
-            File.Copy(sourceFileName, destinationFile, true);
-        }
+       
 
         private void RestoreDatabase_Click(object sender, EventArgs e)
         {
