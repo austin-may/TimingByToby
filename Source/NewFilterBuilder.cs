@@ -208,13 +208,16 @@ namespace TimingForToby
             //Add the ranges to listbox
             listBox1.Items.Add(AgeMinimum + "," + AgeMaximum);
             //Add a filter for the new age range
-            createXMLFilter(this.FilterName + AgeMinimum + "+" + AgeMinimum);
+            createXMLFilter(this.FilterName +"_Ages"+ AgeMinimum + "-" + AgeMaximum);
             //Clear txtboxes
             txtMinAge.Clear();
             txtMaxAge.Clear();
-            //Reset age range
-            AgeMinimum = 0;
-            AgeMaximum = 0;
+            //Reset age range to + 1 of the previous age range.
+            AgeMinimum = AgeMaximum +1;
+            AgeMaximum = 100;
+            // Re enable the age ranges
+            txtMaxAge.Enabled = true;
+            txtMinAge.Text = AgeMinimum.ToString();
             //The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
         }
 
