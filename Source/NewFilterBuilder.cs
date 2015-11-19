@@ -176,7 +176,7 @@ namespace TimingForToby
              }
             /*The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
              * When you press the Add Age Filter button that filter will be added to the listbox and the filter itself
-             * After adding a filter to add another the age range must be outside of previous existing age ranges 
+             * (This part still needs to be done) - After adding a filter to add another the age range must be outside of previous existing age ranges 
              * The textboxes will also be cleared upon pressing "Add Age Filter"
              * */
         }
@@ -205,6 +205,16 @@ namespace TimingForToby
         private void btnAdditionalAge_Click(object sender, EventArgs e)
         {
             AgeRanges++;
+            //Add the ranges to listbox
+            listBox1.Items.Add(AgeMinimum + "," + AgeMaximum);
+            //Add a filter for the new age range
+            createXMLFilter(this.FilterName + AgeMinimum + "+" + AgeMinimum);
+            //Clear txtboxes
+            txtMinAge.Clear();
+            txtMaxAge.Clear();
+            //Reset age range
+            AgeMinimum = 0;
+            AgeMaximum = 0;
             //The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
         }
 
