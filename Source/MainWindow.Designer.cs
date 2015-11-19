@@ -91,7 +91,7 @@
             this.tabRunners.Controls.Add(this.dataGridRunners);
             this.tabRunners.Location = new System.Drawing.Point(4, 22);
             this.tabRunners.Name = "tabRunners";
-            this.tabRunners.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabRunners.Padding = new System.Windows.Forms.Padding(4);
             this.tabRunners.Size = new System.Drawing.Size(977, 430);
             this.tabRunners.TabIndex = 0;
             this.tabRunners.Text = "Runners";
@@ -131,10 +131,10 @@
             this.tabResults.Controls.Add(this.button1);
             this.tabResults.Controls.Add(this.label1);
             this.tabResults.Controls.Add(this.checkedListBoxFilters);
-            this.tabResults.Location = new System.Drawing.Point(4, 25);
+            this.tabResults.Location = new System.Drawing.Point(4, 22);
             this.tabResults.Margin = new System.Windows.Forms.Padding(4);
             this.tabResults.Name = "tabResults";
-            this.tabResults.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabResults.Padding = new System.Windows.Forms.Padding(4);
             this.tabResults.Size = new System.Drawing.Size(977, 430);
             this.tabResults.TabIndex = 1;
             this.tabResults.Text = "Results";
@@ -198,10 +198,10 @@
             "Age",
             "Sex",
             "Real Bib Ids"});
-            this.checkedListBoxFilters.Location = new System.Drawing.Point(1071, 38);
+            this.checkedListBoxFilters.Location = new System.Drawing.Point(792, 38);
             this.checkedListBoxFilters.Margin = new System.Windows.Forms.Padding(4);
             this.checkedListBoxFilters.Name = "checkedListBoxFilters";
-            this.checkedListBoxFilters.Size = new System.Drawing.Size(179, 89);
+            this.checkedListBoxFilters.Size = new System.Drawing.Size(179, 79);
             this.checkedListBoxFilters.TabIndex = 0;
             this.checkedListBoxFilters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBoxFilters_ItemCheck);
             // 
@@ -294,9 +294,9 @@
             this.gbTimerOptions.Controls.Add(this.radioButtonTM);
             this.gbTimerOptions.Controls.Add(this.comPortComboBox);
             this.gbTimerOptions.Location = new System.Drawing.Point(728, 68);
-            this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(4);
             this.gbTimerOptions.Name = "gbTimerOptions";
-            this.gbTimerOptions.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbTimerOptions.Padding = new System.Windows.Forms.Padding(4);
             this.gbTimerOptions.Size = new System.Drawing.Size(225, 100);
             this.gbTimerOptions.TabIndex = 8;
             this.gbTimerOptions.TabStop = false;
@@ -352,7 +352,7 @@
             // 
             this.comPortComboBox.FormattingEnabled = true;
             this.comPortComboBox.Location = new System.Drawing.Point(114, 43);
-            this.comPortComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comPortComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.comPortComboBox.Name = "comPortComboBox";
             this.comPortComboBox.Size = new System.Drawing.Size(100, 21);
             this.comPortComboBox.TabIndex = 3;
@@ -363,7 +363,7 @@
             this.btnEndRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEndRace.Enabled = false;
             this.btnEndRace.Location = new System.Drawing.Point(873, 400);
-            this.btnEndRace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEndRace.Margin = new System.Windows.Forms.Padding(4);
             this.btnEndRace.Name = "btnEndRace";
             this.btnEndRace.Size = new System.Drawing.Size(75, 23);
             this.btnEndRace.TabIndex = 7;
