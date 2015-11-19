@@ -51,11 +51,12 @@ namespace TimingForToby
                 _com.Close(); _com.Dispose();
             }
         }
+        //cool, we got data from over the com... now what...
         private void responseHandler(object sender, SerialDataReceivedEventArgs args)
         {
             ParseCom(_com.ReadExisting());
         }
-
+        //This will open the com chanel and begin to read what is sent
         private void ParseCom(string text)
         {            
             foreach (char c in text.ToCharArray())
@@ -67,12 +68,15 @@ namespace TimingForToby
                 {
                     _currentString = _currentString.Replace("\r\n", "");
                     _recalled.Add(_currentString);
+                    //check for this string... it means its a retransmit... not a normal report
                     if (_currentString.Contains(START_TX))
                         _retransmit = true;
                     else if (_currentString.Contains(END_TX))
                         _retransmit = false;
+                    //if we are doing a retrasmit... process it
                     else if (_retransmit)
                         ProcessRecalledData(_currentString);
+                    //normal data... process it
                     else
                         ProcessPassedData(_currentString);
                     _currentString = "";
@@ -84,6 +88,7 @@ namespace TimingForToby
                 }
             }
         }
+        //process the normal data
         private void ProcessPassedData(string text)
         {
             var test = text.Split(' ');
@@ -98,6 +103,7 @@ namespace TimingForToby
                 this.RecordTime(bibString, time);
             }
         }
+        //handle special data (retransmit)
         private void ProcessRecalledData(string text)
         {
             var test = text.Split(' ');
@@ -114,6 +120,7 @@ namespace TimingForToby
                 }
             }
         }
+        //these are specal ascii chars that are not [A-z]
         private bool IsSpecialChar(char c)
         {
             return (c == 1 || c == 4 || c == 20 || c == 23);
@@ -144,7 +151,7 @@ namespace TimingForToby
         {
             return TimeSpan.Zero;
         }
-
+        //must be called in order to release the com back to sys
         public override void Dispose()
         {
             _com.Close();

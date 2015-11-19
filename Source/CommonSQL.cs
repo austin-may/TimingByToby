@@ -159,7 +159,7 @@ namespace TimingForToby
                     conn.Close();
                     TobyTimer.BackupAfter60Seconds();
                 }
-            });
+            });            
             
         }        
 
@@ -569,6 +569,6 @@ namespace TimingForToby
                 conn.Close();
                 TobyTimer.BackupAfter60Seconds();
             }
-        }        
+        }
     }
 }

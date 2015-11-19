@@ -38,7 +38,7 @@
             this.resultTable = new System.Windows.Forms.TableLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBoxFilters = new System.Windows.Forms.CheckedListBox();
             this.tabTiming = new System.Windows.Forms.TabPage();
             this.panelClock = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
@@ -131,7 +131,8 @@
             this.tabResults.Controls.Add(this.button1);
             this.tabResults.Controls.Add(this.label1);
             this.tabResults.Controls.Add(this.checkedListBox1);
-            this.tabResults.Location = new System.Drawing.Point(4, 22);
+            this.tabResults.Location = new System.Drawing.Point(4, 25);
+            this.tabResults.Margin = new System.Windows.Forms.Padding(4);
             this.tabResults.Name = "tabResults";
             this.tabResults.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabResults.Size = new System.Drawing.Size(977, 430);
@@ -191,15 +192,16 @@
             // 
             // checkedListBox1
             // 
-            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Items.AddRange(new object[] {
+            this.checkedListBoxFilters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkedListBoxFilters.FormattingEnabled = true;
+            this.checkedListBoxFilters.Items.AddRange(new object[] {
             "Age",
             "Sex",
             "Real Bib Ids"});
-            this.checkedListBox1.Location = new System.Drawing.Point(803, 31);
+            this.checkedListBox1.Location = new System.Drawing.Point(1071, 38);
+            this.checkedListBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(135, 64);
+            this.checkedListBox1.Size = new System.Drawing.Size(179, 89);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox1_ItemCheck);
             // 
@@ -471,7 +473,7 @@
         private System.Windows.Forms.TabPage tabRunners;
         private System.Windows.Forms.TabPage tabResults;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBoxFilters;
         private System.Windows.Forms.TabPage tabTiming;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
