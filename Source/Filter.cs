@@ -37,7 +37,7 @@ namespace TimingForToby
           public Filter(RaceData raceData, string name, string query, int width=-1, int height=-1)
               : this(raceData)
           {
-              name = name;
+              this.name = name;
               _Sql = query;
               if (width > 0 && height > 0)
               {

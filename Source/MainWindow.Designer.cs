@@ -193,6 +193,7 @@
             // checkedListBoxFilters
             // 
             this.checkedListBoxFilters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkedListBoxFilters.CheckOnClick = true;
             this.checkedListBoxFilters.FormattingEnabled = true;
             this.checkedListBoxFilters.Items.AddRange(new object[] {
             "Age",

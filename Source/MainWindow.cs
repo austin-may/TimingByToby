@@ -48,7 +48,7 @@ namespace TimingForToby
             resultTable.ColumnCount = filterCount;
             for (int i = 0; i < filterCount;i++)
             {
-                resultTable.Controls.Add(new Label { Text = filters[i].name, Anchor = AnchorStyles.None }, i, 0);
+                resultTable.Controls.Add(new Label { Text = filters[i].name, Anchor = AnchorStyles.None, AutoSize=true }, i, 0);
                 filters[i].LoadDataTable();
                 resultTable.Controls.Add(filters[i].GetDataTable(), i, 1);
             }

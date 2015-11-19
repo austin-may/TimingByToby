@@ -20,6 +20,8 @@ namespace TimingForToby
         public int AgeMaximum = 100;
         //name of Filter
         public string FilterName; 
+        //list of running selecteed ages (min, max)
+        List<Tuple<int, int>> ages = new List<Tuple<int, int>>();
 
         //amount of Age Ranges in the filter
         public int AgeRanges = 0;
@@ -114,65 +116,89 @@ namespace TimingForToby
          //DC - 11-1-2015
         private void createXMLFilter(string name)
         {
+             //get the current selected ages (if the user doesnt select the age checkbox it will be ignored anyways)
+             ages.Add(new Tuple<int, int>(AgeMinimum, AgeMaximum));
              string ageString = "(select (strftime('%Y', 'now') - strftime('%Y', run.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run.DOB))) as Age ";
              if (this.checkBox1.Checked && !this.checkBox2.Checked)
              {
-                  XDocument doc = new XDocument(new XElement("Filter", 
+                  XDocument doc = new XDocument(new XElement("FilterSet", 
+                 new XElement("Filter",
                        new XElement("Name", name + "-Male"),
                                    new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time " 
                                                        + "from RaceResults r " 
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID " 
-                                                       + "where r.RaceID=@RaceID AND run.Gender=77 order by Time"),
+                                                       + "where r.RaceID=@RaceID AND run.Gender=77 order by Time")
+                                                       ),
+                 new XElement("Filter",
                        new XElement("Name", name + "-Female"),
                                    new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time "
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
                                                        + "where r.RaceID=@RaceID AND run.Gender=70 order by Time")
-                                        ));
+                                        )
+                  ));
                   String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                   doc.Save(path + @"\Filters\" + name + ".xml");
                   
              }
              else if (!this.checkBox1.Checked && this.checkBox2.Checked)
              {
-                  XDocument doc = new XDocument(new XElement("Filter",
-                       new XElement("Name", name),
+                 var elementList = new List<XElement>();
+                 foreach(Tuple<int, int> ageRange in ages)
+                 {
+                     elementList.Add(
+                         new XElement("Filter",
+                                    new XElement("Name", name+"-Ages:"+ageRange.Item1+"-"+ageRange.Item2),
                                    new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                        + ageString
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                       + "where r.RaceID=@RaceID AND Age<=" + AgeMaximum + " AND Age>=" + AgeMinimum + " order by Time")
-                                        ));
+                                                       + "where r.RaceID=@RaceID AND Age<=" + ageRange.Item1 + " AND Age>=" + ageRange.Item2 + " order by Time")
+                                        
+                         ));
+                 }
+                  XDocument doc = new XDocument(new XElement("FilterSet", elementList));
+                       
                   String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                   doc.Save(path + @"\Filters\" + name + ".xml");
              }
              else if (this.checkBox1.Checked && this.checkBox2.Checked)
              {
-                  XDocument doc = new XDocument(new XElement("Filter",
-                       new XElement("Name", name + "-Male"),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
-                                                       + ageString
-                                                       + "from RaceResults r "
-                                                       + "join RaceRunner rn on r.BibID = rn.BibID "
-                                                       + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                       + "where r.RaceID=@RaceID AND run.Gender=77 AND Age<=" + AgeMaximum + " AND Age>=" + AgeMinimum + " order by Time"),
-                       new XElement("Name", name + "-Female"),
-                                   new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
-                                                       + ageString
-                                                       + "from RaceResults r "
-                                                       + "join RaceRunner rn on r.BibID = rn.BibID "
-                                                       + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                       + "where r.RaceID=@RaceID AND run.Gender=70 AND Age<=" + AgeMaximum + " AND Age>=" + AgeMinimum + " order by Time")
-                                        ));
-                  String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                  doc.Save(path + @"\Filters\" + name + ".xml");
+                 var elementList = new List<XElement>();
+                 foreach(Tuple<int, int> ageRange in ages)
+                 {
+                     elementList.Add(
+                     new XElement("Filter",
+                          new XElement("Name", name + "-Ages:" + ageRange.Item1 + "-" + ageRange.Item2 + "-Male"),
+                                      new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
+                                                          + ageString
+                                                          + "from RaceResults r "
+                                                          + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                          + "join Runners run on rn.RunnerID = run.RunnerID "
+                                                          + "where r.RaceID=@RaceID AND run.Gender=77 AND Age<=" + ageRange.Item1 + " AND Age>=" + ageRange.Item2 + " order by Time")
+
+                                                          ));
+                      elementList.Add(new XElement("Filter",
+                      new XElement("Name", name + "-Ages: " + ageRange.Item1 + "-" + ageRange.Item2 + "-Female"),
+                                  new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
+                                                      + ageString
+                                                      + "from RaceResults r "
+                                                      + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                      + "join Runners run on rn.RunnerID = run.RunnerID "
+                                                      + "where r.RaceID=@RaceID AND run.Gender=70 AND Age<=" + ageRange.Item1 + " AND Age>=" + ageRange.Item2 + " order by Time")
+                                       ));
+                 }
+                 XDocument doc = new XDocument(new XElement("FilterSet", elementList));
+
+                 String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                 doc.Save(path + @"\Filters\" + name + ".xml");
              }
              else
              {
-                  MessageBox.Show("Please select age and/or gender check boxes for your filter.");
+                 MessageBox.Show("Please select age and/or gender check boxes for your filter.");
              }
             /*The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
              * When you press the Add Age Filter button that filter will be added to the listbox and the filter itself
@@ -207,8 +233,9 @@ namespace TimingForToby
             AgeRanges++;
             //Add the ranges to listbox
             listBox1.Items.Add(AgeMinimum + "," + AgeMaximum);
+            ages.Add(new Tuple<int, int>(AgeMinimum, AgeMaximum));
             //Add a filter for the new age range
-            createXMLFilter(this.FilterName +"_Ages"+ AgeMinimum + "-" + AgeMaximum);
+            //createXMLFilter(this.FilterName +"_Ages"+ AgeMinimum + "-" + AgeMaximum);
             //Clear txtboxes
             txtMinAge.Clear();
             txtMaxAge.Clear();
