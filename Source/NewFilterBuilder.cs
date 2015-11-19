@@ -20,6 +20,9 @@ namespace TimingForToby
         public int AgeMaximum = 100;
         //name of Filter
         public string FilterName; 
+
+        //amount of Age Ranges in the filter
+        public int AgeRanges = 0;
         public NewFilterBuilder()
         {
             InitializeComponent();
@@ -84,6 +87,11 @@ namespace TimingForToby
              }
              else if (checkBox1.Checked || checkBox2.Checked)
              {
+                 //If the Age checkbox is checked, increase the amount of age ranges by 1
+                 if (checkBox2.Checked)
+                 {
+                     AgeRanges++;
+                 }
                   createXMLFilter(this.FilterName);
                   //Close the form 
                   this.Close();
@@ -166,7 +174,11 @@ namespace TimingForToby
              {
                   MessageBox.Show("Please select age and/or gender check boxes for your filter.");
              }
-             
+            /*The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
+             * When you press the Add Age Filter button that filter will be added to the listbox and the filter itself
+             * After adding a filter to add another the age range must be outside of previous existing age ranges 
+             * The textboxes will also be cleared upon pressing "Add Age Filter"
+             * */
         }
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
@@ -188,6 +200,17 @@ namespace TimingForToby
              {
                   trackBar1.Enabled = false;
              }
+        }
+
+        private void btnAdditionalAge_Click(object sender, EventArgs e)
+        {
+            AgeRanges++;
+            //The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabRunners = new System.Windows.Forms.TabPage();
             this.btnAddRunner = new System.Windows.Forms.Button();
@@ -77,11 +78,10 @@
             this.tabControl1.Controls.Add(this.tabRunners);
             this.tabControl1.Controls.Add(this.tabResults);
             this.tabControl1.Controls.Add(this.tabTiming);
-            this.tabControl1.Location = new System.Drawing.Point(16, 33);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1313, 561);
+            this.tabControl1.Size = new System.Drawing.Size(985, 456);
             this.tabControl1.TabIndex = 0;
             // 
             // tabRunners
@@ -89,11 +89,10 @@
             this.tabRunners.AutoScroll = true;
             this.tabRunners.Controls.Add(this.btnAddRunner);
             this.tabRunners.Controls.Add(this.dataGridRunners);
-            this.tabRunners.Location = new System.Drawing.Point(4, 25);
-            this.tabRunners.Margin = new System.Windows.Forms.Padding(4);
+            this.tabRunners.Location = new System.Drawing.Point(4, 22);
             this.tabRunners.Name = "tabRunners";
-            this.tabRunners.Padding = new System.Windows.Forms.Padding(5);
-            this.tabRunners.Size = new System.Drawing.Size(1305, 532);
+            this.tabRunners.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabRunners.Size = new System.Drawing.Size(977, 430);
             this.tabRunners.TabIndex = 0;
             this.tabRunners.Text = "Runners";
             this.tabRunners.UseVisualStyleBackColor = true;
@@ -101,10 +100,9 @@
             // btnAddRunner
             // 
             this.btnAddRunner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddRunner.Location = new System.Drawing.Point(1149, 26);
-            this.btnAddRunner.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAddRunner.Location = new System.Drawing.Point(862, 21);
             this.btnAddRunner.Name = "btnAddRunner";
-            this.btnAddRunner.Size = new System.Drawing.Size(100, 28);
+            this.btnAddRunner.Size = new System.Drawing.Size(75, 23);
             this.btnAddRunner.TabIndex = 1;
             this.btnAddRunner.Text = "Add Runner";
             this.btnAddRunner.UseVisualStyleBackColor = true;
@@ -118,11 +116,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridRunners.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridRunners.Location = new System.Drawing.Point(25, 7);
-            this.dataGridRunners.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridRunners.Location = new System.Drawing.Point(19, 6);
             this.dataGridRunners.Name = "dataGridRunners";
             this.dataGridRunners.ReadOnly = true;
-            this.dataGridRunners.Size = new System.Drawing.Size(1069, 514);
+            this.dataGridRunners.Size = new System.Drawing.Size(802, 418);
             this.dataGridRunners.TabIndex = 0;
             this.dataGridRunners.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RunnerTableDoubleClick);
             this.dataGridRunners.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DataGridViewRunnerRowDel);
@@ -134,11 +131,10 @@
             this.tabResults.Controls.Add(this.button1);
             this.tabResults.Controls.Add(this.label1);
             this.tabResults.Controls.Add(this.checkedListBox1);
-            this.tabResults.Location = new System.Drawing.Point(4, 25);
-            this.tabResults.Margin = new System.Windows.Forms.Padding(4);
+            this.tabResults.Location = new System.Drawing.Point(4, 22);
             this.tabResults.Name = "tabResults";
-            this.tabResults.Padding = new System.Windows.Forms.Padding(5);
-            this.tabResults.Size = new System.Drawing.Size(1305, 532);
+            this.tabResults.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabResults.Size = new System.Drawing.Size(977, 430);
             this.tabResults.TabIndex = 1;
             this.tabResults.Text = "Results";
             this.tabResults.UseVisualStyleBackColor = true;
@@ -146,10 +142,9 @@
             // btnCreateFilter
             // 
             this.btnCreateFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCreateFilter.Location = new System.Drawing.Point(1091, 181);
-            this.btnCreateFilter.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCreateFilter.Location = new System.Drawing.Point(818, 147);
             this.btnCreateFilter.Name = "btnCreateFilter";
-            this.btnCreateFilter.Size = new System.Drawing.Size(117, 65);
+            this.btnCreateFilter.Size = new System.Drawing.Size(88, 53);
             this.btnCreateFilter.TabIndex = 6;
             this.btnCreateFilter.Text = "Create Custom Filter";
             this.btnCreateFilter.UseVisualStyleBackColor = true;
@@ -164,22 +159,20 @@
             this.resultTable.ColumnCount = 1;
             this.resultTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.resultTable.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddColumns;
-            this.resultTable.Location = new System.Drawing.Point(9, 9);
-            this.resultTable.Margin = new System.Windows.Forms.Padding(4);
+            this.resultTable.Location = new System.Drawing.Point(7, 7);
             this.resultTable.Name = "resultTable";
             this.resultTable.RowCount = 2;
             this.resultTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5F));
             this.resultTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95F));
-            this.resultTable.Size = new System.Drawing.Size(1039, 513);
+            this.resultTable.Size = new System.Drawing.Size(779, 417);
             this.resultTable.TabIndex = 5;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(1195, 494);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Location = new System.Drawing.Point(896, 401);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 28);
+            this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 3;
             this.button1.Text = "Export";
             this.button1.UseVisualStyleBackColor = true;
@@ -190,10 +183,9 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(1121, 5);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(841, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 31);
+            this.label1.Size = new System.Drawing.Size(78, 25);
             this.label1.TabIndex = 1;
             this.label1.Text = "Filters";
             // 
@@ -205,10 +197,9 @@
             "Age",
             "Sex",
             "Real Bib Ids"});
-            this.checkedListBox1.Location = new System.Drawing.Point(1071, 38);
-            this.checkedListBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.checkedListBox1.Location = new System.Drawing.Point(803, 31);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(179, 89);
+            this.checkedListBox1.Size = new System.Drawing.Size(135, 64);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.CheckedListBox1_ItemCheck);
             // 
@@ -220,10 +211,9 @@
             this.tabTiming.Controls.Add(this.btnStartRace);
             this.tabTiming.Controls.Add(this.label2);
             this.tabTiming.Controls.Add(this.dataGridTiming);
-            this.tabTiming.Location = new System.Drawing.Point(4, 25);
-            this.tabTiming.Margin = new System.Windows.Forms.Padding(4);
+            this.tabTiming.Location = new System.Drawing.Point(4, 22);
             this.tabTiming.Name = "tabTiming";
-            this.tabTiming.Size = new System.Drawing.Size(1305, 532);
+            this.tabTiming.Size = new System.Drawing.Size(977, 430);
             this.tabTiming.TabIndex = 2;
             this.tabTiming.Text = "Timing";
             this.tabTiming.UseVisualStyleBackColor = true;
@@ -237,67 +227,60 @@
             this.panelClock.Controls.Add(this.textBoxHours);
             this.panelClock.Controls.Add(this.label4);
             this.panelClock.Controls.Add(this.label3);
-            this.panelClock.Location = new System.Drawing.Point(988, 215);
-            this.panelClock.Margin = new System.Windows.Forms.Padding(4);
+            this.panelClock.Location = new System.Drawing.Point(741, 175);
             this.panelClock.Name = "panelClock";
-            this.panelClock.Size = new System.Drawing.Size(267, 123);
+            this.panelClock.Size = new System.Drawing.Size(200, 100);
             this.panelClock.TabIndex = 9;
             this.panelClock.Visible = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(104, 34);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(78, 28);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 17);
+            this.label5.Size = new System.Drawing.Size(33, 13);
             this.label5.TabIndex = 12;
             this.label5.Text = "Timer";
             // 
             // textBoxSeconds
             // 
-            this.textBoxSeconds.Location = new System.Drawing.Point(157, 75);
-            this.textBoxSeconds.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxSeconds.Location = new System.Drawing.Point(118, 61);
             this.textBoxSeconds.MaxLength = 2;
             this.textBoxSeconds.Name = "textBoxSeconds";
-            this.textBoxSeconds.Size = new System.Drawing.Size(36, 22);
+            this.textBoxSeconds.Size = new System.Drawing.Size(28, 20);
             this.textBoxSeconds.TabIndex = 11;
             // 
             // textBoxMin
             // 
-            this.textBoxMin.Location = new System.Drawing.Point(108, 75);
-            this.textBoxMin.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxMin.Location = new System.Drawing.Point(81, 61);
             this.textBoxMin.MaxLength = 2;
             this.textBoxMin.Name = "textBoxMin";
-            this.textBoxMin.Size = new System.Drawing.Size(39, 22);
+            this.textBoxMin.Size = new System.Drawing.Size(30, 20);
             this.textBoxMin.TabIndex = 10;
             // 
             // textBoxHours
             // 
-            this.textBoxHours.Location = new System.Drawing.Point(63, 75);
-            this.textBoxHours.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxHours.Location = new System.Drawing.Point(47, 61);
             this.textBoxHours.MaxLength = 2;
             this.textBoxHours.Name = "textBoxHours";
-            this.textBoxHours.Size = new System.Drawing.Size(33, 22);
+            this.textBoxHours.Size = new System.Drawing.Size(26, 20);
             this.textBoxHours.TabIndex = 10;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(147, 79);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(110, 64);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(12, 17);
+            this.label4.Size = new System.Drawing.Size(10, 13);
             this.label4.TabIndex = 1;
             this.label4.Text = ":";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(97, 79);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(73, 64);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(12, 17);
+            this.label3.Size = new System.Drawing.Size(10, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = ":";
             // 
@@ -308,11 +291,11 @@
             this.gbTimerOptions.Controls.Add(this.radioButtonKB);
             this.gbTimerOptions.Controls.Add(this.radioButtonTM);
             this.gbTimerOptions.Controls.Add(this.comPortComboBox);
-            this.gbTimerOptions.Location = new System.Drawing.Point(971, 84);
-            this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(5);
+            this.gbTimerOptions.Location = new System.Drawing.Point(728, 68);
+            this.gbTimerOptions.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gbTimerOptions.Name = "gbTimerOptions";
-            this.gbTimerOptions.Padding = new System.Windows.Forms.Padding(5);
-            this.gbTimerOptions.Size = new System.Drawing.Size(300, 123);
+            this.gbTimerOptions.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbTimerOptions.Size = new System.Drawing.Size(225, 100);
             this.gbTimerOptions.TabIndex = 8;
             this.gbTimerOptions.TabStop = false;
             this.gbTimerOptions.Text = "Timing Method";
@@ -334,20 +317,18 @@
             "F10",
             "F11",
             "F12"});
-            this.comboBoxKeySelect.Location = new System.Drawing.Point(152, 22);
-            this.comboBoxKeySelect.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBoxKeySelect.Location = new System.Drawing.Point(114, 18);
             this.comboBoxKeySelect.Name = "comboBoxKeySelect";
-            this.comboBoxKeySelect.Size = new System.Drawing.Size(131, 24);
+            this.comboBoxKeySelect.Size = new System.Drawing.Size(99, 21);
             this.comboBoxKeySelect.TabIndex = 4;
             // 
             // radioButtonKB
             // 
             this.radioButtonKB.AutoSize = true;
             this.radioButtonKB.Checked = true;
-            this.radioButtonKB.Location = new System.Drawing.Point(8, 23);
-            this.radioButtonKB.Margin = new System.Windows.Forms.Padding(4);
+            this.radioButtonKB.Location = new System.Drawing.Point(6, 19);
             this.radioButtonKB.Name = "radioButtonKB";
-            this.radioButtonKB.Size = new System.Drawing.Size(91, 21);
+            this.radioButtonKB.Size = new System.Drawing.Size(71, 17);
             this.radioButtonKB.TabIndex = 1;
             this.radioButtonKB.TabStop = true;
             this.radioButtonKB.Text = "KeyBoard";
@@ -357,10 +338,9 @@
             // radioButtonTM
             // 
             this.radioButtonTM.AutoSize = true;
-            this.radioButtonTM.Location = new System.Drawing.Point(8, 52);
-            this.radioButtonTM.Margin = new System.Windows.Forms.Padding(4);
+            this.radioButtonTM.Location = new System.Drawing.Point(6, 42);
             this.radioButtonTM.Name = "radioButtonTM";
-            this.radioButtonTM.Size = new System.Drawing.Size(117, 21);
+            this.radioButtonTM.Size = new System.Drawing.Size(92, 17);
             this.radioButtonTM.TabIndex = 2;
             this.radioButtonTM.Text = "Time Machine";
             this.radioButtonTM.UseVisualStyleBackColor = true;
@@ -369,10 +349,10 @@
             // comPortComboBox
             // 
             this.comPortComboBox.FormattingEnabled = true;
-            this.comPortComboBox.Location = new System.Drawing.Point(152, 53);
-            this.comPortComboBox.Margin = new System.Windows.Forms.Padding(5);
+            this.comPortComboBox.Location = new System.Drawing.Point(114, 43);
+            this.comPortComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comPortComboBox.Name = "comPortComboBox";
-            this.comPortComboBox.Size = new System.Drawing.Size(132, 24);
+            this.comPortComboBox.Size = new System.Drawing.Size(100, 21);
             this.comPortComboBox.TabIndex = 3;
             this.comPortComboBox.DropDown += new System.EventHandler(this.ComDropDown);
             // 
@@ -380,10 +360,10 @@
             // 
             this.btnEndRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEndRace.Enabled = false;
-            this.btnEndRace.Location = new System.Drawing.Point(1164, 492);
-            this.btnEndRace.Margin = new System.Windows.Forms.Padding(5);
+            this.btnEndRace.Location = new System.Drawing.Point(873, 400);
+            this.btnEndRace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnEndRace.Name = "btnEndRace";
-            this.btnEndRace.Size = new System.Drawing.Size(100, 28);
+            this.btnEndRace.Size = new System.Drawing.Size(75, 23);
             this.btnEndRace.TabIndex = 7;
             this.btnEndRace.Text = "End Race";
             this.btnEndRace.UseVisualStyleBackColor = true;
@@ -392,10 +372,9 @@
             // btnStartRace
             // 
             this.btnStartRace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStartRace.Location = new System.Drawing.Point(936, 492);
-            this.btnStartRace.Margin = new System.Windows.Forms.Padding(4);
+            this.btnStartRace.Location = new System.Drawing.Point(702, 400);
             this.btnStartRace.Name = "btnStartRace";
-            this.btnStartRace.Size = new System.Drawing.Size(100, 28);
+            this.btnStartRace.Size = new System.Drawing.Size(75, 23);
             this.btnStartRace.TabIndex = 6;
             this.btnStartRace.Text = "Start Race";
             this.btnStartRace.UseVisualStyleBackColor = true;
@@ -406,10 +385,9 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(1020, 44);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(765, 36);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(225, 36);
+            this.label2.Size = new System.Drawing.Size(188, 29);
             this.label2.TabIndex = 5;
             this.label2.Text = "Timing Method";
             // 
@@ -420,10 +398,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridTiming.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridTiming.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
-            this.dataGridTiming.Location = new System.Drawing.Point(4, 4);
-            this.dataGridTiming.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridTiming.Location = new System.Drawing.Point(3, 3);
             this.dataGridTiming.Name = "dataGridTiming";
-            this.dataGridTiming.Size = new System.Drawing.Size(923, 518);
+            this.dataGridTiming.Size = new System.Drawing.Size(692, 421);
             this.dataGridTiming.TabIndex = 0;
             this.dataGridTiming.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.TimingTableCellChanging);
             this.dataGridTiming.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.TimingTableCellChange);
@@ -438,34 +415,33 @@
             this.mainMenueToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1345, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1009, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(53, 24);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
             this.toolStripMenuItem1.Text = "Help";
             // 
             // mainMenueToolStripMenuItem
             // 
             this.mainMenueToolStripMenuItem.Name = "mainMenueToolStripMenuItem";
-            this.mainMenueToolStripMenuItem.Size = new System.Drawing.Size(95, 24);
+            this.mainMenueToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
             this.mainMenueToolStripMenuItem.Text = "Main Menu";
             this.mainMenueToolStripMenuItem.Click += new System.EventHandler(this.MainMenueToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1345, 597);
+            this.ClientSize = new System.Drawing.Size(1009, 485);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainWindow";
             this.Text = "Race";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
