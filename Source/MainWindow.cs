@@ -257,7 +257,7 @@ namespace TimingForToby
             btnEndRace.Enabled = false;
         }
         //this handles the filters.  finds the related file and builds filter
-        private void CheckedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void CheckedListBoxFilters_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             filters.Clear();
             if(e.NewValue==CheckState.Checked)
