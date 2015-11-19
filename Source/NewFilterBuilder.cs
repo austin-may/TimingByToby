@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,9 +95,10 @@ namespace TimingForToby
                  {
                      AgeRanges++;
                  }
-                  createXMLFilter(this.FilterName);
-                  //Close the form 
-                  this.Close();
+                 bool success=createXMLFilter(this.FilterName);
+                 //Close the form if file was saved
+                 if(success)
+                    this.Close();
              }
              else
              {
@@ -114,14 +116,15 @@ namespace TimingForToby
         //Creates an xml document inside of Source/bin/Debug/Filters
         /*****NOTE:  May need to save in dofferent location to avoid problems with privileges on user's PC*****/
          //DC - 11-1-2015
-        private void createXMLFilter(string name)
+        private bool createXMLFilter(string name)
         {
+            XDocument doc = null;
              //get the current selected ages (if the user doesnt select the age checkbox it will be ignored anyways)
              ages.Add(new Tuple<int, int>(AgeMinimum, AgeMaximum));
              string ageString = "(select (strftime('%Y', 'now') - strftime('%Y', run.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run.DOB))) as Age ";
              if (this.checkBox1.Checked && !this.checkBox2.Checked)
              {
-                  XDocument doc = new XDocument(new XElement("FilterSet", 
+                  doc = new XDocument(new XElement("FilterSet", 
                  new XElement("Filter",
                        new XElement("Name", name + "-Male"),
                                    new XElement("SQL", "select  ( SELECT COUNT(*) + 1  FROM  RaceResults where time < r.time and RaceID=@RaceID) as Position, (run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time " 
@@ -138,10 +141,7 @@ namespace TimingForToby
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
                                                        + "where r.RaceID=@RaceID AND run.Gender=70 order by Time")
                                         )
-                  ));
-                  String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                  doc.Save(path + @"\Filters\" + name + ".xml");
-                  
+                  ));                  
              }
              else if (!this.checkBox1.Checked && this.checkBox2.Checked)
              {
@@ -156,14 +156,11 @@ namespace TimingForToby
                                                        + "from RaceResults r "
                                                        + "join RaceRunner rn on r.BibID = rn.BibID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                       + "where r.RaceID=@RaceID AND Age<=" + ageRange.Item1 + " AND Age>=" + ageRange.Item2 + " order by Time")
+                                                       + "where r.RaceID=@RaceID AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
                                         
                          ));
                  }
-                  XDocument doc = new XDocument(new XElement("FilterSet", elementList));
-                       
-                  String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                  doc.Save(path + @"\Filters\" + name + ".xml");
+                  doc = new XDocument(new XElement("FilterSet", elementList));
              }
              else if (this.checkBox1.Checked && this.checkBox2.Checked)
              {
@@ -178,7 +175,7 @@ namespace TimingForToby
                                                           + "from RaceResults r "
                                                           + "join RaceRunner rn on r.BibID = rn.BibID "
                                                           + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                          + "where r.RaceID=@RaceID AND run.Gender=77 AND Age<=" + ageRange.Item1 + " AND Age>=" + ageRange.Item2 + " order by Time")
+                                                          + "where r.RaceID=@RaceID AND run.Gender=77 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
 
                                                           ));
                       elementList.Add(new XElement("Filter",
@@ -188,13 +185,10 @@ namespace TimingForToby
                                                       + "from RaceResults r "
                                                       + "join RaceRunner rn on r.BibID = rn.BibID "
                                                       + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                      + "where r.RaceID=@RaceID AND run.Gender=70 AND Age<=" + ageRange.Item1 + " AND Age>=" + ageRange.Item2 + " order by Time")
+                                                      + "where r.RaceID=@RaceID AND run.Gender=70 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
                                        ));
                  }
-                 XDocument doc = new XDocument(new XElement("FilterSet", elementList));
-
-                 String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                 doc.Save(path + @"\Filters\" + name + ".xml");
+                 doc = new XDocument(new XElement("FilterSet", elementList));
              }
              else
              {
@@ -205,6 +199,30 @@ namespace TimingForToby
              * (This part still needs to be done) - After adding a filter to add another the age range must be outside of previous existing age ranges 
              * The textboxes will also be cleared upon pressing "Add Age Filter"
              * */
+
+
+             String path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\Filters\" + name + ".xml";
+             if (File.Exists(path))
+             {
+                 MessageBox.Show("File Already Exist with that name!");
+                 return false;
+             }
+             else if (name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+             {
+                 string error = "Name can not contain: ";
+                 foreach (char e in Path.GetInvalidFileNameChars())
+                 {
+                     error += "\"," + e + "\"";
+                 }
+                 MessageBox.Show(error);
+                 return false;
+             }
+             else if(doc!=null)
+             {
+                 doc.Save(path);
+                 return true;
+             }
+             return false;
         }
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
