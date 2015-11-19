@@ -108,7 +108,7 @@ namespace TimingForToby
                     using (var cmd = new SQLiteCommand())
                     {
                         cmd.Connection = conn;
-                        cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB, Team, Orginization from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=@RaceID;";
+                        cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB, CHAR(Gender) as Gender, Team, Orginization from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=@RaceID;";
                         cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
                         var daRunners = new SQLiteDataAdapter(cmd);
                         daRunners.Fill(runners);
@@ -556,6 +556,7 @@ namespace TimingForToby
             string bibId = "";
             string team = "";
             string org = "";
+            char sex='N';
             foreach (DataGridViewTextBoxCell data in row.Cells)
             {
                 switch (dataGridRunners.Columns[data.ColumnIndex].Name)
@@ -579,11 +580,14 @@ namespace TimingForToby
                     case "Orginization":
                         org = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString();
                         break;
+                    case "Gender":
+                        sex = dataGridRunners[data.ColumnIndex, data.RowIndex].Value.ToString().ToUpper().ToCharArray()[0];
+                        break;
                     default:
                         break;
                 }
             }
-            var person = new NewUserWindow(raceData, this, firstName, lastName, dob, bibId, team, org);
+            var person = new NewUserWindow(raceData, this, firstName, lastName, dob, bibId, sex, team, org);
             person.Show();
         }
         //remove row from timing table

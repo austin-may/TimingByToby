@@ -86,7 +86,7 @@ namespace TimingForToby
                     cmd.Parameters.AddWithValue("@FirstName", FirstName);
                     cmd.Parameters.AddWithValue("@LastName", LastName);
                     cmd.Parameters.AddWithValue("@DOB", DOB.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@Sex", sex);
+                    cmd.Parameters.AddWithValue("@Sex", sex.ToUpper().ToCharArray()[0]);
                     //check to ensure that value was added, if not, break
                     if(cmd.ExecuteNonQuery()==0)
                     {
@@ -543,7 +543,7 @@ namespace TimingForToby
                     cmd.Parameters.AddWithValue("@FirstName", FirstName);
                     cmd.Parameters.AddWithValue("@LastName", LastName);
                     cmd.Parameters.AddWithValue("@DOB", DOB.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@Sex", sex);
+                    cmd.Parameters.AddWithValue("@Sex", sex.ToUpper().ToCharArray()[0]);
                     cmd.Parameters.AddWithValue("@runnerId", runnerId);
                     //check to ensure that value was added, if not, break
                     if (cmd.ExecuteNonQuery() == 0)

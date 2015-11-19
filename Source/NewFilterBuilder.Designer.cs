@@ -44,6 +44,7 @@
             this.btnAdditionalAge = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.labelValue = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,7 +100,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(23, 99);
+            this.trackBar1.Location = new System.Drawing.Point(20, 99);
             this.trackBar1.Maximum = 100;
             this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
@@ -187,11 +188,21 @@
             this.label4.TabIndex = 15;
             this.label4.Text = "Age Filters";
             // 
+            // labelValue
+            // 
+            this.labelValue.AutoSize = true;
+            this.labelValue.Location = new System.Drawing.Point(216, 83);
+            this.labelValue.Name = "labelValue";
+            this.labelValue.Size = new System.Drawing.Size(33, 13);
+            this.labelValue.TabIndex = 16;
+            this.labelValue.Text = "value";
+            // 
             // NewFilterBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(598, 258);
+            this.Controls.Add(this.labelValue);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.btnAdditionalAge);
@@ -233,5 +244,6 @@
         private System.Windows.Forms.Button btnAdditionalAge;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelValue;
     }
 }

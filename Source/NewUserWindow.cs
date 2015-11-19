@@ -26,7 +26,7 @@ namespace TimingForToby
             this.parent = _parent;
         }
 
-        public NewUserWindow(RaceData _raceData, MainWindow _parent, string firstName, string lastName, DateTime dob, string bibID, string team, string org)
+        public NewUserWindow(RaceData _raceData, MainWindow _parent, string firstName, string lastName, DateTime dob, string bibID, char sex, string team, string org)
             : this(_raceData, _parent)
         {
             textBoxFirstName.Text = firstName;
@@ -35,6 +35,7 @@ namespace TimingForToby
             textBoxBibId.Text = bibID;
             textBoxTeam.Text = team;
             textBoxOrginization.Text=org;
+            tbGender.Text = sex+"";
             _RunnerID=CommonSQL.GetRunnerID(firstName, lastName, dob);
         }
 

@@ -23,28 +23,41 @@ namespace TimingForToby
         public string FilterName; 
         //list of running selecteed ages (min, max)
         List<Tuple<int, int>> ages = new List<Tuple<int, int>>();
-
+        //have the buttons been set
+        bool minSet = false;
+        bool maxSet = false;
         //amount of Age Ranges in the filter
         public int AgeRanges = 0;
         public NewFilterBuilder()
         {
             InitializeComponent();
+            labelValue.Text = trackBar1.Value.ToString();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //Sets the potential min to the value of the trackbar
-            int minAge = trackBar1.Value;
+            //Sets the potential min to the value of the trackbar if there is no value in the textbox          
+            int minAge=AgeMinimum;
+            if (txtMinAge.Text.Trim() == "")
+            {
+                minAge = trackBar1.Value;
+                txtMinAge.Text = minAge.ToString();
+            }
+            else
+            {
+                minAge = Int16.Parse(txtMinAge.Text.Trim());
+                trackBar1.Value=minAge;
+            }
+
             //Checks that the potential new min is less than the max
             if (minAge > AgeMaximum)
             {
                 MessageBox.Show("The min age must be less than the max age!");
+                txtMinAge.Text = AgeMinimum.ToString();
             }    
                 //On a pass, set the potential min to the age minimum
             else
-            {
-                txtMinAge.Text = minAge.ToString();
-                txtMinAge.Enabled = false;    
+            {  
                 AgeMinimum = minAge;
             }
         }
@@ -56,18 +69,27 @@ namespace TimingForToby
 
         private void btnSetMax_Click(object sender, EventArgs e)
         {
-            //Sets the potential max to the value of the trackbar
-            int maxAge = trackBar1.Value;
+            int maxAge = AgeMaximum;
+            //Sets the potential max to the value of the trackbar if there is no value in the textbox            
+            if (txtMaxAge.Text.Trim() == "")
+            {
+                maxAge = trackBar1.Value;
+                txtMaxAge.Text = maxAge.ToString();
+            }
+            else
+            {
+                maxAge = Int16.Parse(txtMinAge.Text.Trim());
+                txtMaxAge.Text = maxAge.ToString();
+            }
             //Checks that the potential new max is more than the min
             if (maxAge < AgeMinimum)
             {
                 MessageBox.Show("The max age must be greater than the min age!");
+                txtMaxAge.Text = AgeMaximum.ToString();
             }
             //On a pass, set the potential max to the age maximum
             else
             {
-                txtMaxAge.Text = maxAge.ToString();
-                txtMaxAge.Enabled = false;
                 AgeMaximum = maxAge;
             }
             
@@ -227,23 +249,7 @@ namespace TimingForToby
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-             if (txtMaxAge.Enabled && txtMinAge.Enabled)
-             {
-                  txtMaxAge.Text = trackBar1.Value.ToString();
-                  txtMinAge.Text = trackBar1.Value.ToString();
-             }
-             else if (!txtMaxAge.Enabled && txtMinAge.Enabled)
-             {
-                  txtMinAge.Text = trackBar1.Value.ToString();
-             }
-             else if (txtMaxAge.Enabled && !txtMinAge.Enabled)
-             {
-                  txtMaxAge.Text = trackBar1.Value.ToString();
-             }
-             else
-             {
-                  trackBar1.Enabled = false;
-             }
+            labelValue.Text = trackBar1.Value.ToString();
         }
 
         private void btnAdditionalAge_Click(object sender, EventArgs e)
@@ -262,7 +268,12 @@ namespace TimingForToby
             AgeMaximum = 100;
             // Re enable the age ranges
             txtMaxAge.Enabled = true;
-            txtMinAge.Text = AgeMinimum.ToString();
+            txtMinAge.Text = (AgeMinimum).ToString();
+            trackBar1.Value = AgeMinimum;
+            //disable the ability to change the min value
+            txtMinAge.Enabled = false;
+            btnSetMin.Enabled = false;
+
             //The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
         }
 
