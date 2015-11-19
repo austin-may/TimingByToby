@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.IO;
 
 [assembly: InternalsVisibleTo("TimingByTobyTests")]
 
@@ -14,14 +15,66 @@ namespace TimingForToby
 {
     public class CommonSQL
     {
-        public static string SQLiteConnection = "Data Source=MyDatabase.sqlite;Version=3;";
+        private static string _dbFile="MyDatabase.sqlite";
+        internal static string SQLiteConnectionString = "Data Source=MyDatabase.sqlite;Version=3;";
         internal static string backupDB = "Data Source=BackupDatabase.sqlite;Version=3;";
         private static Dictionary<string, int> RaceIdMap = new Dictionary<string, int>();
         public static string filterFolder="Filters";
         public static SQLiteConnection originalDatabase;
         public static SQLiteConnection backupDatabase;
-        private static SQLiteConnection db = new SQLiteConnection(SQLiteConnection);
+        private static SQLiteConnection _db = new SQLiteConnection(SQLiteConnectionString);
+        public static string GetDBFileName()
+        {
+            return _dbFile;
+        }
+        public static void BuildIfNotExsistDB()
+        {
+            try
+            {
+                //look to see if the db file exsist, if not, create it
+                if(File.Exists(_dbFile))
+                    return;
+                //if that file doesnt exsist
+                //force close so we can work
+                _db.Close();
+                //create db file
+                SQLiteConnection.CreateFile(_dbFile);
+                //re-establish connection
+                _db = new SQLiteConnection(SQLiteConnectionString);
+                _db.Open();
+                //build db
+                using (var cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = _db;
+                    cmd.CommandText =   //Table: Race
+                                        "DROP TABLE IF EXISTS Race;"+
+                                        "CREATE TABLE Race (RaceID INTEGER PRIMARY KEY AUTOINCREMENT, Name VARCHAR (50) NOT NULL UNIQUE ON CONFLICT FAIL);"+
+                                        
+                                        //Table: RaceRunner
+                                        "DROP TABLE IF EXISTS RaceRunner;"+
+                                        "CREATE TABLE RaceRunner (RaceID INTEGER REFERENCES Race (RaceID) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL, BibID VARCHAR (10), RunnerID INTEGER REFERENCES Runners (RunnerID) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL, Orginization VARCHAR (250), Team VARCHAR (250));"+
+
+                                        //Table: Runners
+                                        "DROP TABLE IF EXISTS Runners;"+
+                                        "CREATE TABLE Runners (RunnerID INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, FirstName VARCHAR (25) NOT NULL, LastName VARCHAR (25) NOT NULL, DOB DATE NOT NULL, Gender CHAR);"+
+
+                                        //Table: RaceResults
+                                        "DROP TABLE IF EXISTS RaceResults;"+
+                                        "CREATE TABLE RaceResults (RaceID INTEGER REFERENCES Race (RaceID) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL, BibID VARCHAR (10), Time TIME NOT NULL);";
+                    var r = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception sqlError)
+            {
+                MessageBox.Show(sqlError.Message);
+            }
+            finally
+            {
+                _db.Close();
+            }
+        }
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string sex, string Team, string Orginization, string RaceName, string Connection){
+            BuildIfNotExsistDB();
             int raceID = GetRaceID(RaceName);
             using (var conn = new SQLiteConnection(Connection))
             {
@@ -59,12 +112,14 @@ namespace TimingForToby
                     }                 
                 }
                 conn.Close();
+                TobyTimer.BackupAfter60Seconds();
             }
         }
         
         //the inserting of every runner that happens on an asynchronous thread
         public static Task ProcessRunners(string[] FirstName, string[] LastName, DateTime[] DOB, char[] Genders, string[] BibID, string[] Team, string[] Orginization, string RaceName, string Connection, IProgress<ProgressReport> progress)
         {
+            BuildIfNotExsistDB();
             int raceID = GetRaceID(RaceName);
             int index = 1;
             //big assumption that all arrays are same size or atleast larger than the FirstName array
@@ -102,13 +157,15 @@ namespace TimingForToby
                         }
                     }
                     conn.Close();
+                    TobyTimer.BackupAfter60Seconds();
                 }
             });            
+            
         }        
 
         internal static void BackupDB()
         {
-            originalDatabase = new SQLiteConnection(SQLiteConnection);
+            originalDatabase = new SQLiteConnection(SQLiteConnectionString);
             backupDatabase = new SQLiteConnection(backupDB);
             originalDatabase.Open();
             backupDatabase.Open();
@@ -119,6 +176,7 @@ namespace TimingForToby
         
         internal static void UpdateTimingBib(int raceID, string oldBib, string time, string newBib)
         {
+            BuildIfNotExsistDB();
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -135,6 +193,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -148,6 +207,7 @@ namespace TimingForToby
         }
         internal static void UpdateTimingTime(int raceID, string bib, string oldTime, string newTime)
         {
+            BuildIfNotExsistDB();
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -164,6 +224,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -177,6 +238,7 @@ namespace TimingForToby
         }
         //returns -1 if no race is found
         public static int GetRaceID(string raceName){
+            BuildIfNotExsistDB();
             int raceID;
             if (RaceIdMap.TryGetValue(raceName, out raceID))
             {
@@ -207,6 +269,7 @@ namespace TimingForToby
                             Console.WriteLine("No rows found.");
                         }
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception e)
                 {
@@ -221,6 +284,7 @@ namespace TimingForToby
         }
         public static List<string> FindBadBibs(int raceID)
         {
+            BuildIfNotExsistDB();
             var badBibs = new List<string>();
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
@@ -241,6 +305,7 @@ namespace TimingForToby
                         }
                         reader.Dispose();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -256,6 +321,7 @@ namespace TimingForToby
 
         internal static void AddTimeAndBib(int raceID, string bib, string time)
         {
+            BuildIfNotExsistDB();
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -271,6 +337,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -284,6 +351,7 @@ namespace TimingForToby
         }
         internal static void DelTimingRow(int raceID, string time)
         {
+            BuildIfNotExsistDB();
             using (var conn = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;"))
             {
                 try
@@ -298,6 +366,7 @@ namespace TimingForToby
 
                         cmd.ExecuteNonQuery();
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -312,15 +381,16 @@ namespace TimingForToby
         //reuturn runner ID based on name and dob. return -1 if none is found
         internal static int GetRunnerID(string firstName, string LastName, DateTime dob)
         {
+            BuildIfNotExsistDB();
             int runnerID = -1;
-            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            bool alreadyOpen = _db.State != System.Data.ConnectionState.Closed;
                 try
                 {
                     if(!alreadyOpen)
-                        db.Open();
+                        _db.Open();
                     using (var cmd = new SQLiteCommand())
                     {
-                        cmd.Connection = db;
+                        cmd.Connection = _db;
                         cmd.CommandText = "select RunnerID from runners where FirstName=@firstName and LastName=@lastName and DOB=@dob;";
                         cmd.Parameters.AddWithValue("@firstName", firstName);
                         cmd.Parameters.AddWithValue("@lastName", LastName);
@@ -338,6 +408,7 @@ namespace TimingForToby
                             Console.WriteLine("No rows found.");
                         }
                     }
+                    TobyTimer.BackupAfter60Seconds();
                 }
                 catch (Exception sqlError)
                 {
@@ -346,27 +417,29 @@ namespace TimingForToby
                 finally
                 {
                     if(!alreadyOpen)
-                        db.Close();
+                        _db.Close();
                 }
             return runnerID;
         }
         internal static void DelRunner(string firstName, string LastName, DateTime dob, int raceID)
         {
-            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            BuildIfNotExsistDB();
+            bool alreadyOpen = _db.State != System.Data.ConnectionState.Closed;
             try
             {
                 if (!alreadyOpen)
-                    db.Open();
+                    _db.Open();
                 int id = GetRunnerID(firstName, LastName, dob);
                 using (var cmd = new SQLiteCommand())
                 {
-                    cmd.Connection = db;
+                    cmd.Connection = _db;
                     cmd.CommandText = "delete from RaceRunner where RunnerID=@id and RaceID=@RaceID;";
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.Parameters.AddWithValue("@RaceID", raceID);
 
                     cmd.ExecuteNonQuery();
                 }
+                TobyTimer.BackupAfter60Seconds();
             }
             catch (Exception sqlError)
             {
@@ -375,20 +448,21 @@ namespace TimingForToby
             finally
             {
                 if (!alreadyOpen)
-                    db.Close();
+                    _db.Close();
             }
         }
         internal static bool BibExist(string bibID, int raceID)
         {
+            BuildIfNotExsistDB();
             bool results = false;
-            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            bool alreadyOpen = _db.State != System.Data.ConnectionState.Closed;
             try
             {
                 if (!alreadyOpen)
-                    db.Open();
+                    _db.Open();
                 using (var cmd = new SQLiteCommand())
                 {
-                    cmd.Connection = db;
+                    cmd.Connection = _db;
                     cmd.CommandText = "select * from RaceRunner where BibID=@id and RaceID=@RaceID;";
                     cmd.Parameters.AddWithValue("@id", bibID);
                     cmd.Parameters.AddWithValue("@RaceID", raceID);
@@ -401,6 +475,7 @@ namespace TimingForToby
                         while (r.Read()) { }
                     }
                 }
+                TobyTimer.BackupAfter60Seconds();
             }
             catch (Exception sqlError)
             {
@@ -409,7 +484,7 @@ namespace TimingForToby
             finally
             {
                 if (!alreadyOpen)
-                    db.Close();
+                    _db.Close();
             }
             //if we get here then ya, it doesnt exsist
             return results;
@@ -417,15 +492,16 @@ namespace TimingForToby
         //same as above except we want to check if the bib exsist excluding runner
         internal static bool BibExistOutsideRunner(string bibID, int raceID, int runnerID)
         {
+            BuildIfNotExsistDB();
             bool results = false;
-            bool alreadyOpen = db.State != System.Data.ConnectionState.Closed;
+            bool alreadyOpen = _db.State != System.Data.ConnectionState.Closed;
             try
             {
                 if (!alreadyOpen)
-                    db.Open();
+                    _db.Open();
                 using (var cmd = new SQLiteCommand())
                 {
-                    cmd.Connection = db;
+                    cmd.Connection = _db;
                     cmd.CommandText = "select * from RaceRunner where BibID=@id and RaceID=@RaceID and RunnerID<>@runnerID;";
                     cmd.Parameters.AddWithValue("@id", bibID);
                     cmd.Parameters.AddWithValue("@RaceID", raceID);
@@ -439,6 +515,7 @@ namespace TimingForToby
                         while (r.Read()) { }
                     }
                 }
+                TobyTimer.BackupAfter60Seconds();
             }
             catch (Exception sqlError)
             {
@@ -447,13 +524,14 @@ namespace TimingForToby
             finally
             {
                 if (!alreadyOpen)
-                    db.Close();
+                    _db.Close();
             }
             //if we get here then ya, it doesnt exsist
             return results;
         }
         internal static void UpdateRunner(int runnerId, string FirstName, string LastName, DateTime DOB, string BibID, string sex, string Team, string Orginization, string RaceName, string Connection)
         {
+            BuildIfNotExsistDB();
             int raceID = GetRaceID(RaceName);
             using (var conn = new SQLiteConnection(Connection))
             {
@@ -489,8 +567,8 @@ namespace TimingForToby
                     }
                 }
                 conn.Close();
+                TobyTimer.BackupAfter60Seconds();
             }
         }
-        
     }
 }

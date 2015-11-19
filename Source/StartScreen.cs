@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using System.IO;
+using System.Collections;
 using Excel=Microsoft.Office.Interop.Excel;
 using System.Web;
 
@@ -19,20 +20,21 @@ namespace TimingForToby
         public StartScreen()
         {
             InitializeComponent();
-            //Watch dog component
-            //Immediately starts the clock as soon as user opens the app
-            TobyTimer.SetTimer();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void BtnRace_Click(object sender, EventArgs e)
         {
-            var data = new RaceData(this, comboBox1.SelectedItem.ToString(), "Data Source=MyDatabase.sqlite;Version=3;");
-            var mainWindow = new MainWindow(data);
-            this.Hide();
-            mainWindow.Show();
+            if (comboBox1.SelectedItem==null || comboBox1.SelectedItem.ToString()=="")
+                MessageBox.Show("No Race Selected");
+            else {
+                var data = new RaceData(this, comboBox1.SelectedItem.ToString(), CommonSQL.SQLiteConnectionString);
+                var mainWindow = new MainWindow(data);
+                this.Hide();
+                mainWindow.Show(); 
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnNewRace_Click(object sender, EventArgs e)
         {
             var newRaceScreen = new NewRaceWindow();
             newRaceScreen.Show();
@@ -46,7 +48,8 @@ namespace TimingForToby
             comboBox1.Items.Clear();
             //load the names of the races from file
             var races = new DataTable();
-            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
+            CommonSQL.BuildIfNotExsistDB();
+            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnectionString))
             {
                 conn.Open();
                 using (var cmd = new SQLiteCommand())
@@ -140,7 +143,7 @@ namespace TimingForToby
                         case "gender":
                             genderRow = i;
                             break;
-                        case "orginization":
+                        case "organization":
                             orgRow = i;
                             break;
                         case "team":
@@ -207,7 +210,7 @@ namespace TimingForToby
                         //keep user from messing things up
                         LockGUI(true);
                         //waits for runners to be inserted asynchrously
-                        await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, Genders, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection, progress);
+                        await CommonSQL.ProcessRunners(FirstNames,LastNames, DOBs, Genders, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnectionString, progress);
                         //re-enable user interaction
                         LockGUI(false);
                     }
@@ -239,7 +242,7 @@ namespace TimingForToby
         private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Backup the database on close
-            TimeStampedBackup(true);
+            TobyTimer.TimeStampedBackup(true);
         }
 
         //prompts for a save dialog
@@ -266,32 +269,7 @@ namespace TimingForToby
              
         }
 
-        internal static void TimeStampedBackup(bool isClosing)
-        {
-            string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string sourcePath = Directory.GetCurrentDirectory();
-            string destinationPath = AppDataPath+"\\TimingForToby";
-            string sourceFileName = @"MyDatabase.sqlite";
-            //There's no colon in the time because as you might know that's not allowed in file names :(
-            string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
-            string destinationFileName = "";
-            //determines if the auto backup is being called because of a close event or because of a period.
-            if(isClosing == false)
-            { 
-               destinationFileName = "Auto Backup " + timestamp + ".sqlite";
-            }
-            else
-            {
-               destinationFileName = "Last Close " + timestamp + ".sqlite";
-            }
-            string destinationFile = Path.Combine(destinationPath, destinationFileName);
-
-            if (!Directory.Exists(destinationPath))
-            {
-                Directory.CreateDirectory(destinationPath);
-            }
-            File.Copy(sourceFileName, destinationFile, true);
-        }
+       
 
         private void RestoreDatabase_Click(object sender, EventArgs e)
         {

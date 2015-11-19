@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using System.Collections;
+using System.IO;
 
 namespace TimingForToby
 {
     class TobyTimer
     {
-        
+
         private DateTime _StartTime;
         public TobyTimer()
         {
@@ -35,32 +37,56 @@ namespace TimingForToby
             _StartTime = DateTime.Now - ts;
         }
 
-        private static System.Timers.Timer BackupTimer;
-        internal static void SetTimer()
+
+        private static Stack timestampStack = new Stack();
+        internal static void BackupAfter60Seconds()
         {
-            // Create a timer that fires every minute
-            BackupTimer = new System.Timers.Timer(60000);
-            //Sync lapsed events to timer
-                BackupTimer.Elapsed += OnTimedEvent;
-                BackupTimer.AutoReset = true;
-                BackupTimer.Enabled = true;            
+            TimeSpan rightNow = DateTime.Now.TimeOfDay;
+            //if a backup hasn't been created yet create one
+            if (timestampStack.Count == 0)
+            {
+                TimeStampedBackup(false);
+            }
+            else
+            {
+                TimeSpan lastBackup = (TimeSpan)timestampStack.Pop();
+                if ((rightNow.Seconds - lastBackup.Seconds) > 60)
+                {
+                    TimeStampedBackup(false);
+                }
+            }
+            
         }
 
-        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        //performs the backup
+        internal static void TimeStampedBackup(bool isClosing)
         {
-            //CommonSQL.BackupDB();
-            StartScreen.TimeStampedBackup(false);
+            string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string sourcePath = Directory.GetCurrentDirectory();
+            string destinationPath = AppDataPath + "\\TimingForToby";
+            string sourceFileName = @"MyDatabase.sqlite";
+            //There's no colon in the time because as you might know that's not allowed in file names :(
+            string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
+            timestampStack.Push(DateTime.Now.TimeOfDay);
+            string destinationFileName = "";
+            //determines if the auto backup is being called because of a close event or because of a period.
+            if (isClosing == false)
+            {
+                destinationFileName = "Auto Backup " + timestamp + ".sqlite";
+            }
+            else
+            {
+                destinationFileName = "Last Close " + timestamp + ".sqlite";
+            }
+            string destinationFile = Path.Combine(destinationPath, destinationFileName);
+
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+            File.Copy(sourceFileName, destinationFile, true);
         }
-
-        //resets automatic backup clock back to zero if an event has fired
-        //call this method when an event should trigger a backup
-        //otherwise whenever there is a dormant 60 seconds the automatic backup will occur
-        internal static void KeepTimerDormant()
-        {
-            BackupTimer.Stop();
-            BackupTimer.Start();
-        }
-
-
     }
+        
+        
 }

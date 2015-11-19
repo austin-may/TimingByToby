@@ -66,7 +66,7 @@ namespace TimingForToby
             if (!TimingCellBeingEdited)
             {
                 TimingTableUpdating = true;
-                using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
+                using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnectionString))
                 {
                     try
                     {
@@ -84,6 +84,7 @@ namespace TimingForToby
                             dataGridTiming.DataSource = timing;
                             dataGridTiming.AllowUserToAddRows = false;
                                 dataGridTiming.Columns[0].ReadOnly = true;
+                           
                         }
                     }
                     catch (Exception e) { MessageBox.Show(this, e.Message); }
@@ -99,7 +100,7 @@ namespace TimingForToby
         private void BuildRunnersTable(){
             var runners = new DataTable();
             this.dataGridRunners.AllowUserToAddRows = true;
-            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnection))
+            using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnectionString))
             {
                 try
                 {
