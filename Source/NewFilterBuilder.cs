@@ -57,14 +57,10 @@ namespace TimingForToby
             }    
                 //On a pass, set the potential min to the age minimum
             else
-            {  
+            {
                 AgeMinimum = minAge;
+                txtMinAge.BackColor = Color.LimeGreen;
             }
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-            
         }
 
         private void btnSetMax_Click(object sender, EventArgs e)
@@ -78,7 +74,7 @@ namespace TimingForToby
             }
             else
             {
-                maxAge = Int16.Parse(txtMinAge.Text.Trim());
+                maxAge = Int16.Parse(txtMaxAge.Text.Trim());
                 txtMaxAge.Text = maxAge.ToString();
             }
             //Checks that the potential new max is more than the min
@@ -91,6 +87,7 @@ namespace TimingForToby
             else
             {
                 AgeMaximum = maxAge;
+                txtMaxAge.BackColor = Color.LimeGreen;
             }
             
         }
@@ -277,9 +274,14 @@ namespace TimingForToby
             //The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
         }
 
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        private void MaxChanged(object sender, EventArgs e)
         {
+            txtMaxAge.BackColor = Color.White;
+        }
 
+        private void MinChanged(object sender, EventArgs e)
+        {
+            txtMinAge.BackColor = Color.White;
         }
     }
 }

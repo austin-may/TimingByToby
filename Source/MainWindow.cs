@@ -108,7 +108,7 @@ namespace TimingForToby
                     using (var cmd = new SQLiteCommand())
                     {
                         cmd.Connection = conn;
-                        cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB, CHAR(Gender) as Gender, Team, Orginization from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=@RaceID;";
+                        cmd.CommandText = "select FirstName, LastName, BibId, CAST(DOB as varchar(10)) as DOB, CHAR(Gender) as Gender, Team, Orginization as Organization from RaceRunner rr join Runners r where rr.RunnerID=r.RunnerID and rr.RaceID=@RaceID;";
                         cmd.Parameters.AddWithValue("@RaceID", raceData.RaceID);
                         var daRunners = new SQLiteDataAdapter(cmd);
                         daRunners.Fill(runners);
@@ -345,7 +345,7 @@ namespace TimingForToby
                 catch (ObjectDisposedException ode) { }//saw this when app was closed without ending race first
                 catch (Exception e) { MessageBox.Show(e.Message); }
             }
-            if(!TimingCellBeingEdited)
+            if (!TimingCellBeingEdited && !dataGridTiming.InvokeRequired)
             { 
                 TimingTableLoad();
                 HighlightTimingErrors();

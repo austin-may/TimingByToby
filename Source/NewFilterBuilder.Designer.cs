@@ -56,7 +56,6 @@
             this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filter Name:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // textBox1
             // 
@@ -85,7 +84,6 @@
             this.checkBox2.TabIndex = 3;
             this.checkBox2.Text = "Age";
             this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // btnCreateFilter
             // 
@@ -135,6 +133,7 @@
             this.txtMinAge.Name = "txtMinAge";
             this.txtMinAge.Size = new System.Drawing.Size(39, 20);
             this.txtMinAge.TabIndex = 9;
+            this.txtMinAge.TextChanged += new System.EventHandler(this.MinChanged);
             // 
             // txtMaxAge
             // 
@@ -142,6 +141,7 @@
             this.txtMaxAge.Name = "txtMaxAge";
             this.txtMaxAge.Size = new System.Drawing.Size(39, 20);
             this.txtMaxAge.TabIndex = 10;
+            this.txtMaxAge.TextChanged += new System.EventHandler(this.MaxChanged);
             // 
             // label2
             // 
