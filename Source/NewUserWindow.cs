@@ -45,11 +45,14 @@ namespace TimingForToby
             {
                 MessageBox.Show("Can not add: First Name, Last Name, and Bib can not be empty");
             }
-            //if we already know the runner
-            if (_RunnerID > 0)
-                updateRunner();
             else
-                addRunner();
+            {
+                //if we already know the runner
+                if (_RunnerID > 0)
+                    updateRunner();
+                else
+                    addRunner();
+            }
         }
         private void addRunner()
         {
