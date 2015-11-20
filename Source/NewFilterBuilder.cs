@@ -141,7 +141,8 @@ namespace TimingForToby
              //get the current selected ages (if the user doesnt select the age checkbox it will be ignored anyways)
              ages.Add(new Tuple<int, int>(AgeMinimum, AgeMaximum));
              string ageString = "(select (strftime('%Y', 'now') - strftime('%Y', run.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run.DOB))) as Age ";
-             if (this.checkBox1.Checked && !this.checkBox2.Checked)
+            //Sex but not age is selected 
+            if (this.checkBox1.Checked && !this.checkBox2.Checked)
              {
                   doc = new XDocument(new XElement("FilterSet", 
                  new XElement("Filter",
@@ -164,59 +165,69 @@ namespace TimingForToby
                                         )
                   ));                  
              }
+            //age but not sex is selected
              else if (!this.checkBox1.Checked && this.checkBox2.Checked)
              {
                  var elementList = new List<XElement>();
                  foreach(Tuple<int, int> ageRange in ages)
                  {
-                     elementList.Add(
-                         new XElement("Filter",
-                                    new XElement("Name", name+"-Ages:"+ageRange.Item1+"-"+ageRange.Item2),
-                                   new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
-                                                       + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
-                                                       + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND r2.Time<=r.Time order by Time) as Position, "
-                                                       + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
-                                                       + ageString
-                                                       + "from RaceResults r "
-                                                       + "join RaceRunner rn on r.BibID = rn.BibID "
-                                                       + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                       + "where r.RaceID=@RaceID AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
-                                        
-                         ));
+                     //secondary check that the min age is lower than max... if not, skip
+                     if (ageRange.Item1 < ageRange.Item2)
+                     {
+                         elementList.Add(
+                             new XElement("Filter",
+                                        new XElement("Name", name + "-Ages:" + ageRange.Item1 + "-" + ageRange.Item2),
+                                       new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
+                                                           + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
+                                                           + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND r2.Time<=r.Time order by Time) as Position, "
+                                                           + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
+                                                           + ageString
+                                                           + "from RaceResults r "
+                                                           + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                           + "join Runners run on rn.RunnerID = run.RunnerID "
+                                                           + "where r.RaceID=@RaceID AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
+
+                             ));
+                     }
                  }
                   doc = new XDocument(new XElement("FilterSet", elementList));
              }
+            //both age and sex are selected
              else if (this.checkBox1.Checked && this.checkBox2.Checked)
              {
                  var elementList = new List<XElement>();
                  foreach(Tuple<int, int> ageRange in ages)
                  {
-                     elementList.Add(
-                     new XElement("Filter",
-                          new XElement("Name", name + "-Ages:" + ageRange.Item1 + "-" + ageRange.Item2 + "-Male"),
-                                      new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
-                                                          + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
-                                                          + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND run2.Gender=77 AND r2.Time<=r.Time order by Time) as Position, "
-                                                          + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
-                                                          + ageString
-                                                          + "from RaceResults r "
-                                                          + "join RaceRunner rn on r.BibID = rn.BibID "
-                                                          + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                          + "where r.RaceID=@RaceID AND run.Gender=77 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
+                     //secondary check that the min age is lower than max... if not, skip
+                     if (ageRange.Item1 < ageRange.Item2)
+                     {
+                         elementList.Add(
+                         new XElement("Filter",
+                              new XElement("Name", name + "-Ages:" + ageRange.Item1 + "-" + ageRange.Item2 + "-Male"),
+                                          new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
+                                                              + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
+                                                              + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND run2.Gender=77 AND r2.Time<=r.Time order by Time) as Position, "
+                                                              + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
+                                                              + ageString
+                                                              + "from RaceResults r "
+                                                              + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                              + "join Runners run on rn.RunnerID = run.RunnerID "
+                                                              + "where r.RaceID=@RaceID AND run.Gender=77 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
 
-                                                          ));
-                      elementList.Add(new XElement("Filter",
-                      new XElement("Name", name + "-Ages: " + ageRange.Item1 + "-" + ageRange.Item2 + "-Female"),
-                                  new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
-                                                      + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
-                                                      + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND run2.Gender=70 AND r2.Time<=r.Time order by Time) as Position, "
-                                                      + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
-                                                      + ageString
-                                                      + "from RaceResults r "
-                                                      + "join RaceRunner rn on r.BibID = rn.BibID "
-                                                      + "join Runners run on rn.RunnerID = run.RunnerID "
-                                                      + "where r.RaceID=@RaceID AND run.Gender=70 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
-                                       ));
+                                                              ));
+                         elementList.Add(new XElement("Filter",
+                         new XElement("Name", name + "-Ages: " + ageRange.Item1 + "-" + ageRange.Item2 + "-Female"),
+                                     new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
+                                                         + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
+                                                         + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND run2.Gender=70 AND r2.Time<=r.Time order by Time) as Position, "
+                                                         + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
+                                                         + ageString
+                                                         + "from RaceResults r "
+                                                         + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                         + "join Runners run on rn.RunnerID = run.RunnerID "
+                                                         + "where r.RaceID=@RaceID AND run.Gender=70 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
+                                          ));
+                     }
                  }
                  doc = new XDocument(new XElement("FilterSet", elementList));
              }
@@ -277,7 +288,7 @@ namespace TimingForToby
             // Re enable the age ranges
             txtMaxAge.Enabled = true;
             txtMinAge.Text = (AgeMinimum).ToString();
-            trackBar1.Value = AgeMinimum;
+            trackBar1.Value = AgeMinimum>100? 100: AgeMinimum;
             //disable the ability to change the min value
             txtMinAge.Enabled = false;
             btnSetMin.Enabled = false;

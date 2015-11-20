@@ -45,6 +45,10 @@ namespace TimingForToby
             {
                 MessageBox.Show("Can not add: First Name, Last Name, and Bib can not be empty");
             }
+            else if (dateTimePicker1.Value > DateTime.Now)
+            {
+                MessageBox.Show("This user has not been born yet! Unborn children can not race");
+            }
             else
             {
                 //if we already know the runner

@@ -113,6 +113,7 @@ namespace TimingForToby
             int teamRow = -1;
             int orgRow = -1;
             int shirtRow = -1;
+            int ageRow = -1;
             int curRow = 1;
             try {
                 Cursor.Current = Cursors.WaitCursor;
@@ -152,6 +153,9 @@ namespace TimingForToby
                         case "shirt":
                             shirtRow = i;
                             break;
+                        case "age":
+                            ageRow = i;
+                            break;
                         default:
                             break;
                     }
@@ -173,14 +177,45 @@ namespace TimingForToby
                         var Orginizations = new string[rowCount - 1];
                         var Teams = new string[rowCount - 1];
                         Dictionary<string, int> dictionary = new Dictionary<string, int>();
-                        bool duplicateBibsFound = false;
+                        string errorMessage="";
+                        if(firstNameRow<1||lastNameRow<1||bibIDRow<1||(dobRow<1&&ageRow<1))
+                        {
+                            MessageBox.Show("Some columns not found. Need to see: FirstName, LastName, BibId, and either DOB or age");
+                            return;
+                        }
                         for (curRow = 2; curRow <= rowCount; curRow++)
                         {        
                             FirstNames[curRow-2] = range.Cells[curRow, firstNameRow].Value2 as string;
                             LastNames[curRow-2] = range.Cells[curRow, lastNameRow].Value2 as string;
-                            DOBs[curRow - 2] = DateTime.FromOADate(range.Cells[curRow, dobRow].Value2);
+                            if(dobRow>0)
+                                DOBs[curRow - 2] = DateTime.FromOADate(range.Cells[curRow, dobRow].Value2);
+                            else if(ageRow>0){
+                                int age;
+                                var test = Int32.TryParse(range.Cells[curRow, dobRow].Value2 as string, out age);
+                                if(test)
+                                    DOBs[curRow-2]=DateTime.Now.AddYears(-age);
+                                else{
+                                    DOBs[curRow-2]=DateTime.Now;
+                                    string date = string.Format("{0:G}", DateTime.Now);
+                                    string dobError = "Runner " + FirstNames[curRow - 2] + " " + LastNames[curRow - 2] + "could not read age!";
+                                    LogFile.WriteToErrorLog(dobError+" "+date+"\r\n");
+                                    errorMessage += dobError + "\r\n";
+                                }
+                            }
+                            //check to make sure that the dob is in the past, allow them to be entered but warn user
+                            if (DOBs[curRow - 2] > DateTime.Now)
+                            {
+                                string date = string.Format("{0:G}", DateTime.Now);
+                                string birthError = "Runner " + FirstNames[curRow - 2] + " " + LastNames[curRow - 2] + "has not been born yet!";
+                                LogFile.WriteToErrorLog(birthError+" "+date+"\r\n");
+                                errorMessage += birthError + "\r\n";
+                            }
                             //might be male, might be female, just take first letter
-                            Genders[curRow - 2] = (range.Cells[curRow, genderRow].Value2 as string).ToUpper().ToCharArray()[0];
+                            string temp="N";
+                            if(genderRow>0){
+                                temp = range.Cells[curRow, genderRow].Value2 as string;
+                            }
+                            Genders[curRow - 2] = (temp!=null && temp.Length>0)? temp.ToUpper().ToCharArray()[0]: 'N';
                             string BibID = range.Cells[curRow, bibIDRow].Value2.ToString() ?? "";
                             if (!dictionary.ContainsKey(BibID))
                             {
@@ -189,14 +224,20 @@ namespace TimingForToby
                             }
                             else
                             {
-                                duplicateBibsFound = true;
                                 string date = string.Format("{0:G}", DateTime.Now);
-                                LogFile.WriteToErrorLog("Duplicate bib #" + BibID + " found. " + date + "\r\n");
+                                string dateError = "Duplicate bib #" + BibID + " found. ";
+                                LogFile.WriteToErrorLog(dateError + date + "\r\n");
+                                errorMessage += dateError + "\r\n";
                             }
-                            Teams[curRow-2] = range.Cells[curRow, teamRow].Value2 as string ?? "";
-                            Orginizations[curRow-2] = range.Cells[curRow, orgRow] as string ?? "";
+                            if (teamRow > 0)
+                                Teams[curRow-2] = range.Cells[curRow, teamRow].Value2 as string ?? "";
+                            if(orgRow>0)
+                                Orginizations[curRow-2] = range.Cells[curRow, orgRow] as string ?? "";
                         }
-                        if (duplicateBibsFound == true) { MessageBox.Show("Some duplicate bibs were found. They can be edited in home page.");}
+                        if (errorMessage.Length>0) { 
+
+                            MessageBox.Show(errorMessage);
+                        }
                         workbook.Close();
                         //CommonSQL.AddRunners(FirstNames, LastNames, DOBs, BibIDs, Teams, Orginizations, race, CommonSQL.SQLiteConnection);
                         var progress = new Progress<ProgressReport>();
