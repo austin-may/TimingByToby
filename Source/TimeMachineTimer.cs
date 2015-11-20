@@ -100,7 +100,8 @@ namespace TimingForToby
                     bibString = test[6];
                 if(!_raceMap.ContainsKey(time))
                     _raceMap.Add(time, bibString);
-                this.RecordTime(bibString, time);
+                //the TimeMachine always sends out a string with leading 0's if lenght is less than 5.... remove those 
+                this.RecordTime(bibString.TrimStart('0'), time);
             }
         }
         //handle special data (retransmit)
@@ -116,7 +117,8 @@ namespace TimingForToby
                 if (!_raceMap.ContainsKey(time))
                 {
                     _raceMap.Add(time, bibString);
-                    this.RecordTime(bibString, time);
+                    //the TimeMachine always sends out a string with leading 0's if lenght is less than 5.... remove those 
+                    this.RecordTime(bibString.TrimStart('0'), time);
                 }
             }
         }
