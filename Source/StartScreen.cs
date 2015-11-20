@@ -130,12 +130,15 @@ namespace TimingForToby
                     string title = range.Cells[1, i].Value2 + "";
                     switch (title.ToLower()) {
                         case "bibid":
+                        case "bib #":
                             bibIDRow = i;
                             break;
                         case "firstname":
+                        case "first name":
                             firstNameRow = i;
                             break;
                         case "lastname":
+                        case "last name":
                             lastNameRow = i;
                             break;
                         case "dob":
@@ -177,7 +180,8 @@ namespace TimingForToby
                         var Orginizations = new string[rowCount - 1];
                         var Teams = new string[rowCount - 1];
                         Dictionary<string, int> dictionary = new Dictionary<string, int>();
-                        string errorMessage="";
+                        string errorMessage="Full Error log at "+LogFile.PATH+"\r\n";
+                        int errrorThreashold = errorMessage.Length;
                         if(firstNameRow<1||lastNameRow<1||bibIDRow<1||(dobRow<1&&ageRow<1))
                         {
                             MessageBox.Show("Some columns not found. Need to see: FirstName, LastName, BibId, and either DOB or age");
@@ -190,14 +194,17 @@ namespace TimingForToby
                             if(dobRow>0)
                                 DOBs[curRow - 2] = DateTime.FromOADate(range.Cells[curRow, dobRow].Value2);
                             else if(ageRow>0){
-                                int age;
-                                var test = Int32.TryParse(range.Cells[curRow, dobRow].Value2 as string, out age);
-                                if(test)
+                                int age=0;
+                                bool succesful=false;
+                                var celVal=range.Cells[curRow, ageRow].Value2;
+                                if(celVal!=null)
+                                    succesful = Int32.TryParse(celVal.ToString(), out age);
+                                if(succesful)
                                     DOBs[curRow-2]=DateTime.Now.AddYears(-age);
                                 else{
                                     DOBs[curRow-2]=DateTime.Now;
                                     string date = string.Format("{0:G}", DateTime.Now);
-                                    string dobError = "Runner " + FirstNames[curRow - 2] + " " + LastNames[curRow - 2] + "could not read age!";
+                                    string dobError = "Runner " + FirstNames[curRow - 2] + " " + LastNames[curRow - 2] + " could not read age!";
                                     LogFile.WriteToErrorLog(dobError+" "+date+"\r\n");
                                     errorMessage += dobError + "\r\n";
                                 }
@@ -206,7 +213,7 @@ namespace TimingForToby
                             if (DOBs[curRow - 2] > DateTime.Now)
                             {
                                 string date = string.Format("{0:G}", DateTime.Now);
-                                string birthError = "Runner " + FirstNames[curRow - 2] + " " + LastNames[curRow - 2] + "has not been born yet!";
+                                string birthError = "Runner " + FirstNames[curRow - 2] + " " + LastNames[curRow - 2] + " has not been born yet!";
                                 LogFile.WriteToErrorLog(birthError+" "+date+"\r\n");
                                 errorMessage += birthError + "\r\n";
                             }
@@ -234,8 +241,8 @@ namespace TimingForToby
                             if(orgRow>0)
                                 Orginizations[curRow-2] = range.Cells[curRow, orgRow] as string ?? "";
                         }
-                        if (errorMessage.Length>0) { 
-
+                        if (errorMessage.Length > errrorThreashold)
+                        { 
                             MessageBox.Show(errorMessage);
                         }
                         workbook.Close();
@@ -278,6 +285,8 @@ namespace TimingForToby
             comboBox1.Enabled = !lockGui;
             btnRace.Enabled = !lockGui;
             btnImport.Enabled = !lockGui;
+            ExportDatabase.Enabled = !lockGui;
+            RestoreDatabase.Enabled = !lockGui;
         }
 
         private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
