@@ -191,7 +191,7 @@ namespace TimingForToby
                         {        
                             FirstNames[curRow-2] = range.Cells[curRow, firstNameRow].Value2 as string;
                             LastNames[curRow-2] = range.Cells[curRow, lastNameRow].Value2 as string;
-                            if(dobRow>0)
+                            if (dobRow > 0 && range.Cells[curRow, dobRow].Value2!=null)
                                 DOBs[curRow - 2] = DateTime.FromOADate(range.Cells[curRow, dobRow].Value2);
                             else if(ageRow>0){
                                 int age=0;
