@@ -17,7 +17,6 @@ namespace TimingForToby
         private TobyTimer _timer;
         private List<Keys> _triggerKeys=new List<Keys>();
         public KeyEventHandler keyHandler;
-        private KeyEventHandler _windowEvent;
 
         public KeybordTimer(string keyCode)
         {
@@ -64,32 +63,19 @@ namespace TimingForToby
             }
             keyHandler = new KeyEventHandler(KeyPressEvent);
         }
-        public KeybordTimer(MainWindow window, string keyCode)
-            : this(keyCode)
-        {
-            // TODO: Complete member initialization         
-            //window.KeyDown += keyHandler;
-        }
+        
         private void KeyPressEvent(Object sender, KeyEventArgs e)
         {    
             if (_triggerKeys.Contains(e.KeyData))
             {
                 if (_timer!=null)
                 {
-                    //MessageBox.Show(timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
                     this.RecordTime("DEFAULT", _timer.Elapsed().ToString(@"hh\:mm\:ss\.ffff"));
                 }
                 else
                     MessageBox.Show("Race Has Not Started");
             }
         }
-
-        
-        private void KeyEvent()
-        {
-            DialogResult results2 = MessageBox.Show("event triggered");
-        }
-
         
         public override void StartRace()
         {

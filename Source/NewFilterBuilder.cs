@@ -16,28 +16,26 @@ namespace TimingForToby
     public partial class NewFilterBuilder : Form
     {
         //Default min for ages
-        public int AgeMinimum = 1;
+        private int ageMinimum = 1;
         //Default max for ages
-        public int AgeMaximum = 100;
+        private int ageMaximum = 100;
         //name of Filter
-        public string FilterName; 
+        public string filterName; 
         //list of running selecteed ages (min, max)
-        List<Tuple<int, int>> ages = new List<Tuple<int, int>>();
+        private List<Tuple<int, int>> ages = new List<Tuple<int, int>>();
         //have the buttons been set
-        bool minSet = false;
-        bool maxSet = false;
-        //amount of Age Ranges in the filter
-        public int AgeRanges = 0;
+        private bool minSet = false;
+        private bool maxSet = false;
         public NewFilterBuilder()
         {
             InitializeComponent();
             labelValue.Text = trackBar1.Value.ToString();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void BtnSetMin_Click(object sender, EventArgs e)
         {
             //Sets the potential min to the value of the trackbar if there is no value in the textbox          
-            int minAge=AgeMinimum;
+            int minAge=ageMinimum;
             if (txtMinAge.Text.Trim() == "")
             {
                 minAge = trackBar1.Value;
@@ -50,22 +48,22 @@ namespace TimingForToby
             }
 
             //Checks that the potential new min is less than the max
-            if (minAge > AgeMaximum)
+            if (minAge > ageMaximum)
             {
                 MessageBox.Show("The min age must be less than the max age!");
-                txtMinAge.Text = AgeMinimum.ToString();
+                txtMinAge.Text = ageMinimum.ToString();
             }    
                 //On a pass, set the potential min to the age minimum
             else
             {
-                AgeMinimum = minAge;
+                ageMinimum = minAge;
                 txtMinAge.BackColor = Color.LimeGreen;
             }
         }
 
-        private void btnSetMax_Click(object sender, EventArgs e)
+        private void BtnSetMax_Click(object sender, EventArgs e)
         {
-            int maxAge = AgeMaximum;
+            int maxAge = ageMaximum;
             //Sets the potential max to the value of the trackbar if there is no value in the textbox            
             if (txtMaxAge.Text.Trim() == "")
             {
@@ -78,27 +76,27 @@ namespace TimingForToby
                 txtMaxAge.Text = maxAge.ToString();
             }
             //Checks that the potential new max is more than the min
-            if (maxAge < AgeMinimum)
+            if (maxAge < ageMinimum)
             {
                 MessageBox.Show("The max age must be greater than the min age!");
-                txtMaxAge.Text = AgeMaximum.ToString();
+                txtMaxAge.Text = ageMaximum.ToString();
             }
             //On a pass, set the potential max to the age maximum
             else
             {
-                AgeMaximum = maxAge;
+                ageMaximum = maxAge;
                 txtMaxAge.BackColor = Color.LimeGreen;
             }
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnCreateFilter_Click(object sender, EventArgs e)
         {
              /*Need to check this logic.  If filter name is entered but no check boxes are checked
               *filter name is added to the group check box in the MainWindow.
               *This should not happen! -DC 11-1-2015
               */
-             if (this.FilterName == null)
+             if (this.filterName == null)
              {
                   //Make sure name is entered
                   MessageBox.Show("Please create a name for this filter.");
@@ -109,12 +107,7 @@ namespace TimingForToby
              }
              else if (checkBox1.Checked || checkBox2.Checked)
              {
-                 //If the Age checkbox is checked, increase the amount of age ranges by 1
-                 if (checkBox2.Checked)
-                 {
-                     AgeRanges++;
-                 }
-                 bool success=createXMLFilter(this.FilterName);
+                 bool success=createXMLFilter(this.filterName);
                  //Close the form if file was saved
                  if(success)
                     this.Close();
@@ -125,10 +118,10 @@ namespace TimingForToby
              }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TbNameBox_TextChanged(object sender, EventArgs e)
         {
             //Set the filter name 
-            FilterName = textBox1.Text;
+            filterName = textBox1.Text;
         }
 
         //My feable attempts at creating custom filter xml's using Xml.Linq
@@ -139,7 +132,7 @@ namespace TimingForToby
         {
             XDocument doc = null;
              //get the current selected ages (if the user doesnt select the age checkbox it will be ignored anyways)
-             ages.Add(new Tuple<int, int>(AgeMinimum, AgeMaximum));
+             ages.Add(new Tuple<int, int>(ageMinimum, ageMaximum));
              string ageString = "(select (strftime('%Y', 'now') - strftime('%Y', run.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run.DOB))) as Age ";
             //Sex but not age is selected 
             if (this.checkBox1.Checked && !this.checkBox2.Checked)
@@ -266,29 +259,28 @@ namespace TimingForToby
              return false;
         }
 
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void TrackBar_ValueChanged(object sender, EventArgs e)
         {
             labelValue.Text = trackBar1.Value.ToString();
         }
 
-        private void btnAdditionalAge_Click(object sender, EventArgs e)
+        private void BtnAdditionalAge_Click(object sender, EventArgs e)
         {
-            AgeRanges++;
             //Add the ranges to listbox
-            listBox1.Items.Add(AgeMinimum + "," + AgeMaximum);
-            ages.Add(new Tuple<int, int>(AgeMinimum, AgeMaximum));
+            listBox1.Items.Add(ageMinimum + "," + ageMaximum);
+            ages.Add(new Tuple<int, int>(ageMinimum, ageMaximum));
             //Add a filter for the new age range
             //createXMLFilter(this.FilterName +"_Ages"+ AgeMinimum + "-" + AgeMaximum);
             //Clear txtboxes
             txtMinAge.Clear();
             txtMaxAge.Clear();
             //Reset age range to + 1 of the previous age range.
-            AgeMinimum = AgeMaximum +1;
-            AgeMaximum = 100;
+            ageMinimum = ageMaximum +1;
+            ageMaximum = 100;
             // Re enable the age ranges
             txtMaxAge.Enabled = true;
-            txtMinAge.Text = (AgeMinimum).ToString();
-            trackBar1.Value = AgeMinimum>100? 100: AgeMinimum;
+            txtMinAge.Text = (ageMinimum).ToString();
+            trackBar1.Value = ageMinimum>100? 100: ageMinimum;
             //disable the ability to change the min value
             txtMinAge.Enabled = false;
             btnSetMin.Enabled = false;

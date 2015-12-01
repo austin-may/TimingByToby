@@ -42,7 +42,7 @@ namespace TimingForToby
         }
 
         //populate the race comboBox
-        public void loadComboBox()
+        public void LoadComboBox()
         {
             //empty out the comboBox
             comboBox1.Items.Clear();
@@ -73,15 +73,15 @@ namespace TimingForToby
 
         private void StartScreen_Load(object sender, EventArgs e)
         {
-            loadComboBox();
+            LoadComboBox();
         }
 
-        private void comboBox1_Click(object sender, EventArgs e)
+        private void ComboBox1_Click(object sender, EventArgs e)
         {
-            loadComboBox();
+            LoadComboBox();
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
+        private void BtnImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "Excel File|*.xlsx";
@@ -319,8 +319,6 @@ namespace TimingForToby
              
         }
 
-       
-
         private void RestoreDatabase_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -355,11 +353,5 @@ namespace TimingForToby
             if (actionInvoked == 0) MessageBox.Show("Database exported!");
             else if (actionInvoked == 1) MessageBox.Show("Database restored!");
         }
-
-        }
-
-
-
-
-      
+    }      
 }

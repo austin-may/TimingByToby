@@ -14,7 +14,6 @@ namespace TimingForToby
         internal string raceName;
         public readonly int RaceID;
         public Form StartWindow;
-        public RaceData(){}
         public RaceData(Form StartScreen, string _RaceName, string _Connection)
         {
             this.StartWindow=StartScreen;

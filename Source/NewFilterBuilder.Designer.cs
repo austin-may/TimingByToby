@@ -63,7 +63,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.TextChanged += new System.EventHandler(this.TbNameBox_TextChanged);
             // 
             // checkBox1
             // 
@@ -94,7 +94,7 @@
             this.btnCreateFilter.TabIndex = 4;
             this.btnCreateFilter.Text = "Create Filter";
             this.btnCreateFilter.UseVisualStyleBackColor = true;
-            this.btnCreateFilter.Click += new System.EventHandler(this.button1_Click);
+            this.btnCreateFilter.Click += new System.EventHandler(this.BtnCreateFilter_Click);
             // 
             // trackBar1
             // 
@@ -105,7 +105,7 @@
             this.trackBar1.Size = new System.Drawing.Size(419, 45);
             this.trackBar1.TabIndex = 6;
             this.trackBar1.Value = 1;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar_ValueChanged);
             // 
             // btnSetMin
             // 
@@ -115,7 +115,7 @@
             this.btnSetMin.TabIndex = 7;
             this.btnSetMin.Text = "Set Min Age";
             this.btnSetMin.UseVisualStyleBackColor = true;
-            this.btnSetMin.Click += new System.EventHandler(this.button2_Click);
+            this.btnSetMin.Click += new System.EventHandler(this.BtnSetMin_Click);
             // 
             // btnSetMax
             // 
@@ -125,7 +125,7 @@
             this.btnSetMax.TabIndex = 8;
             this.btnSetMax.Text = "Set Max Age";
             this.btnSetMax.UseVisualStyleBackColor = true;
-            this.btnSetMax.Click += new System.EventHandler(this.btnSetMax_Click);
+            this.btnSetMax.Click += new System.EventHandler(this.BtnSetMax_Click);
             // 
             // txtMinAge
             // 
@@ -169,7 +169,7 @@
             this.btnAdditionalAge.TabIndex = 13;
             this.btnAdditionalAge.Text = "Add Age Filter";
             this.btnAdditionalAge.UseVisualStyleBackColor = true;
-            this.btnAdditionalAge.Click += new System.EventHandler(this.btnAdditionalAge_Click);
+            this.btnAdditionalAge.Click += new System.EventHandler(this.BtnAdditionalAge_Click);
             // 
             // listBox1
             // 

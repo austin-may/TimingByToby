@@ -17,12 +17,12 @@ namespace TimingForToby
 {
     public partial class MainWindow : Form, ITimerListener
     {
-        private TimingDevice TimingDevice;
+        private TimingDevice timingDevice;
         private RaceData raceData;
         private List<Filter> filters = new List<Filter>();
-        private bool TimingCellBeingEdited = false;
-        private bool TimingTableUpdating = false;
-        private System.Timers.Timer ClockRefreshTimer = new System.Timers.Timer(500);
+        private bool timingCellBeingEdited = false;
+        private bool timingTableUpdating = false;
+        private System.Timers.Timer clockRefreshTimer = new System.Timers.Timer(500);
         public MainWindow()
         {
             InitializeComponent();
@@ -38,7 +38,7 @@ namespace TimingForToby
             SetClock(new TimeSpan(0,0,0));
             panelClock.Visible = true;
             //this is to make the clock update in the gui
-            ClockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(TimingDevice.GetCurrentTime()); });
+            clockRefreshTimer.Elapsed += new ElapsedEventHandler(delegate { SetClock(timingDevice.GetCurrentTime()); });
         }
         //builds and populates the results table
         private void BuildResults(List<Filter> filters)
@@ -63,9 +63,9 @@ namespace TimingForToby
                 return;
             }
             //if the cells in the timing table are not currently being edited
-            if (!TimingCellBeingEdited)
+            if (!timingCellBeingEdited)
             {
-                TimingTableUpdating = true;
+                timingTableUpdating = true;
                 using (var conn = new SQLiteConnection(CommonSQL.SQLiteConnectionString))
                 {
                     try
@@ -93,7 +93,7 @@ namespace TimingForToby
                         conn.Close();
                     }
                 }
-                TimingTableUpdating = false;
+                timingTableUpdating = false;
             }
         }
         //this handles the construction of the runners table
@@ -197,7 +197,7 @@ namespace TimingForToby
             else
             {
                 //remove the key event
-                var timer = TimingDevice as KeybordTimer;
+                var timer = timingDevice as KeybordTimer;
                 if(timer!=null)
                     KeyDown -= timer.keyHandler;
             }
@@ -206,7 +206,7 @@ namespace TimingForToby
         private void StartRace(object sender, EventArgs e)
         {
             //ensure we have a timing devices, one is set by default
-            if (TimingDevice == null)
+            if (timingDevice == null)
             {
                 RadioButton rb = gbTimerOptions.Controls.OfType<RadioButton>().FirstOrDefault(r=>r.Checked);
                 if (rb != null) {
@@ -229,16 +229,16 @@ namespace TimingForToby
             }
             }
             //note! this is different from else, we want this to run so long as not null (should be based on above)
-            if (TimingDevice != null)
+            if (timingDevice != null)
             {
-                TimingDevice.StartRace(GetClockTime());
+                timingDevice.StartRace(GetClockTime());
                 ClockEditable(false);
         }
             //the clock should run for timers (except for the time machine becouse it is an external clock and we cant pull this data...)
             if(!radioButtonTM.Checked)
             {
                 //this should refresh the clock that the user sees
-                ClockRefreshTimer.Enabled = true;
+                clockRefreshTimer.Enabled = true;
             }
             //disable Start buton, enable stop
             btnStartRace.Enabled = false;
@@ -247,10 +247,10 @@ namespace TimingForToby
         //end the race if applicable
         private void StopRace(object sender, EventArgs e)
         {
-            if(TimingDevice!=null)
-                TimingDevice.StopRace();
+            if(timingDevice!=null)
+                timingDevice.StopRace();
             ClockEditable(true);
-            ClockRefreshTimer.Enabled=false;
+            clockRefreshTimer.Enabled=false;
 
             //disable Start buton, enable stop
             btnStartRace.Enabled = true;
@@ -309,11 +309,11 @@ namespace TimingForToby
         //validateds and updates changes in the timing table
         private void TimingTableCellChanging(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (!TimingTableUpdating)
+            if (!timingTableUpdating)
             {
                 var oldValue = dataGridTiming[e.ColumnIndex, e.RowIndex].Value.ToString();
                 var newValue = e.FormattedValue.ToString();
-                TimingCellBeingEdited = false;
+                timingCellBeingEdited = false;
                 if (oldValue != newValue)
                 {
                     if (e.ColumnIndex == 1)//if we are changing the bib
@@ -345,7 +345,7 @@ namespace TimingForToby
                 catch (ObjectDisposedException ode) { }//saw this when app was closed without ending race first
                 catch (Exception e) { MessageBox.Show(e.Message); }
             }
-            if (!TimingCellBeingEdited && !dataGridTiming.InvokeRequired)
+            if (!timingCellBeingEdited && !dataGridTiming.InvokeRequired)
             { 
                 TimingTableLoad();
                 HighlightTimingErrors();
@@ -356,16 +356,16 @@ namespace TimingForToby
         //takes timing device and sets it to be able to be used
         private void SetTimingDevice(TimingDevice timeDevice)
         {
-            if (this.TimingDevice != null)
-                this.TimingDevice.Dispose();
+            if (this.timingDevice != null)
+                this.timingDevice.Dispose();
             //set TimingDevice
-            this.TimingDevice = timeDevice;
+            this.timingDevice = timeDevice;
             //set RaceID so the device knows what race to update in DB
-            TimingDevice.SetRaceID(raceData.RaceID);
+            timingDevice.SetRaceID(raceData.RaceID);
             //listen for change to update Table
-            TimingDevice.AddListener(this);
+            timingDevice.AddListener(this);
             //if we are using a timer with internal clock, report the time
-            if (!(TimingDevice is TimeMachineTimer))
+            if (!(timingDevice is TimeMachineTimer))
             {
                 panelClock.Visible = true;
         }
@@ -406,8 +406,8 @@ namespace TimingForToby
         //there is a cell in the timeing table that is being changed, toggle flag
         private void CellBeingEdited(object sender, EventArgs e)
         {
-            if (!TimingTableUpdating)
-            { TimingCellBeingEdited = true; }
+            if (!timingTableUpdating)
+            { timingCellBeingEdited = true; }
         }
         //sets clock editability
         public void ClockEditable(bool edit)
@@ -540,7 +540,7 @@ namespace TimingForToby
             //Creates a filterbuilder window
             NewFilterBuilder FilterWin = new NewFilterBuilder();
             //Checks that the "Create Filter" button was pressed on the filterbuilder window and then adds that filter to the list
-            if (FilterWin.ShowDialog(this) == DialogResult.OK && FilterWin.FilterName!=null)
+            if (FilterWin.ShowDialog(this) == DialogResult.OK && FilterWin.filterName!=null)
             {
                 BuildFilters();
             }
@@ -605,8 +605,6 @@ namespace TimingForToby
             DateTime dob = new DateTime(Int32.Parse(parts[0]), Int32.Parse(parts[1]), Int32.Parse(parts[2]));
             CommonSQL.DelRunner(first, last, dob, raceData.RaceID);
         }
-
-
-
+        
     }
 }

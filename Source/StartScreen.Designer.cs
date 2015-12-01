@@ -56,7 +56,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 0;
-            this.comboBox1.Click += new System.EventHandler(this.comboBox1_Click);
+            this.comboBox1.Click += new System.EventHandler(this.ComboBox1_Click);
             // 
             // btnNewRace
             // 
@@ -76,7 +76,7 @@
             this.btnImport.TabIndex = 2;
             this.btnImport.Text = "Import Runners";
             this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            this.btnImport.Click += new System.EventHandler(this.BtnImport_Click);
             // 
             // btnRace
             // 

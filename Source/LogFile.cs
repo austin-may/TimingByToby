@@ -13,8 +13,6 @@ namespace TimingForToby
         internal static void WriteToErrorLog(string message)
         {
             File.AppendAllText(@"ErrorLog.txt", message);
-        }
-        
-        
+        }      
     }
 }

@@ -14,6 +14,7 @@ namespace TimingForToby
     {
 
         private DateTime _StartTime;
+        private static Stack timestampStack = new Stack();
         public TobyTimer()
         {
             _StartTime = DateTime.Now;
@@ -37,8 +38,6 @@ namespace TimingForToby
             _StartTime = DateTime.Now - ts;
         }
 
-
-        private static Stack timestampStack = new Stack();
         internal static void BackupAfter60Seconds()
         {
             TimeSpan rightNow = DateTime.Now.TimeOfDay;
