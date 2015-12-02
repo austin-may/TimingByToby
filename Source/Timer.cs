@@ -62,7 +62,7 @@ namespace TimingForToby
         {
             string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string sourcePath = Directory.GetCurrentDirectory();
-            string destinationPath = AppDataPath + "\\TimingForToby";
+            string destinationPath = AppDataPath + "\\TimingForToby\\AutoBackups";
             string sourceFileName = @"MyDatabase.sqlite";
             //There's no colon in the time because as you might know that's not allowed in file names :(
             string timestamp = string.Format("{0:MM-dd-yyyy hh-mm tt}", DateTime.Now);
@@ -83,6 +83,9 @@ namespace TimingForToby
             {
                 Directory.CreateDirectory(destinationPath);
             }
+            //enseure that we dont fill the HD
+            long megaByte = 1000000;
+            CommonSQL.DelToSize(destinationPath, megaByte*250);
             File.Copy(sourceFileName, destinationFile, true);
         }
     }

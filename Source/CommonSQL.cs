@@ -573,5 +573,28 @@ namespace TimingForToby
                 TobyTimer.BackupAfter60Seconds();
             }
         }
+        private static long GetDirectorySize(string path)
+        {
+            // get file names.
+            string[] files = Directory.GetFiles(path, "*.*");
+            long bytes = 0;
+            foreach (string name in files)
+            {
+                FileInfo fileInfo = new FileInfo(name);
+                bytes += fileInfo.Length;
+            }
+            return bytes;
+        }
+        public static void DelToSize(string dir, long bytes)
+        {
+            List<FileInfo> orderedFiles = new DirectoryInfo(dir).GetFiles().OrderBy(x => x.LastWriteTime).ToList();
+            int numFiles = orderedFiles.Count;
+            int i = 0;
+            //as long as the dir is bigger than 250 MB or until there are only 5 files left
+            while (GetDirectorySize(dir)> bytes && numFiles-i>=5)
+            {
+                orderedFiles[i++].Delete();
+            }
+        }
     }
 }
