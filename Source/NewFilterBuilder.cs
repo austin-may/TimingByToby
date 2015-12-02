@@ -31,7 +31,7 @@ namespace TimingForToby
             InitializeComponent();
             labelValue.Text = trackBar1.Value.ToString();
         }
-
+        //on "Set Min" button click.  set the min for age rance
         private void BtnSetMin_Click(object sender, EventArgs e)
         {
             //Sets the potential min to the value of the trackbar if there is no value in the textbox          
@@ -61,6 +61,7 @@ namespace TimingForToby
             }
         }
 
+        //on "Set Max" button click.  set the max for age rance
         private void BtnSetMax_Click(object sender, EventArgs e)
         {
             int maxAge = ageMaximum;
@@ -89,7 +90,7 @@ namespace TimingForToby
             }
             
         }
-
+        //creates filter (xml) if possible
         private void BtnCreateFilter_Click(object sender, EventArgs e)
         {
              /*Need to check this logic.  If filter name is entered but no check boxes are checked
@@ -117,7 +118,7 @@ namespace TimingForToby
                   MessageBox.Show("ERROR:  Please try again.");
              }
         }
-
+        //called when the name for the filter changes
         private void TbNameBox_TextChanged(object sender, EventArgs e)
         {
             //Set the filter name 
@@ -258,12 +259,12 @@ namespace TimingForToby
              }
              return false;
         }
-
+        //called when the slider for the track bar moves
         private void TrackBar_ValueChanged(object sender, EventArgs e)
         {
             labelValue.Text = trackBar1.Value.ToString();
         }
-
+        //takes current age range, stores it, and allows user to add new range with min set to +1 old max
         private void BtnAdditionalAge_Click(object sender, EventArgs e)
         {
             //Add the ranges to listbox
@@ -287,12 +288,13 @@ namespace TimingForToby
 
             //The idea is to add all of the ranges for the duration of age ranges at the end of the create filter button
         }
-
+        //called when max is changed, highlights cell green to let user know not set
         private void MaxChanged(object sender, EventArgs e)
         {
             txtMaxAge.BackColor = Color.White;
         }
 
+        //called when min is changed, highlights cell green to let user know not set
         private void MinChanged(object sender, EventArgs e)
         {
             txtMinAge.BackColor = Color.White;

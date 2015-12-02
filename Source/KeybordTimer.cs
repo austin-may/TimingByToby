@@ -63,7 +63,7 @@ namespace TimingForToby
             }
             keyHandler = new KeyEventHandler(KeyPressEvent);
         }
-        
+        //what to do when the trigger key has been pressed (normaly its to record the time of the runner)
         private void KeyPressEvent(Object sender, KeyEventArgs e)
         {    
             if (_triggerKeys.Contains(e.KeyData))
@@ -76,37 +76,41 @@ namespace TimingForToby
                     MessageBox.Show("Race Has Not Started");
             }
         }
-        
+        //start the clock
         public override void StartRace()
         {
             if(_timer==null)
                 _timer=new TobyTimer();            
         }
-
+        //kill the clock
         public override void StopRace()
         {
             _timer=null;
         }
+        //offset the clock and start
         public override void StartRace(TimeSpan ts)
         {
             StartRace();
             OffsetTimer(ts);            
         }
+        //reset clock to 0
         public override void ClearTimer()
         {
             _timer.Reset();
         }
+        //return the time on the clock
         public override TimeSpan GetCurrentTime()
         {
             if (_timer == null)
                 return new TimeSpan(0, 0, 0);
             return _timer.Elapsed();
         }
+        //offset timmer by time
         public override void OffsetTimer(TimeSpan ts)
         {
             _timer.OffSetTime(ts);
         }
-
+        //remove handler
         public override void Dispose()
         {
             keyHandler = null;

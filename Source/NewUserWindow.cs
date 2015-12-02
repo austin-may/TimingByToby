@@ -16,16 +16,18 @@ namespace TimingForToby
         private MainWindow parent;
         //if the user exsist already, we want their ID
         private int _RunnerID=-1;
+        //blank new runner window
         public NewUserWindow(RaceData _raceData)
         {
             raceData = _raceData;
             InitializeComponent();
         }
+        //blank new runner window
         public NewUserWindow(RaceData _raceData, MainWindow _parent): this(_raceData)
         {
             this.parent = _parent;
         }
-
+        //pre-pop with runner data and get runner ID (this will preform an update)
         public NewUserWindow(RaceData _raceData, MainWindow _parent, string firstName, string lastName, DateTime dob, string bibID, char sex, string team, string org)
             : this(_raceData, _parent)
         {
@@ -38,7 +40,7 @@ namespace TimingForToby
             tbGender.Text = sex+"";
             _RunnerID=CommonSQL.GetRunnerID(firstName, lastName, dob);
         }
-
+        //on done click. try to add runner or update runner if the runner already exsists
         private void btnDone_Click(object sender, EventArgs e)
         {
             if (textBoxFirstName.Text.Trim() == "" || textBoxLastName.Text.Trim() == "" || textBoxBibId.Text.Trim() == "")
@@ -58,6 +60,7 @@ namespace TimingForToby
                     addRunner();
             }
         }
+        //add a runner to the db
         private void addRunner()
         {
             if (!CommonSQL.BibExist(textBoxBibId.Text, raceData.RaceID))
@@ -73,6 +76,7 @@ namespace TimingForToby
                 MessageBox.Show("Can not add: Duplicate bib");
             }
         }
+        //updates an exsisting runners info based on runnerID
         private void updateRunner()
         {
             if (!CommonSQL.BibExistOutsideRunner(textBoxBibId.Text, raceData.RaceID, _RunnerID))

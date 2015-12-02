@@ -10,6 +10,7 @@ namespace TimingForToby
     public class LogFile
     {
         public static readonly string PATH = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+"\\"+ Path.GetFileName(@"ErrorLog.txt");
+        //append error log with message
         internal static void WriteToErrorLog(string message)
         {
             File.AppendAllText(@"ErrorLog.txt", message);

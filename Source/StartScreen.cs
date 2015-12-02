@@ -21,7 +21,7 @@ namespace TimingForToby
         {
             InitializeComponent();
         }
-
+        //on "Race!" button click. create race data, hide this window, pop up new "Main" window
         private void BtnRace_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedItem==null || comboBox1.SelectedItem.ToString()=="")
@@ -33,7 +33,7 @@ namespace TimingForToby
                 mainWindow.Show(); 
             }
         }
-
+        //on "New Race" button click.  prompt user for new race
         private void BtnNewRace_Click(object sender, EventArgs e)
         {
             var newRaceScreen = new NewRaceWindow();
@@ -70,17 +70,17 @@ namespace TimingForToby
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;
         }
-
+        //populate combobox on load
         private void StartScreen_Load(object sender, EventArgs e)
         {
             LoadComboBox();
         }
-
+        //onclick combobox. load combobox
         private void ComboBox1_Click(object sender, EventArgs e)
         {
             LoadComboBox();
         }
-
+        //on "Import Runners" button click. prompt user to navigate to excel doc and import runner data from that file
         private void BtnImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -102,7 +102,7 @@ namespace TimingForToby
             Console.WriteLine(size); // <-- Shows file size in debugging mode.
             Console.WriteLine(result); // <-- For debugging use.
         }
-
+        //take excel file and import runner data from that file
         private async void AddUsersToRace(String filename)
         {
             int firstNameRow = -1;
@@ -279,7 +279,7 @@ namespace TimingForToby
                 this.UseWaitCursor = false;
             }
         }
-
+        //disable buttons on gui to prevent clicks 
         private void LockGUI(bool lockGui)
         {
             comboBox1.Enabled = !lockGui;
@@ -288,7 +288,7 @@ namespace TimingForToby
             ExportDatabase.Enabled = !lockGui;
             RestoreDatabase.Enabled = !lockGui;
         }
-
+        //call on screen close. create backup
         private void StartScreen_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Backup the database on close
@@ -318,7 +318,7 @@ namespace TimingForToby
              }
              
         }
-
+        //on "Import Database" button click. prompt user to navigate to db backup and replaces current db with that file
         private void RestoreDatabase_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();

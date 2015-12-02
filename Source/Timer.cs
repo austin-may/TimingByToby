@@ -23,21 +23,24 @@ namespace TimingForToby
         {
             _StartTime = dt;
         }
+        //reset clock
         public void Reset()
         {
             _StartTime = DateTime.Now;
         }
+        //time pased from start
         public TimeSpan Elapsed()
         {
             if (_StartTime == null)
                 return new TimeSpan(0, 0, 0);
             return DateTime.Now - _StartTime;
         }
+        //offset clock by set ammount of time
         public void OffSetTime(TimeSpan ts)
         {
             _StartTime = DateTime.Now - ts;
         }
-
+        //create a backup but only if +60 seconds since last backup
         internal static void BackupAfter60Seconds()
         {
             TimeSpan rightNow = DateTime.Now.TimeOfDay;

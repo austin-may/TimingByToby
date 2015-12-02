@@ -23,10 +23,12 @@ namespace TimingForToby
         public static SQLiteConnection originalDatabase;
         public static SQLiteConnection backupDatabase;
         private static SQLiteConnection _db = new SQLiteConnection(SQLiteConnectionString);
+        //get the current db file
         public static string GetDBFileName()
         {
             return _dbFile;
         }
+        //checks if db file exsits, if not, create new db
         public static void BuildIfNotExsistDB()
         {
             try
@@ -73,6 +75,7 @@ namespace TimingForToby
                 _db.Close();
             }
         }
+        //add runner to db
         internal static void AddRunner(string FirstName, string LastName, DateTime DOB, string BibID, string sex, string Team, string Orginization, string RaceName, string Connection){
             BuildIfNotExsistDB();
             int raceID = GetRaceID(RaceName);
@@ -165,7 +168,7 @@ namespace TimingForToby
             });            
             
         }        
-
+        /CreateParams backup of db
         internal static void BackupDB()
         {
             originalDatabase = new SQLiteConnection(SQLiteConnectionString);
@@ -176,7 +179,7 @@ namespace TimingForToby
             originalDatabase.Close();
             backupDatabase.Close();
         }
-        
+        //update the bib of a runner
         internal static void UpdateTimingBib(int raceID, string oldBib, string time, string newBib)
         {
             BuildIfNotExsistDB();
@@ -208,6 +211,7 @@ namespace TimingForToby
                 }
             }
         }
+        //update time of a runner
         internal static void UpdateTimingTime(int raceID, string bib, string oldTime, string newTime)
         {
             BuildIfNotExsistDB();
@@ -285,6 +289,7 @@ namespace TimingForToby
                 return raceID;
             }
         }
+        //returns list of duplicated bib id in race results for this race
         public static List<string> FindBadBibs(int raceID)
         {
             BuildIfNotExsistDB();
@@ -321,7 +326,7 @@ namespace TimingForToby
             }
             return badBibs;
         }
-
+        //add bib:time result to db for this race
         internal static void AddTimeAndBib(int raceID, string bib, string time)
         {
             BuildIfNotExsistDB();
@@ -352,6 +357,7 @@ namespace TimingForToby
                 }
             }
         }
+        //delete a result from this race
         internal static void DelTimingRow(int raceID, string time)
         {
             BuildIfNotExsistDB();
@@ -424,6 +430,7 @@ namespace TimingForToby
                 }
             return runnerID;
         }
+        //del runner from race
         internal static void DelRunner(string firstName, string LastName, DateTime dob, int raceID)
         {
             BuildIfNotExsistDB();
@@ -454,6 +461,7 @@ namespace TimingForToby
                     _db.Close();
             }
         }
+        //check if bib already exist for this race
         internal static bool BibExist(string bibID, int raceID)
         {
             BuildIfNotExsistDB();
@@ -532,6 +540,7 @@ namespace TimingForToby
             //if we get here then ya, it doesnt exsist
             return results;
         }
+        //update runner info
         internal static void UpdateRunner(int runnerId, string FirstName, string LastName, DateTime DOB, string BibID, string sex, string Team, string Orginization, string RaceName, string Connection)
         {
             BuildIfNotExsistDB();
@@ -573,6 +582,7 @@ namespace TimingForToby
                 TobyTimer.BackupAfter60Seconds();
             }
         }
+        //get total size of files in db(doesnt count sub dir)
         private static long GetDirectorySize(string path)
         {
             // get file names.
@@ -585,13 +595,14 @@ namespace TimingForToby
             }
             return bytes;
         }
-        public static void DelToSize(string dir, long bytes)
+        //deletes file from old to new until the dir is below size or file count
+        public static void DelToSize(string dir, long bytes, int minFileCount=5)
         {
             List<FileInfo> orderedFiles = new DirectoryInfo(dir).GetFiles().OrderBy(x => x.LastWriteTime).ToList();
             int numFiles = orderedFiles.Count;
             int i = 0;
-            //as long as the dir is bigger than 250 MB or until there are only 5 files left
-            while (GetDirectorySize(dir)> bytes && numFiles-i>=5)
+            //as long as the dir is bigger than 250 MB or until there are only the min # files left
+            while (GetDirectorySize(dir)> bytes && numFiles-i>=minFileCount)
             {
                 orderedFiles[i++].Delete();
             }

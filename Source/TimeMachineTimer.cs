@@ -23,6 +23,7 @@ namespace TimingForToby
         {
             ConnectToPort(port);
         }
+        //set up com port communitcation
         private void ConnectToPort(string comPort)
         {
             if (_com != null)

@@ -47,7 +47,8 @@ namespace TimingForToby
               else
                 data.AutoSize = true;
           }
-          public void LoadDataTable()
+         //pop filter with data 
+         public void LoadDataTable()
           {
               using (var connect = new SQLiteConnection(_connectionSting))
               {
@@ -68,11 +69,12 @@ namespace TimingForToby
                   }
               }
           }
+         //return table containing data
           public DataGridView GetDataTable()
           {
               return data;
           }
-
+         //construct filter based on xml params
           public static List<Filter> BuildFromXML(RaceData raceData, string file, int width = -1, int height = -1)
           {
               var filters=new List<Filter>();

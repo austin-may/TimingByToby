@@ -83,7 +83,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NewRaceWindow";
             this.Text = "New Race";
-            this.Load += new System.EventHandler(this.NewRaceWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

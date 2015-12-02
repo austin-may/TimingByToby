@@ -18,7 +18,7 @@ namespace TimingForToby
             InitializeComponent();
             lableError.ForeColor = System.Drawing.Color.Red;
         }
-
+        //on "Done" button click attempts to create and add new race in db
         private void btnDone_Click(object sender, EventArgs e)
         {
             int rowsAffected=0;
@@ -44,11 +44,6 @@ namespace TimingForToby
             }
             if(rowsAffected>0)
                 this.Close();
-        }
-
-        private void NewRaceWindow_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
