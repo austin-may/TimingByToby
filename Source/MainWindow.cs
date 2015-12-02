@@ -605,6 +605,11 @@ namespace TimingForToby
             DateTime dob = new DateTime(Int32.Parse(parts[0]), Int32.Parse(parts[1]), Int32.Parse(parts[2]));
             CommonSQL.DelRunner(first, last, dob, raceData.RaceID);
         }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("UserManual.pdf");
+        }
         
     }
 }

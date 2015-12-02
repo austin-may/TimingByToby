@@ -194,9 +194,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="MyDatabase.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="MyDatabase.sqlite" />
     <None Include="MyDatabaseDataSet.xsc">
       <DependentUpon>MyDatabaseDataSet.xsd</DependentUpon>
     </None>
@@ -219,6 +217,9 @@
     </Compile>
     <None Include="Template.xlsx" />
     <None Include="TimingForTobyUI_TemporaryKey.pfx" />
+    <Content Include="UserManual.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -239,9 +240,7 @@
     <Content Include="Filters\OveralFilter.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Filters\OveralFilter2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Filters\OveralFilter2.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.1">

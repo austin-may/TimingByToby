@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimingForTobyUI", "Source\TimingForTobyUI.csproj", "{9387D61F-FBF1-42CB-B705-A0F71AA03F08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimingByTobyTests", "TimingByTobyTests\TimingByTobyTests.csproj", "{CC02ADA1-03C2-44F1-953B-500019CA9378}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TimingForTobySetup", "TimingForTobySetup\TimingForTobySetup.vdproj", "{366328C3-ECA1-4C6F-859E-885B705FB7CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,8 +21,6 @@ Global
 		{CC02ADA1-03C2-44F1-953B-500019CA9378}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC02ADA1-03C2-44F1-953B-500019CA9378}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC02ADA1-03C2-44F1-953B-500019CA9378}.Release|Any CPU.Build.0 = Release|Any CPU
-		{366328C3-ECA1-4C6F-859E-885B705FB7CF}.Debug|Any CPU.ActiveCfg = Debug
-		{366328C3-ECA1-4C6F-859E-885B705FB7CF}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
