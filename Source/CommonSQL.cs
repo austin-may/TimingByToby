@@ -168,7 +168,7 @@ namespace TimingForToby
             });            
             
         }        
-        /CreateParams backup of db
+        //CreateParams backup of db
         internal static void BackupDB()
         {
             originalDatabase = new SQLiteConnection(SQLiteConnectionString);
