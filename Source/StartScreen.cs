@@ -97,6 +97,7 @@ namespace TimingForToby
                 }
                 catch (IOException)
                 {
+                    importProgressPanel.Visible = false;
                 }
             }
             Console.WriteLine(size); // <-- Shows file size in debugging mode.
@@ -168,6 +169,10 @@ namespace TimingForToby
                 {
                     int rowCount = range.Rows.Count;
                     int colCount = range.Columns.Count;
+                    if (comboBox1.SelectedItem == null){
+                        MessageBox.Show("No Race Selected");
+                        return;
+                    }
                     string race=this.comboBox1.SelectedItem.ToString();
                     if(rowCount>1 && colCount>4)//minimum valid input
                     {
@@ -263,7 +268,6 @@ namespace TimingForToby
                         LockGUI(false);
                     }
                     lblProgress.Text = "Import complete for " + race;
-                    importProgressPanel.Visible = false;
                     progressBar1.Value = 0;
                 }
                 else
@@ -277,6 +281,7 @@ namespace TimingForToby
             finally
             {
                 this.UseWaitCursor = false;
+                importProgressPanel.Visible = false;
             }
         }
         //disable buttons on gui to prevent clicks 
