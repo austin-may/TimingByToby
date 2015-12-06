@@ -608,7 +608,14 @@ namespace TimingForToby
         //open user manual with default prog on computer
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("UserManual.pdf");
+            try
+            {
+                System.Diagnostics.Process.Start("UserManual.pdf");
+            }
+            catch
+            {
+                MessageBox.Show("Error trying to open user manual");
+            }
         }
         
     }
