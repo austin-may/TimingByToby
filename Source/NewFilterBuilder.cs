@@ -141,19 +141,19 @@ namespace TimingForToby
                   doc = new XDocument(new XElement("FilterSet", 
                  new XElement("Filter",
                        new XElement("Name", name + "-Male"),
-                                   new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND run2.Gender=77 AND r2.Time<=r.Time order by Time) as Position," 
+                                   new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID AND rn2.RaceID=@RaceID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND run2.Gender=77 AND r2.Time<=r.Time order by Time) as Position," 
                                                        + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time " 
                                                        + "from RaceResults r " 
-                                                       + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                       + "join RaceRunner rn on r.BibID = rn.BibID And rn.RaceID=@RaceID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID " 
                                                        + "where r.RaceID=@RaceID AND run.Gender=77 order by Time")
                                                        ),
                  new XElement("Filter",
                        new XElement("Name", name + "-Female"),
-                                   new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND run2.Gender=70 AND r2.Time<=r.Time order by Time) as Position,"
+                                   new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID AND rn2.RaceID=@RaceID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND run2.Gender=70 AND r2.Time<=r.Time order by Time) as Position,"
                                                        +  "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time "
                                                        + "from RaceResults r "
-                                                       + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                       + "join RaceRunner rn on r.BibID = rn.BibID And rn.RaceID=@RaceID "
                                                        + "join Runners run on rn.RunnerID = run.RunnerID "
                                                        + "where r.RaceID=@RaceID AND run.Gender=70 order by Time")
                                         )
@@ -171,13 +171,13 @@ namespace TimingForToby
                          elementList.Add(
                              new XElement("Filter",
                                         new XElement("Name", name + "-Ages:" + ageRange.Item1 + "-" + ageRange.Item2),
-                                       new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
+                                       new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID AND rn2.RaceID=@RaceID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
                                                            + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
                                                            + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND r2.Time<=r.Time order by Time) as Position, "
                                                            + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                            + ageString
                                                            + "from RaceResults r "
-                                                           + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                           + "join RaceRunner rn on r.BibID = rn.BibID And rn.RaceID=@RaceID "
                                                            + "join Runners run on rn.RunnerID = run.RunnerID "
                                                            + "where r.RaceID=@RaceID AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
 
@@ -198,26 +198,26 @@ namespace TimingForToby
                          elementList.Add(
                          new XElement("Filter",
                               new XElement("Name", name + "-Ages:" + ageRange.Item1 + "-" + ageRange.Item2 + "-Male"),
-                                          new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
+                                          new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID AND rn2.RaceID=@RaceID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
                                                               + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
                                                               + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND run2.Gender=77 AND r2.Time<=r.Time order by Time) as Position, "
                                                               + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                               + ageString
                                                               + "from RaceResults r "
-                                                              + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                              + "join RaceRunner rn on r.BibID = rn.BibID And rn.RaceID=@RaceID "
                                                               + "join Runners run on rn.RunnerID = run.RunnerID "
                                                               + "where r.RaceID=@RaceID AND run.Gender=77 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
 
                                                               ));
                          elementList.Add(new XElement("Filter",
                          new XElement("Name", name + "-Ages: " + ageRange.Item1 + "-" + ageRange.Item2 + "-Female"),
-                                     new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
+                                     new XElement("SQL", "select  (select count(*) from RaceResults r2 join RaceRunner rn2 on r2.BibID = rn2.BibID AND rn2.RaceID=@RaceID join Runners run2 on rn2.RunnerID = run2.RunnerID where r2.RaceID=@RaceID AND "
                                                          + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))>=" + ageRange.Item1 + " AND "
                                                          + "(select (strftime('%Y', 'now') - strftime('%Y', run2.DOB)) - (strftime('%m-%d', 'now') < strftime('%m-%d', run2.DOB)))<=" + ageRange.Item2 + " AND run2.Gender=70 AND r2.Time<=r.Time order by Time) as Position, "
                                                          + "(run.FirstName || ' ' || run.LastName) as Name, CAST(Time as varchar(10)) as Time, "
                                                          + ageString
                                                          + "from RaceResults r "
-                                                         + "join RaceRunner rn on r.BibID = rn.BibID "
+                                                         + "join RaceRunner rn on r.BibID = rn.BibID And rn.RaceID=@RaceID  "
                                                          + "join Runners run on rn.RunnerID = run.RunnerID "
                                                          + "where r.RaceID=@RaceID AND run.Gender=70 AND Age>=" + ageRange.Item1 + " AND Age<=" + ageRange.Item2 + " order by Time")
                                           ));
