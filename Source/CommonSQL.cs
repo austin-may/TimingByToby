@@ -31,6 +31,7 @@ namespace TimingForToby
         //checks if db file exsits, if not, create new db
         public static void BuildIfNotExsistDB()
         {
+            bool alreadyOpen = _db.State != System.Data.ConnectionState.Closed;
             try
             {
                 //look to see if the db file exsist, if not, create it
@@ -72,7 +73,8 @@ namespace TimingForToby
             }
             finally
             {
-                _db.Close();
+                 if(!alreadyOpen)
+                    _db.Close();
             }
         }
         //add runner to db
